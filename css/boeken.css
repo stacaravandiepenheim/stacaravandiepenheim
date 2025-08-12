@@ -1,0 +1,186 @@
+@charset "utf-8";
+/* CSS Document */
+
+/****** boekenpagina ******/
+select {
+  inline-size: fit-content;
+  margin-inline: 2vw;
+}
+input {
+  margin-inline: 2vw;
+  font-size: 1.2vw;
+}
+/** kalender **/
+.calendar-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px;
+}
+
+.calendar-box {
+  flex: 1 1 45%;
+  max-width: 45%;
+  text-align: center;
+}
+
+.month-picker {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.day {
+  padding: 10px;
+  text-align: center;
+}
+
+.header {
+  font-weight: bold;
+  background-color: #f0f0f0;
+}
+
+.available {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.unavailable {
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.booked {
+  background-color: #fcbfbf;
+}
+
+.selected {
+  background-color: #a0d2fc;
+}
+
+#selected-arrival, #selected-departure {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--darkblue);
+}
+
+@media (max-width: 768px) {
+  .calendar-box {
+      flex: 1 1 100%;
+      max-width: 100%;
+  }
+}
+
+img {
+  height: 15rem;
+}
+
+/* ===== Tarieven tabellen ===== */
+.table-wrap {
+  overflow-x: auto;           /* veilig op kleine schermen */
+  margin: 0.75rem 0;
+}
+
+.rate-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.98rem;
+  background: #fff;
+}
+
+.rate-table caption {
+  text-align: left;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: var(--darkblue);
+}
+
+.rate-table th,
+.rate-table td {
+  padding: 0.6rem 0.7rem;
+  border-bottom: 1px solid #e9eef3;
+  vertical-align: top;
+  text-align: left;
+}
+
+.rate-table thead th {
+  background: var(--lightestblue);
+  color: var(--blue);
+  border-bottom: 2px solid #dfe8f0;
+}
+
+.rate-table tbody tr:hover {
+  background: #fafcff;
+}
+
+.rate-table .num {
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* Tweekoloms-variant (label links, waarde rechts) */
+.rate-two-col th {
+  text-align: left;
+  width: 60%;
+  font-weight: 300;
+}
+.rate-two-col td {
+  width: 40%;
+}
+
+/* Kopjes Tarieven (onder h3) aansluiten op jouw stijl */
+#tarieven h4 {
+  text-align: left;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Voetnoten */
+.tarieven-footnotes {
+  margin-top: 0.5rem;
+  color: #444;
+}
+.tarieven-footnotes small { line-height: 1.4; }
+
+/* Mobiel iets compacter */
+@media (max-width: 600px) {
+  .rate-table th, .rate-table td {
+    padding: 0.55rem 0.55rem;
+  }
+  .rate-two-col th { width: 58%; }
+  .rate-two-col td { width: 42%; }
+}
+
+#letop {
+  font-style:italic;
+  margin-block: 1em;
+}
+
+button[type="submit"] {
+  background-color: #ff6600; /* Oranje achtergrond */
+  color: white; /* Witte tekst */
+  padding: 10px 20px; /* Ruimte rondom de tekst */
+  border: none; /* Geen standaardrand */
+  border-radius: 5px; /* Afgeronde hoeken */
+  font-size: 1.3rem; /* Iets grotere tekst */
+  font-weight: bold;
+  cursor: pointer; /* Handje bij hover */
+  transition: background-color 0.3s ease; /* Zachte overgang bij hover */
+}
+
+button[type="submit"]:hover {
+  background-color: #e65c00; /* Donkerder oranje bij hover */
+}
+
+button[type="submit"]:active {
+  background-color: #cc5200; /* Nog donkerder oranje bij klikken */
+}

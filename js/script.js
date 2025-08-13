@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let arrivalYear  = 2025;
   let arrivalMonth = 7;  // Aug 2025
   let departureYear  = 2025;
-  let departureMonth = 8; // Sep 2025
+  let departureMonth = 7; // Aug 2025
 
   const weekdays = ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za'];
 

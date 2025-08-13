@@ -19,6 +19,40 @@ document.addEventListener('DOMContentLoaded', () => {
   const arrivalHidden       = document.getElementById('arrival-hidden');
   const departureHidden     = document.getElementById('departure-hidden');
 
+    const stayRadios   = document.querySelectorAll('input[name="stay"]');
+    const priceSummary = document.getElementById('price-summary');
+    const stayHidden   = document.getElementById('stay-hidden');
+
+// Verblijf configuratie: hoeveel nachten per type
+    const STAYS = {
+  weekend: { label: 'Weekend',  nights: 3, pattern: { arrival: [5], departure: [1] } }, // vr–ma
+  midweek: { label: 'Midweek',  nights: 4, pattern: { arrival: [1], departure: [5] } }, // ma–vr
+  week:    { label: 'Week',     nights: 7, pattern: { arrival: [1,5], departure: [1,5] } } // ma–ma / vr–vr
+};
+
+// Seizoenen + prijzen (pas aan)
+const PRICING = [
+  { name: 'Laagseizoen voorjaar 2026', start: '2026-04-03', end: '2026-04-24',
+    weekend: 195, midweek: 240, week: 295 },
+  { name: 'Meivakantie 2026', start: '2026-04-25', end: '2026-05-07',
+    weekend: null, midweek: null, week: null }, // geboekt/uitgesloten
+  { name: 'Middenseizoen 2026', start: '2026-05-08', end: '2026-07-02',
+    weekend: 215, midweek: 270, week: 320 },
+  { name: 'Zomervakantie (eerste week Noord)', start: '2026-07-03', end: '2026-07-09',
+    weekend: null, midweek: null, week: 420 },
+  { name: 'Zomervakantie midden/zuid', start: '2026-08-14', end: '2026-08-21',
+    weekend: null, midweek: null, week: 395 },
+  { name: 'Zomervakantie (laatste week Zuid)', start: '2026-08-21', end: '2026-08-27',
+    weekend: null, midweek: null, week: 395 },
+  // 2025 (voorbeeld, pas aan op jouw tabel)
+  { name: 'Zomervakantie (laatste week Midden) 2025', start: '2025-08-22', end: '2025-08-28',
+    weekend: 265, midweek: null, week: 395 },
+  { name: 'Laagseizoen najaar 2025', start: '2025-08-29', end: '2025-10-10',
+    weekend: 195, midweek: 240, week: 295 },
+  { name: 'Herfstvakantie 2025', start: '2025-10-10', end: '2025-10-24',
+    weekend: 195, midweek: null, week: 320 }
+];
+
   // --- Startmaanden (0-based maanden)
   let arrivalYear  = 2025;
   let arrivalMonth = 7;  // Aug 2025
@@ -92,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const formatted = formatDate(dateKey);
     if (type === 'arrival') {
       selectedArrival.textContent = formatted;
+      applyStayTypeFromArrival();
     } else if (type === 'departure') {
       selectedDeparture.textContent = formatted;
     }
@@ -227,3 +262,75 @@ document.addEventListener('DOMContentLoaded', () => {
   // Init
   renderFromArrival();
 });
+
+function ymd(d) { // Date -> 'YYYY-MM-DD'
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function parseYMD(s) { // 'YYYY-MM-DD' -> Date
+  const [y,m,d] = s.split('-').map(Number);
+  return new Date(y, m-1, d);
+}
+function addDays(d, n) {
+  const copy = new Date(d);
+  copy.setDate(copy.getDate() + n);
+  return copy;
+}
+function between(dateStr, startStr, endStr) {
+  const d = parseYMD(dateStr), s = parseYMD(startStr), e = parseYMD(endStr);
+  return d >= s && d <= e;
+}
+function getSeasonFor(dateStr) {
+  return PRICING.find(s => between(dateStr, s.start, s.end)) || null;
+}
+function getPrice(arrivalStr, stayType) {
+  const season = getSeasonFor(arrivalStr);
+  if (!season) return { price: null, season: null };
+  const value = season[stayType]; // weekend/midweek/week
+  return { price: value, season: season.name };
+}
+
+function applyStayTypeFromArrival() {
+  // huidige type
+  const checked = document.querySelector('input[name="stay"]:checked')?.value || 'weekend';
+  const cfg = STAYS[checked];
+
+  // we hebben een gekozen aankomst?
+  const a = selectedArrival.textContent.trim();
+  if (!a) return;
+
+  // aankomst dd-mm-jjjj -> Date
+  const [dd,mm,yy] = a.split('-').map(Number);
+  const arr = new Date(yy, mm-1, dd);
+
+  // vertrek = aankomst + nights
+  const dep = addDays(arr, cfg.nights);
+
+  // check patroon (optioneel, alleen ma/vr)
+  const arrWD = arr.getDay(); // 1=Ma,5=Vr
+  const depWD = dep.getDay();
+  if (!cfg.pattern.arrival.includes(arrWD) || !cfg.pattern.departure.includes(depWD)) {
+    // Als patroon niet klopt, toon hint (of corrigeer). Voor nu alleen hint:
+    // Je kunt hier ook automatisch “naar eerstvolgende maandag/vrijdag” schuiven.
+    console.warn('Aankomst/vertrek past niet in patroon voor', checked);
+  }
+
+  // schrijf vertrek in UI
+  const depStr = `${String(dep.getDate()).padStart(2,'0')}-${String(dep.getMonth()+1).padStart(2,'0')}-${dep.getFullYear()}`;
+  selectedDeparture.textContent = depStr;
+
+  // prijs bepalen
+  const arrivalStrYMD = ymd(arr);
+  const { price, season } = getPrice(arrivalStrYMD, checked);
+
+  stayHidden.value = STAYS[checked].label;
+
+  if (price) {
+    priceSummary.textContent = `Indicatie: ${STAYS[checked].label} – € ${price.toFixed(0)},- (${season})`;
+    document.getElementById('price-hidden').value = `${STAYS[checked].label} – € ${price.toFixed(0)},- (${season})`;
+  } else {
+    priceSummary.textContent = `Indicatie: ${STAYS[checked].label} – niet beschikbaar in deze periode`;
+    document.getElementById('price-hidden').value = `${STAYS[checked].label} – niet beschikbaar`;
+  }
+
+  updateSelectedPeriodText();
+}

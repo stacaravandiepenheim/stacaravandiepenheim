@@ -209,7 +209,19 @@
 							<p>Geselecteerde vertrekdatum: <span id="selected-departure"></span></p>
 					</div>
 				</div>
-    		
+
+
+    		<h3>Verblijf</h3>
+        <div class="stay-type" role="group" aria-label="Kies verblijf">
+          <label><input type="radio" name="stay" value="weekend" checked> Weekend (vr–ma)</label>
+          <label><input type="radio" name="stay" value="midweek"> Midweek (ma–vr)</label>
+          <label><input type="radio" name="stay" value="week"> Week (ma–ma of vr–vr)</label>
+        </div>
+
+        <p id="price-summary" style="font-weight:600;margin:.5rem 0;"></p>
+        <input type="hidden" name="Verblijfstype" id="stay-hidden" form="boeken">
+        <input type="hidden" name="PrijsIndicatie" id="price-hidden" form="boeken">
+
   
         
         <h3>Reservering</h3>
@@ -329,7 +341,7 @@
             <img src="../afbeeldingen/wifi.jpg" alt="Foto van wifikosten">
         
         <h3>Gegevens</h3>
-        <form action="https://jkorpela.fi/cgi-bin/echo.cgi" method="post" autocomplete="on" name="boeken" id="boeken">
+        <form action="https://formspree.io/f/manbvgbe" method="post" autocomplete="on" name="boeken" id="boeken">
           <p><label>Naam:<input type="text" name="Naam" size="40" required autofocus autocomplete="name"></label></p>
           <p><label>Adres:<input type="text" name="Adres" size="40" required></label></p>
           <p><label>Postcode:<input type="text" size="7" name="Postcode" pattern="^[0-9]{4}\s?[A-Z]{2}$" placeholder="1111AE" required></label></p>
@@ -339,6 +351,8 @@
           <p><label>E-mailadres:<input type="email" name="Mailadres" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}\,?\s?)+$" size="40" required autocomplete="email"></label></p>
           <input type="hidden" name="Aankomst" id="arrival-hidden">
           <input type="hidden" name="Vertrek"   id="departure-hidden">
+          <input type="hidden" name="_next" value="https://stacaravandiepenheim.nl/bedankt.html">
+          <input type="text" name="_gotcha" style="display:none">
         </form>  
               
 				
@@ -348,7 +362,7 @@
           </label>
         </p>
         <p>Let op: Na invullen en verzenden van dit formulier sturen we u een mail terug of de reservering kan doorgaan en de kosten. U heeft pas definitief geboekt als u deze mail beantwoord. Wij houden de reservering 48 uur voor u vast vanaf het moment dat wij u een mail terug hebben gestuurd met een bevestiging en de kosten.</p>
-        <button type="submit" value="Reserveer" form="boeken" formaction="https://jkorpela.fi/cgi-bin/echo.cgi">Verzenden</button>
+        <button type="submit" value="Reserveer" form="boeken">Verzenden</button>
       
 	
       </div>

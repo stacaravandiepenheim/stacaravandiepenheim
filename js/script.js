@@ -283,23 +283,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================
-  // Synchronisatie helpers (± 1 maand)
+  // Synchronisatie helpers 
   // =========================
-  function setDepartureOneMonthAfterArrival() {
-    departureYear  = arrivalYear;
-    departureMonth = arrivalMonth + 1;
-    if (departureMonth > 11) { departureMonth = 0; departureYear++; }
-    generateCalendar(departureYear, departureMonth, departureCalendar, departureMonthYear, 'departure');
+  function setDepartureSameAsArrival() {
+  departureYear  = arrivalYear;
+  departureMonth = arrivalMonth;
+  generateCalendar(departureYear, departureMonth, departureCalendar, departureMonthYear, 'departure');
   }
-  function setArrivalOneMonthBeforeDeparture() {
+
+  function setArrivalSameAsDeparture() {
     arrivalYear  = departureYear;
-    arrivalMonth = departureMonth - 1;
-    if (arrivalMonth < 0) { arrivalMonth = 11; arrivalYear--; }
+    arrivalMonth = departureMonth;
     generateCalendar(arrivalYear, arrivalMonth, arrivalCalendar, arrivalMonthYear, 'arrival');
   }
   function renderFromArrival() {
     generateCalendar(arrivalYear, arrivalMonth, arrivalCalendar, arrivalMonthYear, 'arrival');
-    setDepartureOneMonthAfterArrival();
+    setDepartureSameAsArrival();
   }
 
   // =========================
@@ -319,13 +318,13 @@ document.addEventListener('DOMContentLoaded', () => {
     departureMonth--;
     if (departureMonth < 0) { departureMonth = 11; departureYear--; }
     generateCalendar(departureYear, departureMonth, departureCalendar, departureMonthYear, 'departure');
-    setArrivalOneMonthBeforeDeparture();
+    setArrivalSameAsDeparture();
   });
   nextDepartureButton.addEventListener('click', () => {
     departureMonth++;
     if (departureMonth > 11) { departureMonth = 0; departureYear++; }
     generateCalendar(departureYear, departureMonth, departureCalendar, departureMonthYear, 'departure');
-    setArrivalOneMonthBeforeDeparture();
+    setArrivalSameAsDeparture();
   });
 
   // Verblijfstype wijzigen → vertrek + prijs herberekenen

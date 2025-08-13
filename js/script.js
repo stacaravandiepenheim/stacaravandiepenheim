@@ -74,27 +74,32 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================
   // Prijs-config (pas bedragen/ranges aan jouw tabel aan)
   // =========================
-  const PRICING = [
-    { name: 'Laagseizoen voorjaar 2026', start: '2026-04-03', end: '2026-04-24',
-      weekend: 195, midweek: 240, week: 295 },
-    { name: 'Meivakantie 2026', start: '2026-04-25', end: '2026-05-07',
-      weekend: null, midweek: null, week: null }, // uitgesloten/geboekt
-    { name: 'Middenseizoen 2026', start: '2026-05-08', end: '2026-07-02',
-      weekend: 215, midweek: 270, week: 320 },
-    { name: 'Zomervakantie (eerste week Noord)', start: '2026-07-03', end: '2026-07-09',
-      weekend: null, midweek: null, week: 420 },
-    { name: 'Zomervakantie midden/zuid', start: '2026-08-14', end: '2026-08-21',
-      weekend: null, midweek: null, week: 395 },
-    { name: 'Zomervakantie (laatste week Zuid)', start: '2026-08-21', end: '2026-08-27',
-      weekend: null, midweek: null, week: 395 },
-    // 2025 (voorbeeld)
-    { name: 'Zomervakantie (laatste week Midden) 2025', start: '2025-08-22', end: '2025-08-28',
-      weekend: 265, midweek: null, week: 395 },
-    { name: 'Laagseizoen najaar 2025', start: '2025-08-29', end: '2025-10-10',
-      weekend: 195, midweek: 240, week: 295 },
-    { name: 'Herfstvakantie 2025', start: '2025-10-10', end: '2025-10-24',
-      weekend: 195, midweek: null, week: 320 }
-  ];
+  // Seizoenen + basisprijzen (compact)
+const PRICING = [
+  // 2025
+  { name: 'Laagseizoen najaar 2025', start: '2025-08-29', end: '2025-10-10',
+    weekend: 195, midweek: 240, week: 295 },
+  { name: 'Herfstvakantie 2025',     start: '2025-10-10', end: '2025-10-24',
+    weekend: 195, midweek: null, week: 320 }, // midweek niet beschikbaar
+
+  // 2026
+  { name: 'Laagseizoen voorjaar 2026', start: '2026-04-03', end: '2026-04-24',
+    weekend: 195, midweek: 240, week: 295 },
+
+  // Meivakantie = geboekt/uitgesloten (je blokkeert ‘m óók al via addDateRange)
+  { name: 'Meivakantie 2026',          start: '2026-04-25', end: '2026-05-07',
+    weekend: null, midweek: null, week: null },
+
+  { name: 'Middenseizoen 2026',        start: '2026-05-08', end: '2026-07-02',
+    weekend: 215, midweek: 270, week: 320 },
+
+  // Zomer 2026 in 2 simpele delen:
+  { name: 'Zomervakantie (vroege week) 2026', start: '2026-07-03', end: '2026-07-09',
+    weekend: null, midweek: null, week: 420 }, // alleen week
+  { name: 'Zomervakantie 2026',               start: '2026-07-10', end: '2026-08-27',
+    weekend: null, midweek: null, week: 395 }  // alleen week
+];
+
 
   // =========================
   // Helpers

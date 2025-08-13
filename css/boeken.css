@@ -242,3 +242,15 @@ button[type="submit"]:active {
 .day .wk-badge + * {
   margin-top: 2px;
 }
+
+.tarieven-kort {
+  background: #fff7ef;
+  border: 1px solid #ffe2cc;
+  border-left: 4px solid #ff6600;
+  border-radius: .6rem;
+  padding: .75rem .9rem;
+  margin: .5rem 0 1rem;
+}
+.tarieven-kort ul { margin: 0 0 .5rem 1.1rem; }
+.tarieven-kort li { margin: 0.15rem 0; }
+.tarieven-footnotes { margin: .25rem 0 0; }

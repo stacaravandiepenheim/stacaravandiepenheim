@@ -184,3 +184,61 @@ button[type="submit"]:hover {
 button[type="submit"]:active {
   background-color: #cc5200; /* Nog donkerder oranje bij klikken */
 }
+
+/* ===== Prijsindicatie onder de kalender ===== */
+#price-summary {
+  font-weight: 600;
+  background: #fff7ef;            /* zachte tint bij jouw oranje */
+  border: 1px solid #ffe2cc;
+  border-left: 4px solid #ff6600;  /* jouw accent */
+  padding: .65rem .8rem;
+  border-radius: .6rem;
+  margin: .75rem 0 .5rem;
+  line-height: 1.35;
+  color: #2b2b2b;
+}
+
+#price-spec {
+  display: grid;
+  gap: .35rem;
+  margin-bottom: .75rem;
+}
+
+#price-spec > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: .45rem .6rem;
+  background: #fafbfc;
+  border: 1px solid #e9eef3;
+  border-radius: .55rem;
+  font-size: .95rem;
+  color: #31353b;
+}
+
+#price-spec > div strong {
+  font-weight: 700;
+}
+
+/* optionele “totaal”-regel (gebruik class in JS als je wilt) */
+#price-spec .price-total {
+  margin-top: .25rem;
+  border-top: 1px solid #eceff3;
+  padding-top: .45rem;
+  background: #fff;
+}
+
+/* ===== Weeknummer-badge in kalender ===== */
+.wk-badge {
+  font-size: .7rem;
+  line-height: 1;
+  opacity: .75;
+  margin-bottom: 2px;
+  display: inline-block;
+  color: #5a6270;
+}
+
+/* kleine verfijning: daghokjes krijgen wat extra lucht als er een badge boven zit */
+.day .wk-badge + * {
+  margin-top: 2px;
+}

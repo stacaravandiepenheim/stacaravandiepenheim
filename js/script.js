@@ -1,5 +1,5 @@
 // ============================
-// Reserveringskalender (2 kalenders) met weeknummers + verblijfstype
+// Reserveringskalender (2 kalenders) - auto type + prijs + extras
 // ============================
 document.addEventListener('DOMContentLoaded', () => {
   // --- DOM refs
@@ -19,17 +19,32 @@ document.addEventListener('DOMContentLoaded', () => {
   const arrivalHidden       = document.getElementById('arrival-hidden');
   const departureHidden     = document.getElementById('departure-hidden');
 
-  // Verblijfstype + prijs
-  const stayRadios   = document.querySelectorAll('input[name="stay"]');
-  const priceSummary = document.getElementById('price-summary');
-  const stayHidden   = document.getElementById('stay-hidden');
-  const priceHidden  = document.getElementById('price-hidden');
+  // Prijs/indicatie + extra’s
+  const priceSummary = document.getElementById('price-summary');   // tekstregel
+  const priceSpecEl  = document.getElementById('price-spec');      // breakdown (optioneel)
+  const priceHidden  = document.getElementById('price-hidden');    // verborgen veld met indicatie
+  const stayHidden   = document.getElementById('stay-hidden');     // verborgen veld met "Week/Midweek/Weekend"
+
+  // Form inputs voor extra’s (IDs uit jouw HTML)
+  const adultsInput       = document.getElementById('volwassenen');       // 1..4
+  const childrenInput     = document.getElementById('kinderen');          // 0..3 (nu niet gebruikt in berekening)
+  const kind1Sel          = document.getElementById('kind1');             // 'baby' → 4/nacht eraf
+  const kind2Sel          = document.getElementById('kind2');
+  const kind3Sel          = document.getElementById('kind3');
+  const cleanSel          = document.getElementById('schoonmaak');        // 'ja' → +50
+  const beddengoedSel     = document.getElementById('beddengoed');        // (bewust geen effect)
+  const aantalBeddengoed  = document.getElementById('aantalbeddengoed');  // n.v.t.|1..4 → +4×n
+  const handdoekenSel     = document.getElementById('handdoeken');        // (bewust geen effect)
+  const aantalHanddoeken  = document.getElementById('aantalhanddoeken');  // n.v.t.|1..4 → +4×n (week/midweek) of +2×n (weekend)
+  const campingbedjeSel   = document.getElementById('campingbedje');      // 'ja' → gratis, wel tonen
+  const kinderstoelSel    = document.getElementById('kinderstoel');       // 'ja' → gratis, wel tonen
+  const hotspotSel        = document.getElementById('hotspot');           // 'ja' → +25
 
   // --- Startmaanden (0-based maanden)
   let arrivalYear  = 2025;
   let arrivalMonth = 7;  // Aug 2025
   let departureYear  = 2025;
-  let departureMonth = 7; // Aug 2025
+  let departureMonth = 7; // Zelfde maand als aankomst
 
   const weekdays = ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za'];
 
@@ -57,20 +72,13 @@ document.addEventListener('DOMContentLoaded', () => {
   addDateRange('2026-05-22', '2026-05-25', 1); // Pinksteren geboekt
 
   // =========================
-  // Verblijven + Prijzen
+  // Prijs-config (pas bedragen/ranges aan jouw tabel aan)
   // =========================
-  const STAYS = {
-    weekend: { label: 'Weekend', nights: 3, pattern: { arrival: [5],   departure: [1] } }, // vr–ma
-    midweek: { label: 'Midweek', nights: 4, pattern: { arrival: [1],   departure: [5] } }, // ma–vr
-    week:    { label: 'Week',    nights: 7, pattern: { arrival: [1,5], departure: [1,5] } } // ma–ma / vr–vr
-  };
-
-  // Seizoenen + prijzen (pas bedragen en ranges aan jouw tabel aan)
   const PRICING = [
     { name: 'Laagseizoen voorjaar 2026', start: '2026-04-03', end: '2026-04-24',
       weekend: 195, midweek: 240, week: 295 },
     { name: 'Meivakantie 2026', start: '2026-04-25', end: '2026-05-07',
-      weekend: null, midweek: null, week: null }, // geboekt/uitgesloten
+      weekend: null, midweek: null, week: null }, // uitgesloten/geboekt
     { name: 'Middenseizoen 2026', start: '2026-05-08', end: '2026-07-02',
       weekend: 215, midweek: 270, week: 320 },
     { name: 'Zomervakantie (eerste week Noord)', start: '2026-07-03', end: '2026-07-09',
@@ -79,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
       weekend: null, midweek: null, week: 395 },
     { name: 'Zomervakantie (laatste week Zuid)', start: '2026-08-21', end: '2026-08-27',
       weekend: null, midweek: null, week: 395 },
-    // 2025 (voorbeeld, pas aan)
+    // 2025 (voorbeeld)
     { name: 'Zomervakantie (laatste week Midden) 2025', start: '2025-08-22', end: '2025-08-28',
       weekend: 265, midweek: null, week: 395 },
     { name: 'Laagseizoen najaar 2025', start: '2025-08-29', end: '2025-10-10',
@@ -98,6 +106,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function ymd(d) { // Date -> 'YYYY-MM-DD'
     return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   }
+  function parseDMY(str) { // 'dd-mm-jjjj' -> Date
+    const [dd, mm, yy] = str.split('-').map(Number);
+    return new Date(yy, mm - 1, dd);
+  }
   function parseYMD(s) { // 'YYYY-MM-DD' -> Date
     const [y,m,d] = s.split('-').map(Number);
     return new Date(y, m-1, d);
@@ -107,18 +119,16 @@ document.addEventListener('DOMContentLoaded', () => {
     copy.setDate(copy.getDate() + n);
     return copy;
   }
+  function diffNights(startDMY, endDMY) {
+    const ms = parseDMY(endDMY) - parseDMY(startDMY);
+    return Math.round(ms / 86400000); // 1000*60*60*24
+  }
   function between(dateStr, startStr, endStr) {
     const d = parseYMD(dateStr), s = parseYMD(startStr), e = parseYMD(endStr);
     return d >= s && d <= e;
   }
-  function getSeasonFor(dateStr) {
-    return PRICING.find(s => between(dateStr, s.start, s.end)) || null;
-  }
-  function getPrice(arrivalStr, stayType) {
-    const season = getSeasonFor(arrivalStr);
-    if (!season) return { price: null, season: null };
-    const value = season[stayType]; // weekend/midweek/week
-    return { price: value, season: season.name };
+  function getSeasonFor(dateStrYMD) {
+    return PRICING.find(s => between(dateStrYMD, s.start, s.end)) || null;
   }
   function getWeekNumber(d) {
     // ISO weeknummer
@@ -129,6 +139,78 @@ document.addEventListener('DOMContentLoaded', () => {
     return Math.ceil((((tmp - yearStart) / 86400000) + 1) / 7);
   }
 
+  // Type bepalen op basis van gekozen aankomst/vertrek
+  function classifyStay(aDMY, dDMY) {
+    const a = parseDMY(aDMY);
+    const d = parseDMY(dDMY);
+    const nights = diffNights(aDMY, dDMY);
+    const aWD = a.getDay(); // 1=Ma,5=Vr
+    const dWD = d.getDay();
+    if (nights === 4 && aWD === 1 && dWD === 5) return { type: 'midweek', label: 'Midweek', nights };
+    if (nights === 3 && aWD === 5 && dWD === 1) return { type: 'weekend', label: 'Weekend', nights };
+    if (nights === 7 && ((aWD === 1 && dWD === 1) || (aWD === 5 && dWD === 5))) return { type: 'week', label: 'Week', nights };
+    return { type: 'other', label: 'Onbekende periode', nights };
+  }
+
+  function getPriceFor(arrivalDMY, stayType) {
+    const arrival = parseDMY(arrivalDMY);
+    const season  = getSeasonFor(ymd(arrival));
+    if (!season) return { price: null, seasonName: null };
+    const val = season[stayType]; // weekend/midweek/week
+    return { price: (typeof val === 'number' ? val : null), seasonName: season.name };
+  }
+
+  // Extra’s-berekening volgens jouw regels
+  function computeExtras(aDMY, dDMY, stayType) {
+    const nights = diffNights(aDMY, dDMY);
+
+    // Toeristenbelasting: 4 € p.p.p.n., start met volwassenen
+    const adults = parseInt(adultsInput?.value || '0', 10) || 0;
+    let toerBel = 4 * adults * nights;
+
+    // Baby’s (kind1/2/3 == 'baby') → 4/nacht eraf per baby
+    const babies =
+      (kind1Sel?.value === 'baby') +
+      (kind2Sel?.value === 'baby') +
+      (kind3Sel?.value === 'baby');
+    toerBel = Math.max(0, toerBel - 4 * babies * nights);
+
+    // Schoonmaak
+    const schoon = (cleanSel && cleanSel.value === 'ja') ? 50 : 0;
+
+    // Beddengoed: €4 * aantal
+    let linenCount = parseInt(aantalBeddengoed?.value || '0', 10);
+    if (isNaN(linenCount)) linenCount = 0;
+    const linenCost = 4 * linenCount;
+
+    // Handdoeken: week/midweek = €4 p.p. ; weekend = €2 p.p.
+    // (Midweek niet gespecificeerd door jou; we nemen hier 4 zoals week. Pas aan als je anders wilt.)
+    let towelsCount = parseInt(aantalHanddoeken?.value || '0', 10);
+    if (isNaN(towelsCount)) towelsCount = 0;
+    const towelRate = (stayType === 'weekend') ? 2 : 4;
+    const towelCost = towelRate * towelsCount;
+
+    // Campingbedje/kinderstoel: gratis, wel tonen
+    const campingbedje = (campingbedjeSel && campingbedjeSel.value === 'ja') ? 0 : 0;
+    const kinderstoel  = (kinderstoelSel  && kinderstoelSel.value  === 'ja') ? 0 : 0;
+
+    // Hotspot: €25 totaal
+    const hotspot = (hotspotSel && hotspotSel.value === 'ja') ? 25 : 0;
+
+    return {
+      nights, adults, babies,
+      toerBel, schoon, linenCost, towelCost,
+      campingbedje, kinderstoel, hotspot,
+      linenCount, towelsCount, towelRate
+    };
+  }
+
+  function euro(n) {
+    if (n == null) return 'n.v.t.';
+    return `€ ${Number(n).toFixed(0)},-`;
+  }
+
+  // UI updates
   function updateSelectedPeriodText() {
     const a = (selectedArrival?.textContent || '').trim();
     const d = (selectedDeparture?.textContent || '').trim();
@@ -144,6 +226,55 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (arrivalHidden)   arrivalHidden.value   = a || '';
     if (departureHidden) departureHidden.value = d || '';
+  }
+
+  function updatePriceAndExtras() {
+    const a = (selectedArrival?.textContent || '').trim();
+    const d = (selectedDeparture?.textContent || '').trim();
+    if (!a || !d) {
+      if (priceSummary) priceSummary.textContent = '';
+      if (priceSpecEl)  priceSpecEl.innerHTML = '';
+      if (priceHidden)  priceHidden.value = '';
+      if (stayHidden)   stayHidden.value = '';
+      return;
+    }
+
+    const cls = classifyStay(a, d); // {type,label,nights}
+    if (stayHidden) stayHidden.value = (cls.label || '');
+
+    const { price, seasonName } = getPriceFor(a, cls.type);
+
+    // Hoofdregel (indicatie)
+    if (price) {
+      const baseText = `${cls.label} · ${euro(price)} (${seasonName})`;
+      if (priceSummary) priceSummary.textContent =
+        `Je wilt boeken van ${a} t/m ${d}. Dat is een ${cls.label.toLowerCase()}. Indicatie: ${baseText} — exclusief toeristenbelasting, borg en extra’s. Vul het formulier in voor een preciezere prijs.`;
+      if (priceHidden) priceHidden.value = `${cls.label} – ${euro(price)} (${seasonName})`;
+    } else {
+      const baseText = (cls.type === 'other')
+        ? 'Deze periode valt buiten onze standaard week/weekend/midweek.'
+        : 'Niet beschikbaar in deze periode.';
+      if (priceSummary) priceSummary.textContent = `Je wilt boeken van ${a} t/m ${d}. ${baseText}`;
+      if (priceHidden) priceHidden.value = baseText;
+    }
+
+    // Extra's berekenen en specificatie tonen
+    const X = computeExtras(a, d, cls.type);
+    if (priceSpecEl) {
+      const rows = [];
+      rows.push(`<div>Basis (${cls.label}): <strong>${price ? euro(price) : 'n.v.t.'}</strong></div>`);
+      rows.push(`<div>Toeristenbelasting (4 p.p.p.n. × ${X.adults} volw${X.babies ? ` – ${X.babies} baby gratis` : ''} × ${X.nights} nachten): <strong>${euro(X.toerBel)}</strong></div>`);
+      if (cleanSel && cleanSel.value === 'ja') rows.push(`<div>Schoonmaak: <strong>${euro(X.schoon)}</strong></div>`);
+      if (aantalBeddengoed && aantalBeddengoed.value !== 'nvt' && X.linenCount > 0) rows.push(`<div>Linnengoed (${X.linenCount}×): <strong>${euro(X.linenCost)}</strong></div>`);
+      if (aantalHanddoeken && aantalHanddoeken.value !== 'nvt' && X.towelsCount > 0) rows.push(`<div>Handdoeken (${X.towelsCount}× à €${X.towelRate}): <strong>${euro(X.towelCost)}</strong></div>`);
+      if (campingbedjeSel && campingbedjeSel.value === 'ja') rows.push(`<div>Campingbedje: <strong>gratis</strong></div>`);
+      if (kinderstoelSel && kinderstoelSel.value === 'ja') rows.push(`<div>Kinderstoel: <strong>gratis</strong></div>`);
+      if (hotspotSel && hotspotSel.value === 'ja') rows.push(`<div>Hotspot: <strong>${euro(X.hotspot)}</strong></div>`);
+
+      const subtotal = (price || 0) + X.toerBel + X.schoon + X.linenCost + X.towelCost + X.hotspot;
+      rows.push(`<div style="margin-top:.25rem;border-top:1px solid #eee;padding-top:.25rem">Indicatief totaal (excl. borg & overige extra’s): <strong>${euro(subtotal)}</strong></div>`);
+      priceSpecEl.innerHTML = rows.join('');
+    }
   }
 
   // =========================
@@ -167,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const startWeekday = new Date(year, month, 1).getDay(); // 0=Zo..6=Za
     const daysInMonth  = new Date(year, month + 1, 0).getDate();
 
-    // Leading blanks (voor de 1e dag van de maand)
+    // Leading blanks
     for (let i = 0; i < startWeekday; i++) {
       const empty = document.createElement('div');
       empty.className = 'day';
@@ -183,18 +314,17 @@ document.addEventListener('DOMContentLoaded', () => {
       dayDiv.className = 'day';
       dayDiv.textContent = day;
 
-      // Weeknummer tonen op elke MAANDAG (weekday==1)
+   // NIEUW
       if (weekday === 1) {
         const wk = getWeekNumber(jsDate);
         const wkBadge = document.createElement('div');
+        wkBadge.className = 'wk-badge';
         wkBadge.textContent = `wk ${wk}`;
-        wkBadge.style.fontSize = '0.7rem';
-        wkBadge.style.opacity  = '0.8';
-        wkBadge.style.marginBottom = '2px';
         dayDiv.prepend(wkBadge);
-      }
+}
 
-      // Seizoensgrenzen toepassen
+
+      // Seizoensgrenzen
       if (jsDate < SEASON_START || jsDate > SEASON_END) {
         dayDiv.className = 'day unavailable';
         calendarEl.appendChild(dayDiv);
@@ -208,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
         continue;
       }
 
-      // Aankomst-/Vertrekdag (alleen ma of vr)
+      // Aankomst/Vertrek: ma of vr selecteerbaar
       const isAllowedWeekday = (weekday === 1 || weekday === 5); // ma/vr
       if ((type === 'arrival' || type === 'departure') && isAllowedWeekday) {
         dayDiv.className = 'day available';
@@ -222,75 +352,32 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // =========================
-  // Verblijfstype → vertrek + prijs
+  // Selectie handlers
   // =========================
-  function applyStayTypeFromArrival() {
-    const checked = document.querySelector('input[name="stay"]:checked')?.value || 'weekend';
-    const cfg = STAYS[checked];
-
-    // we hebben een gekozen aankomst?
-    const a = (selectedArrival.textContent || '').trim();
-    if (!a) return;
-
-    // aankomst dd-mm-jjjj -> Date
-    const [dd,mm,yy] = a.split('-').map(Number);
-    const arr = new Date(yy, mm-1, dd);
-
-    // vertrek = aankomst + nights
-    const dep = addDays(arr, cfg.nights);
-
-    // optioneel patrooncheck (ma/vr)
-    const arrWD = arr.getDay(); // 1=Ma,5=Vr
-    const depWD = dep.getDay();
-    if (!cfg.pattern.arrival.includes(arrWD) || !cfg.pattern.departure.includes(depWD)) {
-      console.warn('Aankomst/vertrek past niet in patroon voor', checked);
-    }
-
-    // schrijf vertrek in UI
-    const depStr = `${String(dep.getDate()).padStart(2,'0')}-${String(dep.getMonth()+1).padStart(2,'0')}-${dep.getFullYear()}`;
-    selectedDeparture.textContent = depStr;
-
-    // prijs bepalen
-    const arrivalStrYMD = ymd(arr);
-    const { price, season } = getPrice(arrivalStrYMD, checked);
-
-    if (stayHidden)  stayHidden.value  = STAYS[checked].label;
-    if (priceHidden) priceHidden.value = price ? `${STAYS[checked].label} – € ${price.toFixed(0)},- (${season})`
-                                              : `${STAYS[checked].label} – niet beschikbaar`;
-
-    if (priceSummary) {
-      priceSummary.textContent = price
-        ? `Indicatie: ${STAYS[checked].label} – € ${price.toFixed(0)},- (${season})`
-        : `Indicatie: ${STAYS[checked].label} – niet beschikbaar in deze periode`;
-    }
-
-    updateSelectedPeriodText();
-  }
-
   function selectDate(type, dateKey, dayDiv, calendarEl) {
     const previouslySelected = calendarEl.querySelector('.selected');
     if (previouslySelected) previouslySelected.classList.remove('selected');
     dayDiv.classList.add('selected');
 
-    const formatted = formatDate(dateKey);
+    const formatted = formatDate(dateKey); // dd-mm-jjjj
     if (type === 'arrival') {
       selectedArrival.textContent = formatted;
-      applyStayTypeFromArrival(); // vertrek + prijs updaten o.b.v. staytype
     } else if (type === 'departure') {
       selectedDeparture.textContent = formatted;
     }
+
     updateSelectedPeriodText();
+    updatePriceAndExtras(); // zodra beide datums er zijn → type/prijs/extras tonen
   }
 
   // =========================
-  // Synchronisatie helpers 
+  // Synchronisatie helpers (zelfde maand)
   // =========================
   function setDepartureSameAsArrival() {
-  departureYear  = arrivalYear;
-  departureMonth = arrivalMonth;
-  generateCalendar(departureYear, departureMonth, departureCalendar, departureMonthYear, 'departure');
+    departureYear  = arrivalYear;
+    departureMonth = arrivalMonth;
+    generateCalendar(departureYear, departureMonth, departureCalendar, departureMonthYear, 'departure');
   }
-
   function setArrivalSameAsDeparture() {
     arrivalYear  = departureYear;
     arrivalMonth = departureMonth;
@@ -327,10 +414,16 @@ document.addEventListener('DOMContentLoaded', () => {
     setArrivalSameAsDeparture();
   });
 
-  // Verblijfstype wijzigen → vertrek + prijs herberekenen
-  stayRadios.forEach(radio => {
-    radio.addEventListener('change', applyStayTypeFromArrival);
-  });
+  // Inputs voor extra’s → live herberekenen
+  [adultsInput, childrenInput, kind1Sel, kind2Sel, kind3Sel,
+   cleanSel, beddengoedSel, aantalBeddengoed, handdoekenSel,
+   aantalHanddoeken, campingbedjeSel, kinderstoelSel, hotspotSel]
+    .forEach(el => {
+      if (el) {
+        el.addEventListener('change', updatePriceAndExtras);
+        el.addEventListener('input',  updatePriceAndExtras);
+      }
+    });
 
   // Init
   renderFromArrival();

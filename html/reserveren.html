@@ -210,19 +210,12 @@
 					</div>
 				</div>
 
-
-    		<h3>Verblijf</h3>
-        <div class="stay-type" role="group" aria-label="Kies verblijf">
-          <label><input type="radio" name="stay" value="weekend" checked> Weekend (vr–ma)</label>
-          <label><input type="radio" name="stay" value="midweek"> Midweek (ma–vr)</label>
-          <label><input type="radio" name="stay" value="week"> Week (ma–ma of vr–vr)</label>
-        </div>
-
+        <h3>Verblijf</h3>
         <p id="price-summary" style="font-weight:600;margin:.5rem 0;"></p>
-        <input type="hidden" name="Verblijfstype" id="stay-hidden" form="boeken">
-        <input type="hidden" name="PrijsIndicatie" id="price-hidden" form="boeken">
+        <div id="price-spec"></div> <!-- optioneel: breakdown -->
 
-  
+        <input type="hidden" id="stay-hidden" name="Verblijfstype" form="boeken">
+        <input type="hidden" id="price-hidden" name="PrijsIndicatie" form="boeken">
         
         <h3>Reservering</h3>
         <p id="selected-period" aria-live="polite" style="font-weight:600; margin: .5rem 0;">

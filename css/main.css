@@ -452,7 +452,7 @@ img[alt="Fietsenplekje"] {
   .carousel-wrapper.section-buiten-portrait a img {
     height: 260px;     /* iets hoger dan je generieke 240px */
     width: 100%;
-    object-fit: contain;  /* hele foto zichtbaar (geen afsnijden) */
+    object-fit: cover;  /* hele foto zichtbaar (geen afsnijden) */
     background: #fff;     /* nette achtergrond achter evt. randen */
   }
 }
@@ -466,7 +466,7 @@ img[alt="Fietsenplekje"] {
   .carousel-wrapper.section-buiten-portrait a img {
     height: 240px;     /* groter dan 180px generiek, oogt minder “afgeknipt” */
     width: 100%;
-    object-fit: contain;
+    object-fit: cover;
     background: #fff;
   }
 
@@ -478,6 +478,6 @@ img[alt="Fietsenplekje"] {
   .carousel-wrapper.section-slaapkamers-portrait a,
   .carousel-wrapper.section-badkamer-portrait a,
   .carousel-wrapper.section-buiten-portrait a {
-    flex: 0 0 78%; /* i.p.v. generieke 85% (staat in je CSS) */
+    flex: 0 0 48%; /* i.p.v. generieke 85% (staat in je CSS) */
   }
 }

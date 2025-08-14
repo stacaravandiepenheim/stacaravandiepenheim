@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Laagseizoen najaar 2025', start: '2025-08-29', end: '2025-10-10',
       weekend: 195, midweek: 240, week: 295 },
     { name: 'Herfstvakantie 2025',     start: '2025-10-10', end: '2025-10-24',
-      weekend: 195, midweek: null, week: 320 },
+      weekend: null, midweek: null, week: 320 },
 
     // 2026
     { name: 'Laagseizoen voorjaar 2026', start: '2026-04-03', end: '2026-04-24',
@@ -105,11 +105,13 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Meivakantie 2026',          start: '2026-04-25', end: '2026-05-07',
       weekend: null, midweek: null, week: null }, // geblokt (overlapt ook met availability)
     { name: 'Middenseizoen 2026',        start: '2026-05-08', end: '2026-07-02',
-      weekend: 215, midweek: 270, week: 320 },
-    { name: 'Zomervakantie (vroege week) 2026', start: '2026-07-03', end: '2026-07-09',
+      weekend: 195, midweek: 240, week: 295 },
+    { name: 'Zomervakantie 2026 (1e week Noord) ', start: '2026-07-03', end: '2026-07-09',
       weekend: null, midweek: null, week: 420 },  // alleen week
-    { name: 'Zomervakantie 2026',               start: '2026-07-10', end: '2026-08-27',
+    { name: 'Zomervakantie 2026 (Zuid, Midden)', start: '2026-08-30', end: '2026-08-27',
       weekend: null, midweek: null, week: 395 }   // alleen week
+    { name: 'Laagseizoen najaar 2026', start: '2026-08-30', end: '2026-10-10',
+      weekend: 195, midweek: 240, week: 295 },
   ];
 
   // ----------------------
@@ -279,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (price) {
       const baseText = `${cls.label} · ${euro(price)} (${seasonName})`;
       if (priceSummary) priceSummary.textContent =
-        `Je wilt boeken van ${a} t/m ${d}. Dat is een ${cls.label.toLowerCase()}. Indicatie: ${baseText} — exclusief toeristenbelasting, borg en extra’s. Vul het formulier in voor een preciezere prijs.`;
+        `Je wilt boeken van ${a} t/m ${d}. Dat is een ${cls.label.toLowerCase()}. Prijsindicatie: ${baseText} — exclusief toeristenbelasting, borg en extra’s. Vul het formulier in voor een preciezere prijs excl. borg en campingkosten.`;
       if (priceHidden) priceHidden.value = `${cls.label} – ${euro(price)} (${seasonName})`;
     } else {
       const baseText = (cls.type === 'other')

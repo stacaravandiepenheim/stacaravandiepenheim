@@ -254,3 +254,7 @@ button[type="submit"]:active {
 .tarieven-kort ul { margin: 0 0 .5rem 1.1rem; }
 .tarieven-kort li { margin: 0.15rem 0; }
 .tarieven-footnotes { margin: .25rem 0 0; }
+
+#submission-receipt h3 { margin-top: .25rem; }
+#receipt-print { margin-top: .75rem; padding: .5rem .9rem; border-radius: .5rem; border:1px solid #ddd; cursor:pointer; }
+#receipt-print:hover { filter:brightness(0.98); }

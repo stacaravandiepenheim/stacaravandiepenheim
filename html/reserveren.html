@@ -229,13 +229,32 @@
         </p>
         <p>Let op: Na invullen en verzenden van dit formulier sturen we u een mail terug of de reservering kan doorgaan en de kosten. U heeft pas definitief geboekt als u deze mail beantwoord. Wij houden de reservering 48 uur voor u vast vanaf het moment dat wij u een mail terug hebben gestuurd met een bevestiging en de kosten.</p>
         <button type="submit" form="boeken">Verzenden</button>
+        <!-- Bedankt / ontvangst-overzicht (verstopt tot na succes) -->
+        <section id="submission-receipt" style="display:none">
+          <h3>Bedankt! We hebben je aanvraag ontvangen.</h3>
+          <p>Hieronder zie je een overzicht van wat je hebt ingevuld. Je kunt deze pagina ook printen of opslaan als PDF.</p>
+
+          <!-- prijsindicatie van je bestaande blokken (we nemen ze over) -->
+          <div id="receipt-price-summary"></div>
+          <div id="receipt-price-spec"></div>
+
+          <!-- tabel met alle velden -->
+          <div class="table-wrap">
+            <table class="rate-table rate-two-col" id="receipt-table">
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <button type="button" id="receipt-print">Print / Bewaar als PDF</button>
+        </section>
+
       
 	
       </div>
       <aside class="right-col">
         <!-- Hier wordt de Last Minutes automatisch ingeladen -->
         <div data-include="../partials/last-minutes.html"></div>
-        
+
         <section class="aside-card">
           <h4>Waarom moet je naar deze plek toe?</h4>
           <ul>

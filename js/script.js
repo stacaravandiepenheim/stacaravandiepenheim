@@ -480,3 +480,129 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFromArrival();
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  const form   = document.getElementById('boeken');
+  const thanks = document.getElementById('submission-receipt');
+
+  if (!form || !thanks) return;
+
+  // hulpfuncties om labels te vinden en nette rijen te maken
+  function getLabelFor(input) {
+    if (!input.id) return '';
+    const lbl = form.querySelector(`label[for="${input.id}"]`);
+    return lbl ? lbl.textContent.trim().replace(/\*+$/, '') : (input.name || input.id);
+  }
+  function addRow(tbody, label, value) {
+    if (!value || String(value).trim() === '') return;
+    const tr = document.createElement('tr');
+    const th = document.createElement('th');
+    const td = document.createElement('td');
+    th.textContent = label;
+    td.textContent = value;
+    td.className = 'num'; // past bij jouw tabelstijl
+    tr.append(th, td);
+    tbody.appendChild(tr);
+  }
+
+  async function submitToFormspree(ev) {
+    ev.preventDefault();
+
+    const fd = new FormData(form);
+
+    // optioneel: als je het e-mailadresveld anders heet, zet hier de juiste naam
+    // bv. fd.get('Mailadres') => dan hieronder mail = fd.get('Mailadres')
+    const mail = fd.get('email') || fd.get('Mailadres') || '';
+
+    try {
+      // POST naar Formspree (form.action en -method komen uit je HTML)
+      const res = await fetch(form.action, {
+        method: form.method || 'POST',
+        body: fd,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      // Bouw het visuele ontvangst-overzicht, ook als Formspree netwerktijd nodig had
+      buildReceiptTable(fd, mail);
+
+      // Form verbergen, ontvangst tonen
+      form.style.display = 'none';
+      thanks.style.display = '';
+
+      // printknop
+      const btn = document.getElementById('receipt-print');
+      if (btn) btn.onclick = () => window.print();
+
+      // Foutmelding tonen als Formspree geen 200/OK gaf
+      if (!res.ok) {
+        console.warn('Formspree gaf geen 200 terug:', res.status);
+      }
+    } catch (e) {
+      console.error('Verzenden naar Formspree mislukte:', e);
+      // We tonen alsnog de ontvangst met de ingevulde data, zodat de gast kan bewaren
+      buildReceiptTable(fd, mail);
+      form.style.display = 'none';
+      thanks.style.display = '';
+    }
+  }
+
+  function buildReceiptTable(fd, mail) {
+    // 1) prijsindicatie kopiëren uit je bestaande blokken
+    const srcSummary = document.getElementById('price-summary');
+    const srcSpec    = document.getElementById('price-spec');
+    const dstSummary = document.getElementById('receipt-price-summary');
+    const dstSpec    = document.getElementById('receipt-price-spec');
+    if (dstSummary && srcSummary) dstSummary.textContent = srcSummary.textContent;
+    if (dstSpec && srcSpec)       dstSpec.innerHTML     = srcSpec.innerHTML;
+
+    // 2) alle zichtbare formvelden netjes in een tabel
+    const tbody = document.querySelector('#receipt-table tbody');
+    tbody.innerHTML = '';
+
+    // Zet eerst de periode bovenaan als die als hidden staat in je form
+    const aankomst = (document.getElementById('arrival-hidden')?.value) || '';
+    const vertrek  = (document.getElementById('departure-hidden')?.value) || '';
+    if (aankomst || vertrek) {
+      addRow(tbody, 'Periode', `${aankomst || '?'} t/m ${vertrek || '?'}`);
+    }
+
+    // Loop door alle inputs/select/textarea in het formulier
+    // (sla interne/technische velden over zoals _subject/_replyto/_cc/hidden indicaties)
+    const skipNames = new Set(['_subject','_replyto','_cc','IndicatiefTotaal','PrijsIndicatie','Verblijfstype','arrival-hidden','departure-hidden']);
+    form.querySelectorAll('input, select, textarea').forEach(el => {
+      const type = (el.type || '').toLowerCase();
+      const name = el.name || el.id;
+
+      // negeer submit/reset/hidden (hidden nemen we alleen mee als het inhoudelijk is en niet in skip)
+      if (type === 'submit' || type === 'button' || type === 'reset') return;
+      if (!name || skipNames.has(name)) return;
+
+      let val = '';
+      if (type === 'checkbox') {
+        val = el.checked ? 'Ja' : 'Nee';
+      } else if (type === 'radio') {
+        // alleen de geselecteerde
+        if (!el.checked) return;
+        val = el.value;
+      } else {
+        val = el.value;
+      }
+
+      // nette labeltekst
+      const label = getLabelFor(el);
+      addRow(tbody, label || name, val);
+    });
+
+    // Zet evt. nog de verblijfstype/indicatie apart als je die zichtbaar wilt
+    const stayHidden = document.getElementById('stay-hidden')?.value;
+    const priceHidden = document.getElementById('price-hidden')?.value;
+    if (stayHidden)  addRow(tbody, 'Verblijfstype', stayHidden);
+    if (priceHidden) addRow(tbody, 'Prijsindicatie', priceHidden);
+
+    // Optioneel, totaalregel uit je price-spec overnemen:
+    const specText = (document.getElementById('price-spec')?.innerText || '');
+    const lastLine = specText.split('\n').reverse().find(l => /Indicatief totaal/i.test(l));
+    if (lastLine) addRow(tbody, 'Indicatief totaal', lastLine.replace(/^.*?:\s*/,'').trim());
+  }
+
+  form.addEventListener('submit', submitToFormspree);
+});

@@ -165,4 +165,54 @@ form textarea {
     padding: 0 0.8rem;
   }
 }
+/* ==== Mobiele fix: voorkom horizontaal scrollen ==== */
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Zorg dat de titel zich aanpast */
+.item1 h1 {
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  margin: 0 auto;
+  padding: 0.5rem 1rem;
+  word-break: break-word;
+  text-align: center;
+}
+
+/* Algemeen: zorg dat geen enkel element uitsteekt */
+.grid-container,
+.item1, .item2, .item3 {
+  max-width: 100vw;
+  box-sizing: border-box;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Extra bescherming voor mobiele weergave */
+@media (max-width: 600px) {
+  .calendar-container,
+  .calendar-box,
+  form,
+  .item3 {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  form input,
+  form select,
+  form textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Laat alles onder elkaar vallen */
+  .calendar-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
 

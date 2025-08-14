@@ -19,33 +19,31 @@
           <li><a href="/html/reserveren.html" aria-current="page">Reserveren</a></li>
         </ul>
       </nav>
+
       <div class="item3">
-        <h2>Reserveren</h2>
-        <p>Op deze pagina kunt u de stacaravan boeken. Let op: Na invullen van dit formulier sturen we u een mail terug of de reservering kan doorgaan en de kosten. U heeft pas definitief geboekt als u deze mail beantwoord. Wij houden de reservering 48 uur voor u vast vanaf het moment dat wij u een mail terug hebben gestuurd met een bevestiging en de kosten.</p>
-        <h3>Tarieven</h3>
+        <section class="section-text">
+          <h2>Reserveren</h2>
+          <p>Op deze pagina kunt u de stacaravan boeken. Let op: Na invullen van dit formulier sturen we u een mail terug of de reservering kan doorgaan en de kosten. U heeft pas definitief geboekt als u deze mail beantwoord. Wij houden de reservering 48 uur voor u vast vanaf het moment dat wij u een mail terug hebben gestuurd met een bevestiging en de kosten.</p>
+        </section>
 
-        <div class="tarieven-kort">
-          <ul>
-            <li>Weekend (vr–ma): <strong>vanaf €195</strong></li>
-            <li>Midweek (ma–vr): <strong>vanaf €240</strong></li>
-            <li>Week (ma–ma / vr–vr): <strong>vanaf €295</strong></li>
-            <li>Zomervakantie: <strong>Week €395</strong> <small>(eerste week Noord: €420)</small></li>
-          </ul>
-
-          <p>De basisprijzen liggen dus tussen <strong>€195 en €420</strong> per verblijf (afhankelijk van seizoen).
+        <section class="section-tarieven">
+          <h3>Tarieven</h3>
+          <div class="tarieven-kort">
+            <ul>
+              <li>Weekend (vr–ma): <strong>vanaf €195</strong></li>
+              <li>Midweek (ma–vr): <strong>vanaf €240</strong></li>
+              <li>Week (ma–ma / vr–vr): <strong>vanaf €295</strong></li>
+              <li>Zomervakantie: <strong>Week €395</strong> <small>(eerste week Noord: €420)</small></li>
+            </ul>
+            <p>De basisprijzen liggen dus tussen <strong>€195 en €420</strong> per verblijf (afhankelijk van seizoen).
             De <em>exacte</em> prijs wordt automatisch berekend zodra u hieronder een aankomst- en vertrekdatum kiest.</p>
+            <p class="tarieven-footnotes">
+              <small>* Exclusief toeristenbelasting (€4 p.p.p.n. voor volwassenen), borg, schoonmaakkosten en evt. linnengoed/handdoeken. Beschikbaarheid kan wijzigen; speciale periodes (zoals meivakantie, Hemelvaart, Pinksteren) kunnen zijn uitgesloten.</small>
+            </p>
+          </div>
+        </section>
 
-          <p class="tarieven-footnotes">
-            <small>* Exclusief toeristenbelasting (<strong>€4 p.p.p.n. voor volwassenen</strong>), borg, schoonmaakkosten en evt. linnengoed/handdoeken.
-            Beschikbaarheid kan wijzigen; speciale periodes (zoals meivakantie, Hemelvaart, Pinksteren) kunnen zijn uitgesloten.</small>
-          </p>
-        </div>
-
-        
-         
-
-          
-
+        <section class="section-tarieven-details">
           <h4>Verdere tarieven huur caravan</h4>
           <div class="table-wrap">
             <table class="rate-table rate-two-col">
@@ -60,7 +58,6 @@
               </tbody>
             </table>
           </div>
-
 
           <h4>Tarieven camping</h4>
           <div class="table-wrap">
@@ -77,42 +74,46 @@
             </table>
           </div>
         </section>
-  
-        
-        <h3>Beschikbaarheid</h3>
-				<p>Hieronder ziet u de beschikbaarheid van de stacaravan. De rode dagen zijn bezet en de niet gekleurde dagen zijn beschikbaar. We proberen dit zo snel mogelijk aan te passen bij nieuwe boekingen. Je kunt boeken per weekend, midweek of week. Aankomst- en vertrekdagen zijn in principe alleen op vrijdag of maandag, in overleg zou een andere dag mogelijk kunnen zijn. Liever geen honden. </p>
-				<div class="calendar-container">
-					<div class="calendar-box">
-							<h3>Aankomstdatum</h3>
-							<div id="arrival-month-picker" class="month-picker">
-									<button id="prev-arrival-month">Vorige maand</button>
-									<span id="arrival-month-year"></span>
-									<button id="next-arrival-month">Volgende maand</button>
-							</div>
-							<div id="arrival-calendar" class="calendar"></div>
-							<p>Geselecteerde aankomstdatum: <span id="selected-arrival"></span></p>
-					</div>
-					<div class="calendar-box">
-							<h3>Vertrekdatum</h3>
-							<div id="departure-month-picker" class="month-picker">
-									<button id="prev-departure-month">Vorige maand</button>
-									<span id="departure-month-year"></span>
-									<button id="next-departure-month">Volgende maand</button>
-							</div>
-							<div id="departure-calendar" class="calendar"></div>
-							<p>Geselecteerde vertrekdatum: <span id="selected-departure"></span></p>
-					</div>
-				</div>
 
-        <h3>Verblijf</h3>
-        <p id="price-summary" style="font-weight:600;margin:.5rem 0;"></p>
-        <div id="price-spec"></div> <!-- optioneel: breakdown -->
+        <section class="section-kalender">
+          <h3>Beschikbaarheid</h3>
+          <p>Hieronder ziet u de beschikbaarheid van de stacaravan. De rode dagen zijn bezet en de niet gekleurde dagen zijn beschikbaar. We proberen dit zo snel mogelijk aan te passen bij nieuwe boekingen. Je kunt boeken per weekend, midweek of week. Aankomst- en vertrekdagen zijn in principe alleen op vrijdag of maandag, in overleg zou een andere dag mogelijk kunnen zijn. Liever geen honden. </p>
+          <div class="calendar-container">
+            <div class="calendar-box">
+                <h3>Aankomstdatum</h3>
+                <div id="arrival-month-picker" class="month-picker">
+                    <button id="prev-arrival-month">Vorige maand</button>
+                    <span id="arrival-month-year"></span>
+                    <button id="next-arrival-month">Volgende maand</button>
+                </div>
+                <div id="arrival-calendar" class="calendar"></div>
+                <p>Geselecteerde aankomstdatum: <span id="selected-arrival"></span></p>
+            </div>
+            <div class="calendar-box">
+                <h3>Vertrekdatum</h3>
+                <div id="departure-month-picker" class="month-picker">
+                    <button id="prev-departure-month">Vorige maand</button>
+                    <span id="departure-month-year"></span>
+                    <button id="next-departure-month">Volgende maand</button>
+                </div>
+                <div id="departure-calendar" class="calendar"></div>
+                <p>Geselecteerde vertrekdatum: <span id="selected-departure"></span></p>
+            </div>
+          </div>
+        </section>
 
-        <input type="hidden" id="stay-hidden" name="Verblijfstype" form="boeken">
-        <input type="hidden" id="price-hidden" name="PrijsIndicatie" form="boeken">
+        <section class="section-verblijf">
+          <h3>Verblijf</h3>
+          <p id="price-summary" style="font-weight:600;margin:.5rem 0;"></p>
+          <div id="price-spec"></div> <!-- optioneel: breakdown -->
 
-        <h3>Reservering</h3>
-        <p id="selected-period" aria-live="polite" style="font-weight:600; margin: .5rem 0;">
+          <input type="hidden" id="stay-hidden" name="Verblijfstype" form="boeken">
+          <input type="hidden" id="price-hidden" name="PrijsIndicatie" form="boeken">
+        </section>
+
+        <section class="section-reservering">
+          <h3>Reservering</h3>
+          <p id="selected-period" aria-live="polite" style="font-weight:600; margin: .5rem 0;">
         <!-- wordt dynamisch gevuld -->
         </p>
           <p><label for="volwassenen">Aantal volwassenen (v.a. 18 jaar)</label>
@@ -205,31 +206,32 @@
             <p>Let op: 'gewone' wifi kunt u zelf kopen bij de receptie. Verbinding is niet altijd optimaal. </p>
             <p  class="letop">*Let op: als u er voor kiest om zelf de eindschoonmaak te doen, dan moet u het net zo schoon achterlaten als u het heeft aangetroffen. Stofzuigen, dweilen en een sopje over/door alle platte oppervlakken, wasbakken en wc, trapje buiten aanvegen. Wanneer dit bij controle niet blijkt kunnen wij alsnog schoonmaakkosten in rekening brengen door het in te houden van de borg.</p>
             <img src="../afbeeldingen/wifi.jpg" alt="Foto van wifikosten">
+        </section>
+
+        <section class="section-gegevens">
+          <h3>Gegevens</h3>
+          <form action="https://formspree.io/f/manbvgbe" method="post" autocomplete="on" name="boeken" id="boeken">
+            <p><label>Naam:<input type="text" name="Naam" size="40" required autocomplete="name"></label></p>
+            <p><label>Adres:<input type="text" name="Adres" size="40" required></label></p>
+            <p><label>Postcode:<input type="text" size="7" name="Postcode" pattern="^[0-9]{4}\s?[A-Z]{2}$" placeholder="1111AE" required></label></p>
+            <p><label>Woonplaats:<input type="text" name="Woonplaats" required autocomplete="address-level2"></label></p>
+            <p><label>Land:<input type="text" name="Land" required autocomplete="country-name"></label></p>
+            <p><label>Telefoonnummer:<input type="tel" name="Telefoonnummer" size="20" pattern="^0\d{1,3}[-|\s]?\d{6,8}$" required autocomplete="tel"></label></p>
+            <p><label>E-mailadres:<input type="email" name="Mailadres" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}\,?\s?)+$" size="40" required autocomplete="email"></label></p>
+            <input type="hidden" name="Aankomst" id="arrival-hidden">
+            <input type="hidden" name="Vertrek"   id="departure-hidden">
+            <input type="text" name="_gotcha" style="display:none">
+          </form>  
         
-        <h3>Gegevens</h3>
-        <form action="https://formspree.io/f/manbvgbe" method="post" autocomplete="on" name="boeken" id="boeken">
-          <p><label>Naam:<input type="text" name="Naam" size="40" required autocomplete="name"></label></p>
-          <p><label>Adres:<input type="text" name="Adres" size="40" required></label></p>
-          <p><label>Postcode:<input type="text" size="7" name="Postcode" pattern="^[0-9]{4}\s?[A-Z]{2}$" placeholder="1111AE" required></label></p>
-          <p><label>Woonplaats:<input type="text" name="Woonplaats" required autocomplete="address-level2"></label></p>
-          <p><label>Land:<input type="text" name="Land" required autocomplete="country-name"></label></p>
-          <p><label>Telefoonnummer:<input type="tel" name="Telefoonnummer" size="20" pattern="^0\d{1,3}[-|\s]?\d{6,8}$" required autocomplete="tel"></label></p>
-          <p><label>E-mailadres:<input type="email" name="Mailadres" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}\,?\s?)+$" size="40" required autocomplete="email"></label></p>
-          <input type="hidden" name="Aankomst" id="arrival-hidden">
-          <input type="hidden" name="Vertrek"   id="departure-hidden">
-          <input type="text" name="_gotcha" style="display:none">
-        </form>  
-              
-				
-				
-        <p><label>Opmerkingen:
-          <textarea name="Opmerkingen" cols="50" rows="8" form="boeken"></textarea>
-          </label>
-        </p>
-        <p>Let op: Na invullen en verzenden van dit formulier sturen we u een mail terug of de reservering kan doorgaan en de kosten. U heeft pas definitief geboekt als u deze mail beantwoord. Wij houden de reservering 48 uur voor u vast vanaf het moment dat wij u een mail terug hebben gestuurd met een bevestiging en de kosten.</p>
-        <button type="submit" form="boeken">Verzenden</button>
-        <!-- Bedankt / ontvangst-overzicht (verstopt tot na succes) -->
-        <section id="submission-receipt" style="display:none">
+          <p><label>Opmerkingen:
+            <textarea name="Opmerkingen" cols="50" rows="8" form="boeken"></textarea>
+            </label>
+          </p>
+          <p>Let op: Na invullen en verzenden van dit formulier sturen we u een mail terug of de reservering kan doorgaan en de kosten. U heeft pas definitief geboekt als u deze mail beantwoord. Wij houden de reservering 48 uur voor u vast vanaf het moment dat wij u een mail terug hebben gestuurd met een bevestiging en de kosten.</p>
+          <button type="submit" form="boeken">Verzenden</button>
+        </section>
+        
+        <section class="section-overzicht" id="submission-receipt" style="display:none">
           <h3>Bedankt! We hebben je aanvraag ontvangen.</h3>
           <p>Hieronder zie je een overzicht van wat je hebt ingevuld. Je kunt deze pagina ook printen of opslaan als PDF.</p>
 
@@ -246,10 +248,9 @@
 
           <button type="button" id="receipt-print">Print / Bewaar als PDF</button>
         </section>
-
-      
-	
+     
       </div>
+
       <aside class="right-col">
         <!-- Hier wordt de Last Minutes automatisch ingeladen -->
         <div data-include="../partials/last-minutes.html"></div>

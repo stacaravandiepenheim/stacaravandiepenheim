@@ -1,22 +1,12 @@
 @charset "utf-8";
-/* CSS Document */
 
-/****** boekenpagina ******/
-select {
-  inline-size: fit-content;
-  margin-inline: 2vw;
-}
-input {
-  margin-inline: 2vw;
-  font-size: 1.2vw;
-}
-/** kalender **/
+/****** boekenpagina specifieke stijl ******/
 .calendar-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
-  margin: 20px;
+  margin: 20px 0;
 }
 
 .calendar-box {
@@ -67,33 +57,35 @@ input {
   background-color: #a0d2fc;
 }
 
-#selected-arrival, #selected-departure {
-  font-size: 1.5rem;
+#selected-arrival,
+#selected-departure {
+  font-size: 1.2rem;
   font-weight: bold;
   color: var(--darkblue);
 }
 
+/* Responsive verbeteringen */
 @media (max-width: 768px) {
   .calendar-box {
-      flex: 1 1 100%;
-      max-width: 100%;
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .calendar {
+    font-size: 0.9rem;
   }
 }
 
-img {
-  height: 15rem;
-}
-
-/* ===== Tarieven tabellen ===== */
+/* Tarievenschema (indien gebruikt) */
 .table-wrap {
-  overflow-x: auto;           /* veilig op kleine schermen */
+  overflow-x: auto;
   margin: 0.75rem 0;
 }
 
 .rate-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.98rem;
+  font-size: 0.95rem;
   background: #fff;
 }
 
@@ -125,441 +117,4 @@ img {
 .rate-table .num {
   text-align: left;
   white-space: nowrap;
-}
-
-/* Tweekoloms-variant (label links, waarde rechts) */
-.rate-two-col th {
-  text-align: left;
-  width: 60%;
-  font-weight: 300;
-}
-.rate-two-col td {
-  width: 40%;
-}
-
-/* Kopjes Tarieven (onder h3) aansluiten op jouw stijl */
-#tarieven h4 {
-  text-align: left;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-/* Voetnoten */
-.tarieven-footnotes {
-  margin-top: 0.5rem;
-  color: #444;
-}
-.tarieven-footnotes small { line-height: 1.4; }
-
-/* Mobiel iets compacter */
-@media (max-width: 600px) {
-  .rate-table th, .rate-table td {
-    padding: 0.55rem 0.55rem;
-  }
-  .rate-two-col th { width: 58%; }
-  .rate-two-col td { width: 42%; }
-}
-
-.letop {
-  font-style:italic;
-  margin-block: 1em;
-}
-
-button[type="submit"] {
-  background-color: #ff6600; /* Oranje achtergrond */
-  color: white; /* Witte tekst */
-  padding: 10px 20px; /* Ruimte rondom de tekst */
-  border: none; /* Geen standaardrand */
-  border-radius: 5px; /* Afgeronde hoeken */
-  font-size: 1.3rem; /* Iets grotere tekst */
-  font-weight: bold;
-  cursor: pointer; /* Handje bij hover */
-  transition: background-color 0.3s ease; /* Zachte overgang bij hover */
-}
-
-button[type="submit"]:hover {
-  background-color: #e65c00; /* Donkerder oranje bij hover */
-}
-
-button[type="submit"]:active {
-  background-color: #cc5200; /* Nog donkerder oranje bij klikken */
-}
-
-/* ===== Prijsindicatie onder de kalender ===== */
-#price-summary {
-  font-weight: 600;
-  background: #fff7ef;            /* zachte tint bij jouw oranje */
-  border: 1px solid #ffe2cc;
-  border-left: 4px solid #ff6600;  /* jouw accent */
-  padding: .65rem .8rem;
-  border-radius: .6rem;
-  margin: .75rem 0 .5rem;
-  line-height: 1.35;
-  color: #2b2b2b;
-}
-
-#price-spec {
-  display: grid;
-  gap: .35rem;
-  margin-bottom: .75rem;
-}
-
-#price-spec > div {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: .45rem .6rem;
-  background: #fafbfc;
-  border: 1px solid #e9eef3;
-  border-radius: .55rem;
-  font-size: .95rem;
-  color: #31353b;
-}
-
-#price-spec > div strong {
-  font-weight: 700;
-}
-
-/* optionele “totaal”-regel (gebruik class in JS als je wilt) */
-#price-spec .price-total {
-  margin-top: .25rem;
-  border-top: 1px solid #eceff3;
-  padding-top: .45rem;
-  background: #fff;
-}
-
-/* ===== Weeknummer-badge in kalender ===== */
-.wk-badge {
-  font-size: .7rem;
-  line-height: 1;
-  opacity: .75;
-  margin-bottom: 2px;
-  display: inline-block;
-  color: #5a6270;
-}
-
-/* kleine verfijning: daghokjes krijgen wat extra lucht als er een badge boven zit */
-.day .wk-badge + * {
-  margin-top: 2px;
-}
-
-.tarieven-kort {
-  background: #fff7ef;
-  border: 1px solid #ffe2cc;
-  border-left: 4px solid #ff6600;
-  border-radius: .6rem;
-  padding: .75rem .9rem;
-  margin: .5rem 0 1rem;
-}
-.tarieven-kort ul { margin: 0 0 .5rem 1.1rem; }
-.tarieven-kort li { margin: 0.15rem 0; }
-.tarieven-footnotes { margin: .25rem 0 0; }
-
-#submission-receipt h3 { margin-top: .25rem; }
-#receipt-print { margin-top: .75rem; padding: .5rem .9rem; border-radius: .5rem; border:1px solid #ddd; cursor:pointer; }
-#receipt-print:hover { filter:brightness(0.98); }
-
-/* Mobiel verbeteringen voor reserveringspagina */
-@media (max-width: 600px) {
-  input, select {
-    font-size: 1rem;
-    width: 90%;
-    margin: 0.5rem auto;
-    display: block;
-  }
-
-  .calendar-container {
-    flex-direction: column;
-    gap: 1.2rem;
-    padding: 0 10px;
-    margin: 1rem 0;
-  }
-
-  .calendar-box {
-    max-width: 100%;
-    width: 100%;
-  }
-
-  .calendar {
-    font-size: 0.9rem;
-    padding: 8px;
-  }
-
-  #selected-arrival,
-  #selected-departure {
-    font-size: 1.2rem;
-  }
-
-  #price-summary {
-    font-size: 0.95rem;
-    padding: 0.6rem;
-  }
-
-  #price-spec > div {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-
-  button[type="submit"] {
-    font-size: 1rem;
-    padding: 10px;
-    width: 90%;
-    margin: 1rem auto;
-    display: block;
-  }
-
-  .tarieven-kort {
-    font-size: 0.95rem;
-    padding: 0.6rem 0.8rem;
-  }
-
-  #submission-receipt h3 {
-    font-size: 1.1rem;
-  }
-}
-/* Basisstijl voor formulier */
-form {
-  max-width: 700px;
-  margin: 2rem auto;
-  padding: 1rem;
-  background: #f8f8f8;
-  border-radius: 8px;
-}
-
-/* Input-velden en tekstvakken */
-form input,
-form select,
-form textarea {
-  width: 100%;
-  max-width: 100%;
-  padding: 0.7rem;
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-/* Labels netjes erboven */
-form label {
-  font-weight: 600;
-  margin-bottom: 0.3rem;
-  display: block;
-}
-
-/* Responsief formulier op kleinere schermen */
-@media (max-width: 600px) {
-  form {
-    padding: 1rem 0.8rem;
-  }
-
-  form input,
-  form select,
-  form textarea {
-    font-size: 1rem;
-    padding: 0.6rem;
-  }
-
-  form button,
-  input[type="submit"] {
-    width: 100%;
-  }
-}
-
-/* Verzendknop */
-form button,
-input[type="submit"] {
-  padding: 0.8rem 1.2rem;
-  background-color: navy;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-form button:hover,
-input[type="submit"]:hover {
-  background-color: #003399;
-}
-
-/* Formulier in container: responsive maken */
-.form-wrapper, .boeken-container, .form-section {
-  max-width: 100%;
-  padding: 1rem;
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
-
-/* Algemeen formulier */
-form {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 1rem;
-  background: #f9f9f9;
-  border-radius: 8px;
-}
-
-/* Velden netjes op breedte */
-form input,
-form select,
-form textarea {
-  width: 100%;
-  max-width: 100%;
-  padding: 0.7rem;
-  font-size: 1rem;
-  margin-bottom: 1rem;
-  box-sizing: border-box;
-}
-
-/* Label-styling */
-form label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 0.3rem;
-}
-
-/* Knoppen */
-form button,
-form input[type="submit"] {
-  padding: 0.8rem 1.2rem;
-  background-color: #003366;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: auto;
-}
-
-form button:hover,
-form input[type="submit"]:hover {
-  background-color: #0055aa;
-}
-
-/* Responsiveness */
-@media (max-width: 600px) {
-  form {
-    padding: 0.8rem;
-  }
-
-  form button,
-  form input[type="submit"] {
-    width: 100%;
-  }
-}
-
-@media (max-width: 768px) {
-  .main-content, .reserveringskolom {
-    flex-direction: column;
-  }
-}
-
-/* === RESPONSIVE LAYOUT reserveren.html === */
-
-/* Algemeen: container niet breder dan scherm op mobiel */
-@media (max-width: 600px) {
-  .item3 {
-    padding: 1rem;
-    box-sizing: border-box;
-    max-width: 100vw;
-    overflow-x: hidden;
-  }
-
-  .calendar-container {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  .calendar-box {
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .month-picker {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    font-size: 1rem;
-  }
-
-  .month-picker button {
-    flex: 1 1 40%;
-    padding: 0.5rem;
-    font-size: 0.9rem;
-  }
-
-  .month-picker span {
-    flex: 1 1 100%;
-    text-align: center;
-    font-weight: bold;
-  }
-
-  .calendar {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .calendar table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .calendar td,
-  .calendar th {
-    padding: 0.4rem;
-    text-align: center;
-    font-size: 0.9rem;
-  }
-
-  .tarieven-kort ul,
-  .rate-table,
-  .table-wrap {
-    max-width: 100%;
-    overflow-x: auto;
-  }
-
-  form label,
-  form input,
-  form select,
-  form textarea {
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  form input[type="text"],
-  form input[type="email"],
-  form input[type="tel"],
-  form select,
-  form textarea {
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-  }
-
-  button[type="submit"],
-  #receipt-print {
-    display: block;
-    width: 100%;
-    font-size: 1.1rem;
-    padding: 0.75rem;
-    margin-top: 1rem;
-  }
-
-  /* Verbetering leesbaarheid tekst boven de kalender */
-  .item3 > p {
-    font-size: 1rem;
-    line-height: 1.5;
-  }
-
-  /* Verminder witruimte tussen elementen */
-  .item3 h3 {
-    margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
-  }
 }

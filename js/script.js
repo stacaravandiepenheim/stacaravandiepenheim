@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
       weekend: null, midweek: null, week: null },  // geblokt (overlapt ook met availability)
     { name: 'Zomervakantie 2026 (Zuid, Midden)', start: '2026-08-14', end: '2026-08-28',
       weekend: null, midweek: null, week: 395 },   // alleen week
-    { name: 'Laagseizoen najaar 2026', start: '2026-08-39', end: '2026-10-10',
+    { name: 'Laagseizoen najaar 2026', start: '2026-08-29', end: '2026-10-10',
       weekend: 195, midweek: 240, week: 295 }
   ];
 

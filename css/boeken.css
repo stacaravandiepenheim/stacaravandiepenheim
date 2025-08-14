@@ -258,3 +258,63 @@ button[type="submit"]:active {
 #submission-receipt h3 { margin-top: .25rem; }
 #receipt-print { margin-top: .75rem; padding: .5rem .9rem; border-radius: .5rem; border:1px solid #ddd; cursor:pointer; }
 #receipt-print:hover { filter:brightness(0.98); }
+
+/* Mobiel verbeteringen voor reserveringspagina */
+@media (max-width: 600px) {
+  input, select {
+    font-size: 1rem;
+    width: 90%;
+    margin: 0.5rem auto;
+    display: block;
+  }
+
+  .calendar-container {
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 0 10px;
+    margin: 1rem 0;
+  }
+
+  .calendar-box {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .calendar {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+
+  #selected-arrival,
+  #selected-departure {
+    font-size: 1.2rem;
+  }
+
+  #price-summary {
+    font-size: 0.95rem;
+    padding: 0.6rem;
+  }
+
+  #price-spec > div {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  button[type="submit"] {
+    font-size: 1rem;
+    padding: 10px;
+    width: 90%;
+    margin: 1rem auto;
+    display: block;
+  }
+
+  .tarieven-kort {
+    font-size: 0.95rem;
+    padding: 0.6rem 0.8rem;
+  }
+
+  #submission-receipt h3 {
+    font-size: 1.1rem;
+  }
+}

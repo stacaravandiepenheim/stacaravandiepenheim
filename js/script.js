@@ -209,46 +209,56 @@ document.addEventListener('DOMContentLoaded', () => {
   // Extra’s berekening (jouw regels)
   // ----------------------
   function computeExtras(aDMY, dDMY, stayType) {
-    const nights = diffNights(aDMY, dDMY);
+  const nights = diffNights(aDMY, dDMY);
 
-    // Toeristenbelasting: €4 p.p.p.n. (alleen volwassenen)
-    const adults = parseInt(adultsInput?.value || '0', 10) || 0;
-    let toerBel = 4 * adults * nights;
+  // 4 euro p.p.p.n. voor volwassenen + kinderen (1–17 jaar)
+  const adults = parseInt(adultsInput?.value || '0', 10) || 0;
 
-    // Baby’s (kind1/2/3 == 'baby') → €4/nacht eraf per baby
-    const babies =
-      (kind1Sel?.value === 'baby') +
-      (kind2Sel?.value === 'baby') +
-      (kind3Sel?.value === 'baby');
-    toerBel = Math.max(0, toerBel - 4 * babies * nights);
+  // Lees exact wat er in de selects met id kind1/kind2/kind3 staat
+  const v1 = (document.getElementById('kind1')?.value || 'nvt');
+  const v2 = (document.getElementById('kind2')?.value || 'nvt');
+  const v3 = (document.getElementById('kind3')?.value || 'nvt');
 
-    // Schoonmaak
-    const schoon = (cleanSel && cleanSel.value === 'ja') ? 50 : 0;
+  // Kinderen tellen als de waarde precies '1-17' is
+  const children =
+    (v1 === '1-17' ? 1 : 0) +
+    (v2 === '1-17' ? 1 : 0) +
+    (v3 === '1-17' ? 1 : 0);
 
-    // Beddengoed: €4 * aantal (totaal, niet per nacht)
-    let linenCount = parseInt(aantalBeddengoed?.value || '0', 10);
-    if (isNaN(linenCount)) linenCount = 0;
-    const linenCost = 4 * linenCount;
+  // Baby's zijn gratis (alleen label), geen invloed op prijs
+  const babies =
+    (v1 === 'baby' ? 1 : 0) +
+    (v2 === 'baby' ? 1 : 0) +
+    (v3 === 'baby' ? 1 : 0);
 
-    // Handdoeken: weekend €2 p.p., week/midweek €4 p.p. (op basis van aantal setjes)
-    let towelsCount = parseInt(aantalHanddoeken?.value || '0', 10);
-    if (isNaN(towelsCount)) towelsCount = 0;
-    const towelRate = (stayType === 'weekend') ? 2 : 4;
-    const towelCost = towelRate * towelsCount;
+  // Toeristenbelasting: 4 euro × (volwassenen + kinderen 1–17) × nachten
+  const toerBel = 4 * (adults + children) * nights;
 
-    // Gratis items, wel tonen in specificatie
-    const campingbedje = (campingbedjeSel && campingbedjeSel.value === 'ja') ? 0 : 0;
-    const kinderstoel  = (kinderstoelSel  && kinderstoelSel.value  === 'ja') ? 0 : 0;
+  // ===== laat jouw overige extra’s hieronder ongewijzigd =====
+  const schoon = (cleanSel && cleanSel.value === 'ja') ? 50 : 0;
 
-    // Hotspot
-    const hotspot = (hotspotSel && hotspotSel.value === 'ja') ? 25 : 0;
+  let linenCount = parseInt(aantalBeddengoed?.value || '0', 10);
+  if (isNaN(linenCount)) linenCount = 0;
+  const linenCost = 4 * linenCount;
 
-    return {
-      nights, adults, babies,
-      toerBel, schoon, linenCost, towelCost, towelRate, towelsCount,
-      campingbedje, kinderstoel, hotspot, linenCount
-    };
-  }
+  let towelsCount = parseInt(aantalHanddoeken?.value || '0', 10);
+  if (isNaN(towelsCount)) towelsCount = 0;
+  const towelRate = (stayType === 'weekend') ? 2 : 4;
+  const towelCost = towelRate * towelsCount;
+
+  const campingbedje = (campingbedjeSel && campingbedjeSel.value === 'ja') ? 0 : 0;
+  const kinderstoel  = (kinderstoelSel  && kinderstoelSel.value  === 'ja') ? 0 : 0;
+
+  const hotspot = (hotspotSel && hotspotSel.value === 'ja') ? 25 : 0;
+
+  // Belangrijk: return nu ook children en babies
+  return {
+    nights, adults, children, babies,
+    toerBel, schoon, linenCost, towelCost, towelRate, towelsCount,
+    campingbedje, kinderstoel, hotspot, linenCount
+  };
+}
+
 
   // ----------------------
   // UI updates
@@ -298,21 +308,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Extra’s
     const X = computeExtras(a, d, cls.type);
-    if (priceSpecEl) {
-      const rows = [];
-      rows.push(`<div>Basis (${cls.label}): <strong>${price ? euro(price) : 'n.v.t.'}</strong></div>`);
-      rows.push(`<div>Toeristenbelasting (4 p.p.p.n. × ${X.adults} volw${X.babies ? ` – ${X.babies} baby gratis` : ''} × ${X.nights} nachten): <strong>${euro(X.toerBel)}</strong></div>`);
-      if (cleanSel && cleanSel.value === 'ja') rows.push(`<div>Schoonmaak: <strong>${euro(X.schoon)}</strong></div>`);
-      if (aantalBeddengoed && aantalBeddengoed.value !== 'nvt' && X.linenCount > 0) rows.push(`<div>Linnengoed (${X.linenCount}×): <strong>${euro(X.linenCost)}</strong></div>`);
-      if (aantalHanddoeken && aantalHanddoeken.value !== 'nvt' && X.towelsCount > 0) rows.push(`<div>Handdoeken (${X.towelsCount}× à €${X.towelRate}): <strong>${euro(X.towelCost)}</strong></div>`);
-      if (campingbedjeSel && campingbedjeSel.value === 'ja') rows.push(`<div>Campingbedje: <strong>gratis</strong></div>`);
-      if (kinderstoelSel  && kinderstoelSel.value  === 'ja') rows.push(`<div>Kinderstoel: <strong>gratis</strong></div>`);
-      if (hotspotSel && hotspotSel.value === 'ja') rows.push(`<div>Hotspot: <strong>${euro(X.hotspot)}</strong></div>`);
+      if (priceSpecEl) {
+        const rows = [];
+        rows.push(`<div>Basis (${cls.label}): <strong>${price ? euro(price) : 'n.v.t.'}</strong></div>`);
 
-      const subtotal = (price || 0) + X.toerBel + X.schoon + X.linenCost + X.towelCost + X.hotspot;
-      rows.push(`<div class="price-total">Indicatief totaal (excl. borg & overige extra’s): <strong>${euro(subtotal)}</strong></div>`);
-      priceSpecEl.innerHTML = rows.join('');
-    }
+        // Tekst voor toeristenbelasting samenstellen:
+        const tbParts = [];
+        tbParts.push(`4 p.p.p.n. × ${X.adults} volw`);
+        if (X.children && X.children > 0) tbParts.push(`+ ${X.children} kind${X.children > 1 ? 'eren' : ''}`);
+        if (X.babies   && X.babies   > 0) tbParts.push(`+ ${X.babies} baby${X.babies > 1 ? "'s" : ''} gratis`);
+
+        rows.push(
+          `<div>Toeristenbelasting (${tbParts.join(' ')} × ${X.nights} nachten): <strong>${euro(X.toerBel)}</strong></div>`
+        );
+
+        if (cleanSel && cleanSel.value === 'ja') rows.push(`<div>Schoonmaak: <strong>${euro(X.schoon)}</strong></div>`);
+        if (aantalBeddengoed && aantalBeddengoed.value !== 'nvt' && X.linenCount > 0)
+          rows.push(`<div>Linnengoed (${X.linenCount}×): <strong>${euro(X.linenCost)}</strong></div>`);
+        if (aantalHanddoeken && aantalHanddoeken.value !== 'nvt' && X.towelsCount > 0)
+          rows.push(`<div>Handdoeken (${X.towelsCount}× à €${X.towelRate}): <strong>${euro(X.towelCost)}</strong></div>`);
+        if (campingbedjeSel && campingbedjeSel.value === 'ja') rows.push(`<div>Campingbedje: <strong>gratis</strong></div>`);
+        if (kinderstoelSel  && kinderstoelSel.value  === 'ja') rows.push(`<div>Kinderstoel: <strong>gratis</strong></div>`);
+        if (hotspotSel && hotspotSel.value === 'ja') rows.push(`<div>Hotspot: <strong>${euro(X.hotspot)}</strong></div>`);
+
+        const subtotal = (price || 0) + X.toerBel + X.schoon + X.linenCost + X.towelCost + X.hotspot;
+        rows.push(`<div class="price-total">Indicatief totaal (excl. borg & overige extra’s): <strong>${euro(subtotal)}</strong></div>`);
+        priceSpecEl.innerHTML = rows.join('');
+      }
+
   }
 
   // ----------------------

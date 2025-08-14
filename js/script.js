@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
   addDateRange('2026-04-25', '2026-05-07', 1); // meivakantie
   addDateRange('2026-05-14', '2026-05-18', 1); // hemelvaart
   addDateRange('2026-05-22', '2026-05-25', 1); // pinksteren
+  addDateRange('2026-07-09', '2026-08-14', 1); // zomervakantie noord (niet te boeken)
 
   // ----------------------
   // PRIJZEN PER SEIZOEN (compact en makkelijk bijhouden)
@@ -94,6 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // ----------------------
   const PRICING = [
     // 2025
+    { name: 'Zomervakantie 2025 (laatste week Midden) LAST MINUTE PRIJS', start: '2025-08-22', end: '2025-08-29',
+      weekend: 195, midweek: 240, week: 295 },
     { name: 'Laagseizoen najaar 2025', start: '2025-08-29', end: '2025-10-10',
       weekend: 195, midweek: 240, week: 295 },
     { name: 'Herfstvakantie 2025',     start: '2025-10-10', end: '2025-10-24',
@@ -108,10 +111,12 @@ document.addEventListener('DOMContentLoaded', () => {
       weekend: 195, midweek: 240, week: 295 },
     { name: 'Zomervakantie 2026 (1e week Noord) ', start: '2026-07-03', end: '2026-07-09',
       weekend: null, midweek: null, week: 420 },  // alleen week
-    { name: 'Zomervakantie 2026 (Zuid, Midden)', start: '2026-08-30', end: '2026-08-27',
-      weekend: null, midweek: null, week: 395 }   // alleen week
-    { name: 'Laagseizoen najaar 2026', start: '2026-08-30', end: '2026-10-10',
-      weekend: 195, midweek: 240, week: 295 },
+    { name: 'Zomervakantie 2026', start: '2026-07-09', end: '2026-08-14',
+      weekend: null, midweek: null, week: null },  // geblokt (overlapt ook met availability)
+    { name: 'Zomervakantie 2026 (Zuid, Midden)', start: '2026-08-14', end: '2026-08-28',
+      weekend: null, midweek: null, week: 395 },   // alleen week
+    { name: 'Laagseizoen najaar 2026', start: '2026-08-39', end: '2026-10-10',
+      weekend: 195, midweek: 240, week: 295 }
   ];
 
   // ----------------------

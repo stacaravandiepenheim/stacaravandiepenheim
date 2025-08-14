@@ -317,7 +317,7 @@ img[alt="Fietsenplekje"] {
 
   /* gelijke hoogte tablet */
   .carousel-wrapper a img {
-    height: 180px;
+    height: 240px;
     width: 100%;
     object-fit: cover;
     border-radius: 0.6em;

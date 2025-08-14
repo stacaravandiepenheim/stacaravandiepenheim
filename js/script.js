@@ -84,15 +84,37 @@ document.addEventListener('DOMContentLoaded', () => {
   // VOORBEELDEN (pas aan / voeg toe):
   addDateRange('2025-08-01', '2025-08-21', 1); // zomervakantie noord (niet te boeken)
   addDateRange('2025-10-28', '2026-04-02', 1); // winter dicht
+  addDateRange('2026-04-25', '2026-05-07', 1); // meivakantie
+  addDateRange('2026-05-14', '2026-05-18', 1); // hemelvaart
+  addDateRange('2026-05-22', '2026-05-25', 1); // pinksteren
+  addDateRange('2026-07-09', '2026-08-14', 1); // zomervakantie noord (niet te boeken)
 
   // ----------------------
-  // Prijzen (per seizoen) — eenvoudig uitbreidbaar
+  // PRIJZEN PER SEIZOEN (compact en makkelijk bijhouden)
+  // Tip: Zet niet-beschikbare combinaties op null
   // ----------------------
   const PRICING = [
-    // Voorbeeld:
-    // { name: 'Zomer 2025', start: '2025-06-28', end: '2025-08-31', weekend: 190, midweek: 260, week: 400 },
-    // { name: 'Najaar 2025', start: '2025-09-01', end: '2025-10-27', weekend: 170, midweek: 230, week: 360 },
-    // { name: 'Zomer 2026', start: '2026-06-27', end: '2026-08-29', weekend: 210, midweek: 280, week: 430 },
+    // 2025
+    { name: 'Zomervakantie 2025 (laatste week Midden) LAST MINUTE PRIJS', start: '2025-08-22', end: '2025-08-29',
+      weekend: 195, midweek: 240, week: 295 },
+    { name: 'Laagseizoen najaar 2025', start: '2025-08-29', end: '2025-10-10',
+      weekend: 195, midweek: 240, week: 295 },
+    { name: 'Herfstvakantie 2025',     start: '2025-10-10', end: '2025-10-24',
+      weekend: null, midweek: null, week: 320 },
+
+    // 2026
+    { name: 'Laagseizoen voorjaar 2026', start: '2026-04-03', end: '2026-04-24',
+      weekend: 195, midweek: 240, week: 295 },
+    { name: 'Meivakantie 2026',          start: '2026-04-25', end: '2026-05-07',
+      weekend: null, midweek: null, week: 320 },
+    { name: 'Hemelvaart 2026',           start: '2026-05-14', end: '2026-05-18',
+      weekend: 250, midweek: null, week: null },
+    { name: 'Pinksteren 2026',           start: '2026-05-22', end: '2026-05-25',
+      weekend: null, midweek: null, week: 320 },
+    { name: 'Zomervakantie 2026',        start: '2026-07-09', end: '2026-08-14',
+      weekend: 220, midweek: 290, week: 445 },
+    { name: 'Laagseizoen najaar 2026',   start: '2026-08-29', end: '2026-10-31',
+      weekend: 200, midweek: 245, week: 330 },
   ];
 
   // ----------------------
@@ -169,32 +191,31 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ----------------------
-  // Extra’s berekening (jouw regels)
+  // Extra’s berekening (jouw regels) — MINIMALE AANPASSINGEN
   // ----------------------
   function computeExtras(aDMY, dDMY, stayType) {
     const nights = diffNights(aDMY, dDMY);
 
     // Toeristenbelasting: €4 p.p.p.n. (alleen volwassenen)
     const adults = parseInt(adultsInput?.value || '0', 10) || 0;
-    // Belangrijk: baby is gratis, maar prijs blijft hetzelfde → GEEN aftrek meer
     const toerBel = 4 * adults * nights;
 
-    // Kind-aantallen voor weergave (beïnvloeden de prijs niet)
-    const val1 = kind1Sel?.value || 'nvt';
-    const val2 = kind2Sel?.value || 'nvt';
-    const val3 = kind3Sel?.value || 'nvt';
+    // Kinderen/baby's voor weergave (prijs blijft gelijk)
+    const v1 = kind1Sel?.value || 'nvt';
+    const v2 = kind2Sel?.value || 'nvt';
+    const v3 = kind3Sel?.value || 'nvt';
     const isBaby = v => v === 'baby';
     const isChild = v => /^(1-3|4-12|13-17|15-17|1-17)$/.test(v);
 
     const babies =
-      (isBaby(val1) ? 1 : 0) +
-      (isBaby(val2) ? 1 : 0) +
-      (isBaby(val3) ? 1 : 0);
+      (isBaby(v1) ? 1 : 0) +
+      (isBaby(v2) ? 1 : 0) +
+      (isBaby(v3) ? 1 : 0);
 
     const children =
-      (isChild(val1) ? 1 : 0) +
-      (isChild(val2) ? 1 : 0) +
-      (isChild(val3) ? 1 : 0);
+      (isChild(v1) ? 1 : 0) +
+      (isChild(v2) ? 1 : 0) +
+      (isChild(v3) ? 1 : 0);
 
     // Schoonmaak
     const schoon = (cleanSel && cleanSel.value === 'ja') ? 50 : 0;
@@ -264,26 +285,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const cls = classifyStay(a, d);           // {type,label,nights}
     if (stayHidden) stayHidden.value = cls.label;
 
-    const { price } = getPriceFor(a, cls.type);
-    const X = computeExtras(a, d, cls.type);
+    const { price, seasonName } = getPriceFor(a, cls.type);
 
     // Korte zin
     if (priceSummary) {
       if (price) {
-        priceSummary.textContent = `Indicatie: ${X.nights} nachten, ${cls.label}, basis ${euro(price)} + extra’s`;
+        priceSummary.textContent = `Indicatie: ${cls.label} (${cls.nights} nachten) – ${euro(price)}${seasonName ? ` (${seasonName})` : ''}`;
       } else {
-        priceSummary.textContent = `Indicatie: ${X.nights} nachten, ${cls.label}, (basisprijs niet beschikbaar)`;
+        priceSummary.textContent = `Indicatie: ${cls.label} (${cls.nights} nachten) – niet beschikbaar in deze periode`;
       }
     }
 
-    // Breakdown
+    // Extra’s
+    const X = computeExtras(a, d, cls.type);
     if (priceSpecEl) {
       const rows = [];
       rows.push(`<div>Basis (${cls.label}): <strong>${price ? euro(price) : 'n.v.t.'}</strong></div>`);
-      // >>> aangepaste toeristenbelasting-tekst
+      // >>> aangepaste toeristenbelasting-tekst (alleen volwassenen tellen in bedrag)
       rows.push(`<div>Toeristenbelasting (4 p.p.p.n. × ${X.adults} volw${X.children ? ` + ${X.children} kind${X.children>1?'eren':''}` : ''}${X.babies ? `, baby gratis` : ''} × ${X.nights} nachten): <strong>${euro(X.toerBel)}</strong></div>`);
       if (cleanSel && cleanSel.value === 'ja') rows.push(`<div>Schoonmaak: <strong>${euro(X.schoon)}</strong></div>`);
-      if (aantalBeddengoed && aantalBeddengoed.value !== 'nvt' && X.linenCount > 0) rows.push(`<div>Beddengoed (${X.linenCount}×): <strong>${euro(4 * X.linenCount)}</strong></div>`);
+      if (aantalBeddengoed && aantalBeddengoed.value !== 'nvt' && X.linenCount > 0) rows.push(`<div>Linnengoed (${X.linenCount}×): <strong>${euro(4 * X.linenCount)}</strong></div>`);
       if (aantalHanddoeken && aantalHanddoeken.value !== 'nvt' && X.towelsCount > 0) rows.push(`<div>Handdoeken (${X.towelsCount}× à ${euro(X.towelRate)}): <strong>${euro(X.towelCost)}</strong></div>`);
       if (campingbedjeSel && campingbedjeSel.value === 'ja') rows.push(`<div>Campingbedje: gratis</div>`);
       if (kinderstoelSel  && kinderstoelSel.value  === 'ja') rows.push(`<div>Kinderstoel: gratis</div>`);
@@ -293,6 +314,25 @@ document.addEventListener('DOMContentLoaded', () => {
       rows.push(`<div class="price-total">Indicatief totaal (excl. borg & overige extra’s): <strong>${euro(subtotal)}</strong></div>`);
       priceSpecEl.innerHTML = rows.join('');
     }
+
+    // Hidden velden voor formulier
+    if (priceHidden) {
+      if (price) priceHidden.value = `${cls.label} – ${euro(price)}${seasonName ? ` (${seasonName})` : ''}`;
+      else priceHidden.value = 'Niet beschikbaar / prijs n.v.t.';
+    }
+  }
+
+  // ----------------------
+  // Weeknummer (ISO-8601): helper
+  // ----------------------
+  function getWeekNumber(d) {
+    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    const dayNum = (date.getUTCDay() + 6) % 7;
+    date.setUTCDate(date.getUTCDate() - dayNum + 3);
+    const firstThursday = new Date(Date.UTC(date.getUTCFullYear(), 0, 4));
+    const firstDayNum = (firstThursday.getUTCDay() + 6) % 7;
+    firstThursday.setUTCDate(firstThursday.getUTCDate() - firstDayNum + 3);
+    return 1 + Math.round((date - firstThursday) / 604800000);
   }
 
   // ----------------------
@@ -327,52 +367,63 @@ document.addEventListener('DOMContentLoaded', () => {
       const cell = document.createElement('div');
       cell.className = 'day';
 
-      const dateObj = new Date(year, month, d);
-      const dateStr = ymd(dateObj);
+      const jsDate  = new Date(year, month, d);
+      const dateKey = ymd(jsDate);
+      const wd = jsDate.getDay(); // 0..6
 
-      // Buiten seizoen → disabled
-      if (dateObj < SEASON_START || dateObj > SEASON_END) {
-        cell.classList.add('disabled');
+      // Weeknummer op maandag (styling via .wk-badge in CSS)
+      if (wd === 1) {
+        const wk = getWeekNumber(jsDate);
+        const badge = document.createElement('div');
+        badge.className = 'wk-badge';
+        badge.textContent = `wk ${wk}`;
+        cell.prepend(badge);
       }
 
-      // Geblokkeerd/uitgesloten
-      if (availability[dateStr] === 1) {
-        cell.classList.add('blocked');
-        cell.setAttribute('data-blocked', '1');
+      // Seizoensgrenzen
+      if (jsDate < SEASON_START || jsDate > SEASON_END) {
+        cell.className = 'day unavailable';
+        calendarEl.appendChild(cell);
+        continue;
       }
 
-      // Welke kalender?
-      if (type === 'arrival') {
+      // Boekingen
+      if (availability[dateKey] === 1) {
+        cell.className = 'day booked';
+        calendarEl.appendChild(cell);
+        continue;
+      }
+
+      // Alleen ma/vr klikbaar (arrival & departure)
+      const allowed = (wd === 1 || wd === 5);
+      if (allowed && (type === 'arrival' || type === 'departure')) {
+        cell.classList.add('selectable'); // voor underline in CSS
         cell.addEventListener('click', () => {
-          // Niet op geblokkeerde dagen aankomen
-          if (cell.classList.contains('blocked')) return;
-          selectedArrival.textContent  = `${String(d).padStart(2,'0')}-${String(month+1).padStart(2,'0')}-${year}`;
+          if (type === 'arrival') {
+            selectedArrival.textContent  = `${String(d).padStart(2,'0')}-${String(month+1).padStart(2,'0')}-${year}`;
+          } else {
+            selectedDeparture.textContent = `${String(d).padStart(2,'0')}-${String(month+1).padStart(2,'0')}-${year}`;
+          }
           updateSelectedPeriodText();
           updatePriceAndExtras();
         });
       } else {
-        cell.addEventListener('click', () => {
-          // Niet op geblokkeerde dagen vertrekken
-          if (cell.classList.contains('blocked')) return;
-          selectedDeparture.textContent = `${String(d).padStart(2,'0')}-${String(month+1).padStart(2,'0')}-${year}`;
-          updateSelectedPeriodText();
-          updatePriceAndExtras();
-        });
+        cell.classList.add('disabled');
       }
 
-      // Tekst in cel
+      // Datumlabel
       const label = document.createElement('span');
       label.className = 'date-label';
       label.textContent = d;
       cell.appendChild(label);
 
-      // Aankomst/vertrek markeren
+      // Selected states
       const a = (selectedArrival?.textContent || '').trim();
       const v = (selectedDeparture?.textContent || '').trim();
-      if (a && parseDMY(a).toDateString() === dateObj.toDateString()) {
+      if (a && parseDMY(a).toDateString() === jsDate.toDateString()) {
         cell.classList.add('arrival-selected');
       }
-      if (v && parseDMY(v).toDateString() === dateObj.toDateString()) {
+      if (v && parseDMY(v).toDateString() === jsDate.toDateString()) {
         cell.classList.add('departure-selected');
       }
 
@@ -394,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Knoppen (LET OP: vertrek beweegt los; alleen syncen als er nog geen aankomst is gekozen)
+  // Knoppen
   prevArrivalButton.addEventListener('click', () => {
     arrivalMonth--; if (arrivalMonth < 0) { arrivalMonth = 11; arrivalYear--; }
     renderFromArrival();
@@ -406,13 +457,11 @@ document.addEventListener('DOMContentLoaded', () => {
   prevDepartureButton.addEventListener('click', () => {
     departureMonth--; if (departureMonth < 0) { departureMonth = 11; departureYear--; }
     generateCalendar(departureYear, departureMonth, departureCalendar, departureMonthYear, 'departure');
-    // Alleen syncen als er NOG GEEN aankomstdatum gekozen is
     if (!hasArrivalSelection()) setArrivalSameAsDeparture();
   });
   nextDepartureButton.addEventListener('click', () => {
     departureMonth++; if (departureMonth > 11) { departureMonth = 0; departureYear++; }
     generateCalendar(departureYear, departureMonth, departureCalendar, departureMonthYear, 'departure');
-    // Alleen syncen als er NOG GEEN aankomstdatum gekozen is
     if (!hasArrivalSelection()) setArrivalSameAsDeparture();
   });
 

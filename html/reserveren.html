@@ -244,13 +244,7 @@
           </ul>
         </section>
 
-        <section class="aside-card last-minutes">
-          <h3>Last minutes!</h3>
-          <ul>
-            <li>Momenteel nog geen last minutes</li>
-            
-          </ul>
-        </section>
+        <div data-include="../partials/last-minutes.html"></div>
       </aside>
 
 
@@ -320,6 +314,16 @@
       window.addEventListener('DOMContentLoaded', initAllCarousels);
     </script>
     <script src="../js/script.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll("[data-include]").forEach(function (el) {
+        fetch(el.getAttribute("data-include"))
+          .then(response => response.text())
+          .then(data => el.outerHTML = data)
+          .catch(err => console.error("Include mislukt:", err));
+      });
+    });
+    </script>   
 
 
 

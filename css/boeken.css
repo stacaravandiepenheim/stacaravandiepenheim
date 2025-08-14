@@ -118,3 +118,51 @@
   text-align: left;
   white-space: nowrap;
 }
+
+/* ========== Extra responsive fix reserveren.html ========== */
+
+/* Zorg dat formulieren niet buiten viewport vallen */
+form {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Maak invoervelden mobielvriendelijk */
+form input[type="text"],
+form input[type="email"],
+form input[type="tel"],
+form select,
+form textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Zorg dat de omschrijving boven de kalender meeschuift */
+.item3 > p {
+  padding: 0 1rem;
+  word-break: break-word;
+}
+
+/* Zorg dat bij kleine schermen alles netjes onder elkaar staat */
+@media (max-width: 600px) {
+  .calendar-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .calendar-box {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .item3 {
+    padding: 0 0.8rem;
+  }
+
+  form {
+    padding: 0 0.8rem;
+  }
+}
+

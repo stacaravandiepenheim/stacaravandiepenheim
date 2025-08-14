@@ -384,3 +384,76 @@ input[type="submit"]:hover {
   background-color: #003399;
 }
 
+/* Formulier in container: responsive maken */
+.form-wrapper, .boeken-container, .form-section {
+  max-width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* Algemeen formulier */
+form {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+/* Velden netjes op breedte */
+form input,
+form select,
+form textarea {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.7rem;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+
+/* Label-styling */
+form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+/* Knoppen */
+form button,
+form input[type="submit"] {
+  padding: 0.8rem 1.2rem;
+  background-color: #003366;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: auto;
+}
+
+form button:hover,
+form input[type="submit"]:hover {
+  background-color: #0055aa;
+}
+
+/* Responsiveness */
+@media (max-width: 600px) {
+  form {
+    padding: 0.8rem;
+  }
+
+  form button,
+  form input[type="submit"] {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content, .reserveringskolom {
+    flex-direction: column;
+  }
+}
+

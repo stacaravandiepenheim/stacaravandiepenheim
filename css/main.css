@@ -438,3 +438,46 @@ img[alt="Fietsenplekje"] {
   font-size: 0.95rem;
   color: #444;
 }
+
+/* =========================
+   OVERRIDES: portrait carrousels
+   ========================= */
+
+/* TABLET (601–900px): portrait = hele foto tonen (contain) */
+@media (min-width: 601px) and (max-width: 900px) {
+  .carousel-wrapper.section-woonruimte-portrait a img,
+  .carousel-wrapper.section-keuken-portrait a img,
+  .carousel-wrapper.section-slaapkamers-portrait a img,
+  .carousel-wrapper.section-badkamer-portrait a img,
+  .carousel-wrapper.section-buiten-portrait a img {
+    height: 260px;     /* iets hoger dan je generieke 240px */
+    width: 100%;
+    object-fit: contain;  /* hele foto zichtbaar (geen afsnijden) */
+    background: #fff;     /* nette achtergrond achter evt. randen */
+  }
+}
+
+/* MOBIEL (≤600px): portrait ruimer en 'contain'; landscape blijft cover via je generieke regels */
+@media (max-width: 600px) {
+  .carousel-wrapper.section-woonruimte-portrait a img,
+  .carousel-wrapper.section-keuken-portrait a img,
+  .carousel-wrapper.section-slaapkamers-portrait a img,
+  .carousel-wrapper.section-badkamer-portrait a img,
+  .carousel-wrapper.section-buiten-portrait a img {
+    height: 240px;     /* groter dan 180px generiek, oogt minder “afgeknipt” */
+    width: 100%;
+    object-fit: contain;
+    background: #fff;
+  }
+
+
+  /* Portrait-slides iets smaller dan landscape zodat swipen lekker voelt
+     en je niet té grote witte randen krijgt bij contain */
+  .carousel-wrapper.section-woonruimte-portrait a,
+  .carousel-wrapper.section-keuken-portrait a,
+  .carousel-wrapper.section-slaapkamers-portrait a,
+  .carousel-wrapper.section-badkamer-portrait a,
+  .carousel-wrapper.section-buiten-portrait a {
+    flex: 0 0 78%; /* i.p.v. generieke 85% (staat in je CSS) */
+  }
+}

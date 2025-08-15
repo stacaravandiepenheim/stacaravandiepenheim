@@ -34,10 +34,7 @@
   text-align: center;
 }
 
-.header {
-  font-weight: bold;
-  background-color: #f0f0f0;
-}
+
 
 .available {
   text-decoration: underline;
@@ -87,6 +84,7 @@
   border-collapse: collapse;
   font-size: 0.95rem;
   background: #fff;
+  min-width: unset; 
 }
 
 .rate-table caption {
@@ -118,6 +116,8 @@
   text-align: left;
   white-space: nowrap;
 }
+
+
 
 /* ========== Extra responsive fix reserveren.html ========== */
 
@@ -165,30 +165,8 @@ form textarea {
     padding: 0 0.8rem;
   }
 }
-/* ==== Mobiele fix: voorkom horizontaal scrollen ==== */
 
-html, body {
-  overflow-x: hidden;
-  width: 100%;
-}
 
-/* Zorg dat de titel zich aanpast */
-.item1 h1 {
-  font-size: clamp(1.5rem, 5vw, 2.5rem);
-  margin: 0 auto;
-  padding: 0.5rem 1rem;
-  word-break: break-word;
-  text-align: center;
-}
-
-/* Algemeen: zorg dat geen enkel element uitsteekt */
-.grid-container,
-.item1, .item2, .item3 {
-  max-width: 100vw;
-  box-sizing: border-box;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
 
 /* Extra bescherming voor mobiele weergave */
 @media (max-width: 600px) {
@@ -216,3 +194,125 @@ html, body {
   }
 }
 
+img[alt="Foto van wifikosten"] {
+  max-width: 25%;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.rate-table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+}
+
+.rate-table th,
+.rate-table td {
+  white-space: normal;
+  word-break: break-word;
+}
+
+td, th {
+  word-break: normal;
+  hyphens: auto;
+}
+
+@media (max-width: 600px) {
+  .calendar {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    box-sizing: border-box;
+  }
+
+  .calendar-box {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .month-picker {
+    flex-wrap: wrap;
+  }
+}
+
+/* Zorg dat formulieritems mobiel niet uitsteken */
+@media (max-width: 600px) {
+  .section-gegevens form,
+  .section-gegevens form p,
+  .section-gegevens form label,
+  .section-gegevens input,
+  .section-gegevens textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .section-gegevens textarea {
+    resize: vertical;
+  }
+
+  /* Override vaste HTML-attributen zoals cols en size */
+  .section-gegevens input[type="text"],
+  .section-gegevens input[type="email"],
+  .section-gegevens input[type="tel"] {
+    font-size: 1rem;
+    padding: 0.4rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .calendar {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+
+  .calendar .day {
+    font-size: 0.7rem;
+    padding: 5px 2px;
+    min-height: auto;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .month-picker {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Gelijke kolombreedtes in alle rate-tables */
+table.rate-table.rate-two-col {
+  table-layout: fixed;
+}
+
+table.rate-table.rate-two-col th:first-child,
+table.rate-table.rate-two-col td:first-child {
+  width: 30%;
+}
+
+table.rate-table.rate-two-col th:last-child,
+table.rate-table.rate-two-col td:last-child {
+  width: 25%;
+}
+@media (min-width: 2560px) {
+    /* Gelijke kolombreedtes in alle rate-tables */
+  table.rate-table.rate-two-col th:first-child,
+  table.rate-table.rate-two-col td:first-child {
+    width: 10%;
+  }
+
+  table.rate-table.rate-two-col th:last-child,
+  table.rate-table.rate-two-col td:last-child {
+    width: 25%;
+  }
+}

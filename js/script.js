@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ----------------------
   const PRICING = [
     // 2025
-    { name: 'Zomervakantie 2025 (laatste week Midden) LAST MINUTE PRIJS', start: '2025-08-22', end: '2025-08-29',
+    { name: 'Zomervakantie 2025 (laatste week Midden: LAST MINUTE PRIJS)', start: '2025-08-22', end: '2025-08-29',
       weekend: 195, midweek: 240, week: 295 },
     { name: 'Laagseizoen najaar 2025', start: '2025-08-29', end: '2025-10-10',
       weekend: 195, midweek: 240, week: 295 },
@@ -294,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hoofdregel (indicatie)
     if (price) {
-      const baseText = `${cls.label} · ${euro(price)} (${seasonName})`;
+      const baseText = `${cls.label} = ${euro(price)} (${seasonName})`;
       if (priceSummary) priceSummary.textContent =
         `Je wilt boeken van ${a} t/m ${d}. Dat is een ${cls.label.toLowerCase()}. Prijsindicatie: ${baseText} — exclusief toeristenbelasting, borg en extra’s. Vul het formulier in voor een preciezere prijs excl. borg en campingkosten.`;
       if (priceHidden) priceHidden.value = `${cls.label} – ${euro(price)} (${seasonName})`;
@@ -313,27 +313,44 @@ document.addEventListener('DOMContentLoaded', () => {
         rows.push(`<div>Basis (${cls.label}): <strong>${price ? euro(price) : 'n.v.t.'}</strong></div>`);
 
         // Tekst voor toeristenbelasting samenstellen:
+        const tableRows = [];
+
         const tbParts = [];
         tbParts.push(`4 p.p.p.n. × ${X.adults} volw`);
         if (X.children && X.children > 0) tbParts.push(`+ ${X.children} kind${X.children > 1 ? 'eren' : ''}`);
-        if (X.babies   && X.babies   > 0) tbParts.push(`+ ${X.babies} baby${X.babies > 1 ? "'s" : ''} gratis`);
+        if (X.babies && X.babies > 0) tbParts.push(`+ ${X.babies} baby${X.babies > 1 ? "'s" : ''} gratis`);
 
-        rows.push(
-          `<div>Toeristenbelasting (${tbParts.join(' ')} × ${X.nights} nachten): <strong>${euro(X.toerBel)}</strong></div>`
-        );
+        tableRows.push(`<tr><td>Toeristenbelasting<br><small>(${tbParts.join(' ')} × ${X.nights} nachten)</small></td><td><strong>${euro(X.toerBel)}</strong></td></tr>`);
 
-        if (cleanSel && cleanSel.value === 'ja') rows.push(`<div>Schoonmaak: <strong>${euro(X.schoon)}</strong></div>`);
+        if (cleanSel && cleanSel.value === 'ja')
+          tableRows.push(`<tr><td>Schoonmaak</td><td><strong>${euro(X.schoon)}</strong></td></tr>`);
+
         if (aantalBeddengoed && aantalBeddengoed.value !== 'nvt' && X.linenCount > 0)
-          rows.push(`<div>Linnengoed (${X.linenCount}×): <strong>${euro(X.linenCost)}</strong></div>`);
+          tableRows.push(`<tr><td>Linnengoed (${X.linenCount}×)</td><td><strong>${euro(X.linenCost)}</strong></td></tr>`);
+
         if (aantalHanddoeken && aantalHanddoeken.value !== 'nvt' && X.towelsCount > 0)
-          rows.push(`<div>Handdoeken (${X.towelsCount}× à €${X.towelRate}): <strong>${euro(X.towelCost)}</strong></div>`);
-        if (campingbedjeSel && campingbedjeSel.value === 'ja') rows.push(`<div>Campingbedje: <strong>gratis</strong></div>`);
-        if (kinderstoelSel  && kinderstoelSel.value  === 'ja') rows.push(`<div>Kinderstoel: <strong>gratis</strong></div>`);
-        if (hotspotSel && hotspotSel.value === 'ja') rows.push(`<div>Hotspot: <strong>${euro(X.hotspot)}</strong></div>`);
+          tableRows.push(`<tr><td>Handdoeken (${X.towelsCount}× à €${X.towelRate})</td><td><strong>${euro(X.towelCost)}</strong></td></tr>`);
+
+        if (campingbedjeSel && campingbedjeSel.value === 'ja')
+          tableRows.push(`<tr><td>Campingbedje</td><td><strong>gratis</strong></td></tr>`);
+
+        if (kinderstoelSel && kinderstoelSel.value === 'ja')
+          tableRows.push(`<tr><td>Kinderstoel</td><td><strong>gratis</strong></td></tr>`);
+
+        if (hotspotSel && hotspotSel.value === 'ja')
+          tableRows.push(`<tr><td>Hotspot</td><td><strong>${euro(X.hotspot)}</strong></td></tr>`);
 
         const subtotal = (price || 0) + X.toerBel + X.schoon + X.linenCost + X.towelCost + X.hotspot;
-        rows.push(`<div class="price-total">Indicatief totaal (excl. borg & overige extra’s): <strong>${euro(subtotal)}</strong></div>`);
-        priceSpecEl.innerHTML = rows.join('');
+        tableRows.push(`<tr class="price-total"><td><strong>Totaalbedrag</strong><br><small>excl. 100 euro borg & campingextra’s</small></td><td><strong>${euro(subtotal)}</strong></td></tr>`);
+
+        // Zet alles in <table>
+        priceSpecEl.innerHTML = `
+          <table class="prijs-tabel">
+            <tbody>
+              ${tableRows.join('')}
+            </tbody>
+          </table>
+        `;
       }
 
   }

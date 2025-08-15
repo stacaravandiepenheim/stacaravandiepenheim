@@ -481,3 +481,8 @@ img[alt="Fietsenplekje"] {
     flex: 0 0 48%; /* i.p.v. generieke 85% (staat in je CSS) */
   }
 }
+@media (min-width: 2560px) {
+    html, body {
+    font-size: 1.2rem;
+  }
+}

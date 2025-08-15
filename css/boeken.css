@@ -114,7 +114,6 @@
 
 .rate-table .num {
   text-align: left;
-  white-space: nowrap;
 }
 
 
@@ -195,7 +194,7 @@ form textarea {
 }
 
 img[alt="Foto van wifikosten"] {
-  max-width: 25%;
+  max-width: 50%;
   height: auto;
   display: block;
   margin: 1rem auto;
@@ -284,6 +283,16 @@ td, th {
     align-items: center;
     gap: 0.5rem;
   }
+
+  #selected-arrival {
+    display: block;
+    margin-top: 0.3rem;
+  }
+
+  #selected-departure {
+    display: block;
+    margin-top: 0.3rem;
+  }
 }
 
 body {
@@ -315,4 +324,59 @@ table.rate-table.rate-two-col td:last-child {
   table.rate-table.rate-two-col td:last-child {
     width: 25%;
   }
+}
+@media (min-width: 768px) {
+    img[alt="Foto van wifikosten"] {
+    max-width: 30%;
+  }
+}
+@media (min-width: 2560px) {
+    img[alt="Foto van wifikosten"] {
+    max-width: 20%;
+  }
+  form input  {
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    height: 2.75rem;
+  }
+  form label {
+    padding-bottom: 0.3rem;
+  }
+  button {
+    font-size: 1.4rem;
+    padding: 0.3rem;
+  }
+  select {
+    font-size: 1rem;
+    padding: 0.2rem;
+    height: 2rem;
+  }
+}
+table.prijs-tabel {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+table.prijs-tabel th,
+table.prijs-tabel td {
+  border: 1px solid #ccc;
+  padding: 0.6rem;
+  text-align: left;
+  vertical-align: top;
+  
+}
+
+table.prijs-tabel th {
+  background-color: #f3f7fc;
+  color: var(--darkblue);
+  
+}
+
+table.prijs-tabel .price-total {
+  background-color: #e6f2ff;
+}
+
+table.prijs-tabel td {
+  width: 5%;
 }

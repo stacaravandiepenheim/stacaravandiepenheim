@@ -95,20 +95,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // ----------------------
   const PRICING = [
     // 2025
-    { name: 'Zomervakantie 2025 (laatste week Midden: LAST MINUTE PRIJS)', start: '2025-08-22', end: '2025-08-29',
+    { name: 'Zomervakantie 2025 (laatste week Midden: LAST MINUTE PRIJS)', start: '2025-08-22', end: '2025-08-28',
       weekend: 195, midweek: 240, week: 295 },
-    { name: 'Laagseizoen najaar 2025', start: '2025-08-29', end: '2025-10-10',
-      weekend: 195, midweek: 240, week: 295 },
+    { name: 'Laagseizoen najaar 2025', start: '2025-08-29', end: '2025-10-09',
+      weekend: 195, midweek: 240, week: 295, tweeweken: 525, drieweken: 795  },
     { name: 'Herfstvakantie 2025',     start: '2025-10-10', end: '2025-10-24',
-      weekend: null, midweek: null, week: 320 },
+      weekend: null, midweek: null, week: 320, tweeweken: 595 },
 
     // 2026
     { name: 'Laagseizoen voorjaar 2026', start: '2026-04-03', end: '2026-04-24',
-      weekend: 195, midweek: 240, week: 295 },
+      weekend: 195, midweek: 240, week: 295, tweeweken: 525, drieweken: 795 },
     { name: 'Meivakantie 2026',          start: '2026-04-25', end: '2026-05-07',
       weekend: null, midweek: null, week: null }, // geblokt (overlapt ook met availability)
     { name: 'Middenseizoen 2026',        start: '2026-05-08', end: '2026-07-02',
-      weekend: 195, midweek: 240, week: 295 },
+      weekend: 195, midweek: 240, week: 295, tweeweken: 525, drieweken: 795 },
     { name: 'Zomervakantie 2026 (1e week Noord) ', start: '2026-07-03', end: '2026-07-09',
       weekend: null, midweek: null, week: 420 },  // alleen week
     { name: 'Zomervakantie 2026', start: '2026-07-09', end: '2026-08-14',
@@ -130,6 +130,9 @@ document.addEventListener('DOMContentLoaded', () => {
     { key: 'weekend', label: 'Weekend', nights: 3, arrivalWD: [5],        departureWD: [1]        }, // vr → ma
     { key: 'midweek', label: 'Midweek', nights: 4, arrivalWD: [1],        departureWD: [5]        }, // ma → vr
     { key: 'week',    label: 'Week',    nights: 7, arrivalWD: [1, 5],     departureWD: [1, 5]     }  // ma→ma of vr→vr
+      ,{ key: 'tweeweken', label: '2 weken', nights: 14, arrivalWD: [1, 5], departureWD: [1, 5] } // ma→ma of vr→vr
+      ,{ key: 'drieweken', label: '3 weken', nights: 21, arrivalWD: [1, 5], departureWD: [1, 5] } // ma→ma of vr→vr
+
     // Voorbeeld extra midweek: { key:'midweek2', label:'Midweek (di-za)', nights:4, arrivalWD:[2], departureWD:[6] }
   ];
 

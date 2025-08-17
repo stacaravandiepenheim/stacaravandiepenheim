@@ -229,7 +229,7 @@ img[alt="Fietsenplekje"] {
   /* gelijke hoogte op desktop voor gallery’s */
   .carousel-wrapper.gallery-landscape a img,
   .carousel-wrapper.gallery-portrait a img {
-    height: 220px;      /* pas gerust aan (200–260) */
+    height: 260px;      /* pas gerust aan (200–260) */
     width: auto;
     object-fit: cover;
     border-radius: 0.6em;
@@ -572,4 +572,28 @@ img[alt="Fietsenplekje"] {
     border-radius: 0.6em;
     box-shadow: 0 2px 6px #ddd;
   }
+}
+.reserveer-button {
+  display: inline-block;
+  background-color: #2a7a2e; /* donkergroen */
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.reserveer-button:hover {
+  background-color: #246524; /* iets donkerder bij hover */
+}
+.last-minutes {
+  text-align: center; /* zorgt dat alles binnen dit vak gecentreerd staat */
+}
+
+.last-minutes .reserveer-button {
+  display: inline-block; /* knop blijft een nette 'blok'-knop */
+  margin: 0 auto 10px auto; /* boven/onder 0–10px ruimte, links/rechts auto = midden */
 }

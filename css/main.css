@@ -1,0 +1,951 @@
+@charset "utf-8";
+
+/* =========================
+   Variabelen & Basis
+   ========================= */
+:root {
+  --blue: #019bf2;
+  --orange: #f3ae62;
+  --lightblue: #9fcee8;
+  --lightestblue: #f2f8fb;
+  --darkblue: #000080;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  font-family: "Golos Text", sans-serif;
+  background: var(--lightestblue);
+  font-size: 1rem;
+}
+
+/* =========================
+   Grid-layout
+   ========================= */
+.grid-container {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 260px;
+  grid-template-areas:
+    "header header header"
+    "menu   main   right"
+    "footer footer footer";
+  gap: 10px;
+  background: #fff;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 1rem;
+}
+
+.item1 { grid-area: header; }
+.item2 { grid-area: menu; }
+.item3 { grid-area: main; }
+.item5 { grid-area: footer; }
+
+.right-col {
+  grid-area: right;
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  min-width: 0;
+}
+
+/* =========================
+   Typografie & algemene elementen
+   ========================= */
+body,
+p,
+li {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+p,
+li {
+  margin-bottom: 0.7em;
+  line-height: 1.5;
+}
+
+h1 {
+  border: 2.5px solid var(--blue);
+  background: antiquewhite;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--blue);
+  margin: 0.2em;
+  padding: 0.7em 0.5em;
+  border-radius: 1em;
+  box-shadow: 0 2px 12px #eee;
+  font-size: clamp(1.6rem, 2.2vw, 2.2rem);
+  line-height: 1.15;
+  overflow-wrap: break-word;
+}
+
+h2 {
+  border: 1px solid var(--blue);
+  background: var(--lightestblue);
+  text-align: center;
+  color: var(--blue);
+  margin-bottom: var(--space-sm);
+  padding: 0.45em;
+  font-size: clamp(1.25rem, 1.6vw, 1.75rem);
+  line-height: 1.2;
+}
+
+h3 {
+  background: var(--darkblue);
+  text-align: center;
+  color: white;
+  margin-top: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  padding: 0.45em;
+  font-size: clamp(1.05rem, 1.2vw, 1.3rem);
+  line-height: 1.2;
+}
+
+h4 {
+  color: #000;
+  margin-bottom: 0.5rem;
+  padding-top: 1em;
+  text-align: left;
+  font-size: 1.3em;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  padding-inline-end: 0.2rem;
+}
+
+/* Responsive handmatige regeleindes in H1 */
+.mobiel-br {
+  display: none;
+}
+
+@media (max-width: 425px) {
+  .mobiel-br {
+    display: inline;
+  }
+}
+
+/* =========================
+   Header / intro
+   ========================= */
+.introzin {
+  font-size: 1.2rem;
+  line-height: 1.5;
+  margin: 0.8rem 0 1rem 0;
+}
+
+.header-image {
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  margin: 1rem auto 0 auto;
+  display: block;
+  border-radius: 0.8em;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header-images {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.header-images .header-image {
+  width: 100%;
+  height: 330px;
+  object-fit: cover;
+  margin: 0;
+  border-radius: 0.8em;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================
+   Menu
+   ========================= */
+.item2 ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item2 li {
+  margin-bottom: 7px;
+}
+
+.item2 a {
+  display: block;
+  padding: 8px;
+  background: var(--darkblue);
+  color: #fff;
+  text-decoration: none;
+  transition: background 0.2s;
+  border-radius: 4px;
+}
+
+.item2 a:hover,
+.item2 a:focus {
+  background: var(--blue);
+}
+
+.item2 a[aria-current="page"] {
+  background: var(--blue);
+  font-weight: 600;
+}
+
+/* =========================
+   Main content
+   ========================= */
+.item3 > p {
+  margin-bottom: 7px;
+}
+
+.item3 ul {
+  padding-left: 1em;
+}
+
+/* =========================
+   Aside / rechter kolom
+   ========================= */
+.aside-card {
+  background: var(--orange);
+  padding: 15px;
+  color: #000;
+  min-width: 0;
+}
+
+.aside-card ul {
+  padding-left: 1em;
+  padding-top: 1em;
+}
+
+.aside-card li {
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.aside-card.last-minutes {
+  background: var(--darkblue);
+  color: #fff;
+  border-top: 3px solid #fff;
+}
+
+.aside-card h3,
+.aside-card h4 {
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.aside-info {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.aside-info li,
+.aside-card p {
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.aside-info li {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+/* =========================
+   Buttons / CTA's
+   ========================= */
+.reserveer-button,
+.cta-knop {
+  display: inline-block;
+  background-color: #2a7a2e;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.reserveer-button:hover,
+.cta-knop:hover {
+  background-color: #246524;
+}
+
+.whatsapp-button {
+  display: inline-block;
+  background-color: #25D366;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 18px;
+  margin: 0 auto 10px auto;
+  border-radius: 6px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.whatsapp-button:hover {
+  background-color: #1ebe5d;
+}
+
+.last-minutes {
+  text-align: center;
+}
+
+.last-minutes .reserveer-button {
+  display: inline-block;
+  margin: 0 auto 10px auto;
+}
+
+.last-minutes-actions {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.last-minutes-actions p {
+  margin: 6px 0;
+}
+
+/* top-cta standaard verbergen */
+.top-cta {
+  display: none;
+}
+
+/* alleen tonen wanneer aside onder de pagina staat */
+@media (max-width: 1100px) {
+  .top-cta {
+    display: block;
+    text-align: center;
+    margin: 1.2rem 0 1rem 0;
+  }
+
+  .top-cta a {
+    margin: 6px;
+  }
+}
+
+/* =========================
+   Extra info-blokken
+   ========================= */
+.contact-blok {
+  background: #f7f7f7;
+  padding: 18px;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.contact-blok h3 {
+  margin-bottom: 0.6rem;
+}
+
+.contact-blok a {
+  margin: 8px;
+}
+
+.review-blok {
+  background: #f7f7f7;
+  padding: 18px;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+}
+
+.review-blok blockquote {
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.review-bron {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.map-container {
+  margin: 1.5rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.populariteit {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+/* =========================
+   Owner gallery / over-ons
+   ========================= */
+.owner-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.owner-gallery figure {
+  margin: 0;
+  text-align: center;
+}
+
+.owner-gallery img {
+  width: 100%;
+  height: auto;
+  border-radius: 0.6em;
+  box-shadow: 0 2px 6px #ddd;
+}
+
+.owner-gallery:first-of-type img {
+  max-height: 260px;
+  object-fit: contain;
+}
+
+.owner-gallery:first-of-type figcaption {
+  font-size: 0.95rem;
+}
+
+.owner-gallery figcaption {
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+  color: #444;
+}
+
+/* =========================
+   Footer
+   ========================= */
+.item5 {
+  background: var(--lightestblue);
+  text-align: center;
+  padding-top: 1rem;
+}
+
+/* =========================
+   Carrousel – basis
+   ========================= */
+.carousel-container {
+  position: relative;
+  margin: 0.5rem 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.carousel-wrapper {
+  margin: 0;
+}
+
+.carousel-arrow {
+  display: none;
+}
+
+/* Fietsenplekje altijd volledig tonen */
+img[alt="Fietsenplekje"] {
+  object-fit: contain !important;
+  background: #fff;
+}
+
+/* =========================
+   Desktop (≥901px)
+   ========================= */
+@media (min-width: 901px) {
+  .carousel-wrapper.section-woonruimte-landscape,
+  .carousel-wrapper.section-keuken-landscape,
+  .carousel-wrapper.section-slaapkamers-landscape,
+  .carousel-wrapper.section-badkamer-landscape,
+  .carousel-wrapper.section-buiten-landscape,
+  .carousel-wrapper.section-woonruimte-portrait,
+  .carousel-wrapper.section-keuken-portrait,
+  .carousel-wrapper.section-slaapkamers-portrait,
+  .carousel-wrapper.section-badkamer-portrait,
+  .carousel-wrapper.section-buiten-portrait,
+  .carousel-wrapper.gallery-landscape,
+  .carousel-wrapper.gallery-portrait {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    gap: 0;
+    margin: 1rem 0;
+    overflow-x: visible;
+  }
+
+  .carousel-wrapper.gallery-landscape a img,
+  .carousel-wrapper.gallery-portrait a img {
+    height: 260px;
+    width: auto;
+    object-fit: cover;
+    border-radius: 0.6em;
+    box-shadow: 0 2px 6px #ddd;
+  }
+
+  .right-col {
+    position: sticky;
+    top: 20px;
+    align-self: start;
+    height: fit-content;
+    z-index: 1;
+  }
+
+  .carousel-arrow {
+    display: none !important;
+  }
+
+  .carousel-container {
+    padding: 0;
+  }
+
+  .carousel-wrapper {
+    overflow-x: visible !important;
+  }
+}
+
+/* =========================
+   Tussenmaat / kleiner desktop
+   ========================= */
+@media (max-width: 1200px) {
+  .grid-container {
+    grid-template-columns: 180px minmax(0, 1fr) 220px;
+    padding: 0 0.75rem;
+  }
+
+  h1 {
+    font-size: 1.35rem;
+    padding: 0.7em 0.4em;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .right-col {
+    position: static;
+    top: auto;
+  }
+
+  .aside-card {
+    padding: 12px;
+  }
+
+  .aside-info li {
+    font-size: 0.98rem;
+  }
+}
+
+/* =========================
+   Eén kolom onder 1100px
+   ========================= */
+@media (max-width: 1100px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "menu"
+      "main"
+      "right"
+      "footer";
+    padding: 0;
+  }
+
+  .grid-container > div,
+  .right-col,
+  .item2,
+  .item3,
+  .item5 {
+    width: 100%;
+    max-width: 100%;
+    padding: 0.7em;
+  }
+
+  .right-col {
+    position: static;
+    top: auto;
+  }
+}
+
+/* =========================
+   Tablet (601–900px)
+   ========================= */
+@media (max-width: 900px) and (min-width: 601px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "menu"
+      "main"
+      "right"
+      "footer";
+    padding: 0;
+  }
+
+  .grid-container > div,
+  .right-col {
+    padding: 0.7em;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  h1 {
+    margin: 0.5em 0.2em;
+    padding: 0.7em 0.6em;
+  }
+
+  h2,
+  h3 {
+    margin: 0.7em 0.2em;
+    padding: 0.4em 0.3em;
+  }
+
+  .carousel-container {
+    padding: 0 1rem;
+    margin: 0.5rem 0;
+  }
+
+  .carousel-wrapper.section-keuken-portrait,
+  .carousel-wrapper.section-slaapkamers-portrait,
+  .carousel-wrapper.section-badkamer-portrait,
+  .carousel-wrapper.section-buiten-portrait,
+  .carousel-wrapper.gallery-portrait {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0 !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  .carousel-wrapper.section-woonruimte-landscape,
+  .carousel-wrapper.section-keuken-landscape,
+  .carousel-wrapper.section-slaapkamers-landscape,
+  .carousel-wrapper.section-badkamer-landscape,
+  .carousel-wrapper.section-buiten-landscape,
+  .carousel-wrapper.gallery-landscape {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0 !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  .carousel-wrapper a {
+    scroll-snap-align: start;
+  }
+
+  .carousel-wrapper a img {
+    height: 240px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.6em;
+    box-shadow: 0 2px 6px #ddd;
+  }
+
+  .right-col {
+    position: static;
+    top: auto;
+  }
+
+  .header-images {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+
+  .header-images .header-image {
+    height: 260px;
+  }
+
+  .video-container {
+    max-width: 100%;
+    margin: 0.75rem auto;
+  }
+}
+
+/* =========================
+   Klein mobiel (≤600px)
+   ========================= */
+@media (max-width: 600px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "menu"
+      "main"
+      "right"
+      "footer";
+    padding: 0;
+  }
+
+  h1 {
+    padding: 0.6em 0.3em;
+  }
+
+  .introzin {
+    font-size: 1.05rem;
+  }
+
+  p,
+  li {
+    line-height: 1.6;
+  }
+
+  .item3,
+  .right-col {
+    padding: 0 10px;
+  }
+
+  .item3 p {
+    max-width: 40ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .item3 ul {
+    max-width: 40ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .carousel-container {
+    padding: 0 0.3rem;
+  }
+
+  .carousel-wrapper,
+  .carousel-wrapper.gallery-landscape,
+  .carousel-wrapper.gallery-portrait {
+    display: flex !important;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 0;
+  }
+
+  .carousel-wrapper a {
+    flex: 0 0 85%;
+    scroll-snap-align: start;
+  }
+
+  .carousel-wrapper a img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 0.6em;
+    box-shadow: 0 2px 6px #ddd;
+  }
+
+  .carousel-arrow {
+    display: block !important;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    border: 0;
+    padding: 0.5rem;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .carousel-arrow.left { left: 0.5rem; }
+  .carousel-arrow.right { right: 0.5rem; }
+
+  .right-col {
+    position: static;
+    top: auto;
+  }
+
+  .video-container {
+    margin: 0.75rem 10px;
+  }
+
+  .header-images {
+    grid-template-columns: 1fr;
+  }
+
+  .header-images .header-image {
+    height: auto;
+  }
+
+  .top-cta a {
+    display: block;
+    width: 100%;
+    max-width: 320px;
+    margin: 0.4rem auto;
+  }
+}
+
+/* =========================
+   Video: responsief 16:9
+   ========================= */
+.video-container {
+  width: 100%;
+  max-width: 900px;
+  aspect-ratio: 16 / 9;
+  margin-block: 1.5rem;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.12);
+  background: #000;
+}
+
+.video-container .featured-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.video-caption {
+  max-width: 900px;
+  margin: 0.4rem auto 1rem auto;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+/* =========================
+   Overrides: portrait carrousels
+   ========================= */
+@media (min-width: 601px) and (max-width: 900px) {
+  .carousel-wrapper.section-woonruimte-portrait a img,
+  .carousel-wrapper.section-keuken-portrait a img,
+  .carousel-wrapper.section-slaapkamers-portrait a img,
+  .carousel-wrapper.section-badkamer-portrait a img,
+  .carousel-wrapper.section-buiten-portrait a img {
+    height: 260px;
+    width: 100%;
+    object-fit: cover;
+    background: #fff;
+  }
+}
+
+@media (max-width: 600px) {
+  .carousel-wrapper.section-woonruimte-portrait a img,
+  .carousel-wrapper.section-keuken-portrait a img,
+  .carousel-wrapper.section-slaapkamers-portrait a img,
+  .carousel-wrapper.section-badkamer-portrait a img,
+  .carousel-wrapper.section-buiten-portrait a img {
+    height: 240px;
+    width: 100%;
+    object-fit: cover;
+    background: #fff;
+  }
+
+  .carousel-wrapper.section-woonruimte-portrait a,
+  .carousel-wrapper.section-keuken-portrait a,
+  .carousel-wrapper.section-slaapkamers-portrait a,
+  .carousel-wrapper.section-badkamer-portrait a,
+  .carousel-wrapper.section-buiten-portrait a {
+    flex: 0 0 48%;
+  }
+}
+
+/* =========================
+   Extra desktop carrousel-aanpassingen
+   ========================= */
+@media (min-width: 1024px) {
+  .carousel-wrapper[class*="-landscape"] {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+  }
+
+  .carousel-wrapper[class*="-landscape"] img {
+    width: auto;
+    max-height: 220px;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .carousel-wrapper[class*="-portrait"] {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+  }
+
+  .carousel-wrapper[class*="-portrait"] img {
+    width: auto;
+    max-height: 260px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 0.6em;
+    box-shadow: 0 2px 6px #ddd;
+  }
+
+  .carousel-wrapper.section-buiten-landscape {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: auto;
+    gap: 0.75rem;
+  }
+
+  .carousel-wrapper.section-buiten-landscape a:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .carousel-wrapper.section-buiten-landscape a:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .carousel-wrapper.section-buiten-landscape a:nth-child(3) {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .carousel-wrapper.section-buiten-landscape a:nth-child(4) {
+    grid-column: 1 / 2;
+    grid-row: 2;
+  }
+
+  .carousel-wrapper.section-buiten-landscape a:nth-child(5) {
+    grid-column: 2 / 3;
+    grid-row: 2;
+  }
+
+  .carousel-wrapper.section-buiten-landscape img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 0.6em;
+    box-shadow: 0 2px 6px #ddd;
+  }
+}
+
+@media (min-width: 901px) {
+  .carousel-wrapper.section-buiten-landscape {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem !important;
+    overflow-x: visible;
+  }
+
+  .carousel-wrapper.section-buiten-landscape a img {
+    height: 220px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.6em;
+    box-shadow: 0 2px 6px #ddd;
+  }
+}

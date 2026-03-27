@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stacaravan reserveren in Diepenheim (Twente) | 4 personen | De Mölnhöfte</title>
+    <meta name="description" content="Gezellige stacaravan voor 4 personen te huur op camping De Mölnhöfte in Diepenheim, Twente. Rust, natuur, fietsen, wandelen, zwembad en geschikt voor 50-plussers en jonge gezinnen.">
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/boeken.css">
+    <link rel="canonical" href="https://www.stacaravandiepenheim.nl/html/reserveren.html">
+  </head>
+  <body>
+    <div class="grid-container">
+      <div class="item1">
+        <h1>Stacaravan huren in Diepenheim, Twente</h1>
+        <p class="introzin">Gezellige stacaravan voor 4 personen op camping De Mölnhöfte, ideaal voor rust, fietsen, wandelen en jonge gezinnen.</p>
+        <div class="header-images">
+          <img src="../afbeeldingen/caravanvoorkant_groot.jpg" alt="Stacaravan in Diepenheim op camping De Mölnhöfte in Twente" class="header-image">
+          <img src="../afbeeldingen/buitenkant_groot.jpg" alt="Buitenkant stacaravan in Diepenheim op camping De Mölnhöfte in Twente" class="header-image">
+          <img src="../afbeeldingen/luchtfoto_groot.jpg" alt="Luchtfoto van de camping in Diepenheim" class="header-image">
+        </div> 
+        <div class="top-cta">
+          <a href="../html/reserveren.html" class="reserveer-button">Bekijk beschikbaarheid</a>
+          <a href="https://wa.me/31642738357?text=Hallo,%20ik%20heb%20een%20vraag%20over%20de%20stacaravan%20in%20Diepenheim" class="whatsapp-button">
+          💬 Stel een vraag via WhatsApp</a>
+        </div>   
+        <div class="populariteit">
+          <p>⭐ 4/5 beoordeling van gasten  </p>
+          <p>📅 Nog veel weken beschikbaar dit seizoen</p>
+        </div>
+      </div>  
+      <nav class="item2" aria-label="Hoofdmenu">
+        <ul>
+          <li><a href="../index.html" >Home</a></li>
+          <li><a href="/html/caravan.html">De caravan</a></li>
+          <li><a href="/html/camping.html">De camping</a></li>
+          <li><a href="/html/omgeving.html">De omgeving</a></li>
+          <li><a href="/html/reserveren.html" aria-current="page">Reserveren</a></li>
+          <li><a href="../html/over-ons.html">Over ons</a></li>
+        </ul>
+      </nav>
+
+      <div class="item3">
+        <section class="section-text">
+          <h2>Reserveren</h2>
+          <p>Op deze pagina kunt u de stacaravan boeken. Let op: Na invullen van dit formulier sturen we u een mail terug of de reservering kan doorgaan en de kosten. U heeft pas definitief geboekt als u deze mail beantwoord. Wij houden de reservering 48 uur voor u vast vanaf het moment dat wij u een mail terug hebben gestuurd met een bevestiging en de kosten.</p>
+        </section>
+
+        
+
+        <section class="section-kalender">
+          <h3 id="kalender">Beschikbaarheid</h3>
+          <p>Hieronder ziet u de beschikbaarheid van de stacaravan. De rode dagen zijn bezet en de niet gekleurde dagen zijn beschikbaar. We proberen dit zo snel mogelijk aan te passen bij nieuwe boekingen. U kunt boeken per weekend, midweek of week. Aankomst- en vertrekdagen zijn in principe alleen op vrijdag of maandag, in overleg zou een andere dag mogelijk kunnen zijn. Liever geen honden. </p>
+          <p><strong>Let op: Er kan 1 week (misschien 2 weken) in de zomervakantie geboekt worden, in overleg met ons. Neem hiervoor contact op via mail of what's app.</strong></p>
+          <div class="calendar-container single-calendar">
+            <div class="calendar-box">
+              <h3>Kies aankomst- en vertrekdatum</h3>
+
+              <div class="month-picker">
+                <button type="button" id="prev-month">Vorige maand</button>
+                <span id="month-year"></span>
+                <button type="button" id="next-month">Volgende maand</button>
+              </div>
+
+              <div id="calendar" class="calendar"></div>
+
+              <p>Geselecteerde aankomstdatum: <span id="selected-arrival"></span></p>
+              <p>Geselecteerde vertrekdatum: <span id="selected-departure"></span></p>
+            </div>
+          </div>
+          
+        </section>
+
+        <section class="section-verblijf">
+          <h3>Verblijf</h3>
+          <p id="price-summary" style="font-weight:600;margin:.5rem 0;"></p>
+          <div id="price-spec"></div> <!-- optioneel: breakdown -->
+
+          <input type="hidden" id="stay-hidden" name="Verblijfstype" form="boeken">
+          <input type="hidden" id="price-hidden" name="PrijsIndicatie" form="boeken">
+          <input type="hidden" id="price-spec-hidden" name="PrijsSpecificatie" form="boeken">
+          <p>Aankomsttijd: tussen 15.00 en 21.00 uur.</p>
+          <p>Vertrektijd: tot 11.00 uur.</p>
+          <p>Andere aankomst- en vertrekdag in overleg mogelijk. Mail / app ons daarvoor, of zet het in de opmerkingen.</p>
+        </section>
+
+        <section class="section-reservering">
+          <h3>Reservering</h3>
+          <p id="selected-period" aria-live="polite" style="font-weight:600; margin: .5rem 0;">
+        <!-- wordt dynamisch gevuld -->
+        </p>
+          <p>
+            <label for="personen">Aantal personen (v.a. 3 jaar)</label>
+            <select id="personen" name="personen" form="boeken">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="babies">Aantal baby's (0 t/m 2 jaar, gratis)</label>
+            <select id="babies" name="babies" form="boeken">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+            </select>
+          </p>
+
+          <p><strong>Extra's</strong></p>
+
+          <p>
+            <label>
+              <input type="checkbox" id="schoonmaak" name="schoonmaak" value="ja" form="boeken">
+              Eindschoonmaak door ons laten doen voor € 50*
+            </label>
+          </p>
+
+          <p class="letop">
+            <small>De caravan dient sowieso altijd met een schone vaat en met een lege koelkast en vriezer te worden achtergelaten, tevens moeten meubels en keukengerei zoveel mogelijk op dezelfde plek terug worden gezet/gelegd als bij aankomst aangetroffen, in geval van verplaatsing. Het afval brengt u ook altijd zelf naar de containers voor aan de camping.
+            </br></br>*Let op: als u er voor kiest om zelf de eindschoonmaak te doen, dan moet u het net zo schoon achterlaten als u het heeft aangetroffen. Stofzuigen, dweilen en een sopje over/door alle platte oppervlakken, wasbakken en wc, trapje buiten aanvegen. Wanneer dit bij controle niet blijkt, kunnen wij alsnog schoonmaakkosten in rekening brengen door het in te houden van de borg.
+            </small>
+          </p>
+
+          <p>
+            <label>
+              <input type="checkbox" id="beddengoed" name="beddengoed" value="ja" form="boeken">
+              Linnengoed huren voor € 4 per persoon
+            </label><br>
+            <small>Bij aanvinken rekenen we linnengoed voor alle opgegeven volwassenen en kinderen van 1-17 jaar. Voor uitzonderingen kunt u dit invullen bij opmerkingen.</small>
+          </p>
+
+          <p>
+            <select id="handdoeken-aantal" name="handdoeken_aantal" form="boeken">
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+            <label for="handdoeken-aantal">Aantal handdoeksets huren (€ 4 per set)</label>
+            
+            <small>1 set = 2 grote en 2 kleine handdoeken.</small>
+          </p>
+
+          <p>
+            <label>
+              <input type="checkbox" id="campingbedje" name="campingbedje" value="ja" form="boeken">
+              Campingbedje klaarzetten (gratis)
+            </label><br>
+            <small>Let op: voor het campingbedje is geen linnengoed te huur. Alleen een matrashoesje is aanwezig. Overig beddengoed moet u zelf meenemen.</small>
+          </p>
+
+          <p>
+            <label>
+              <input type="checkbox" id="kinderstoel" name="kinderstoel" value="ja" form="boeken">
+              Gratis kinderstoel (onder voorbehoud)
+            </label>
+          </p>
+
+          <p>
+            <label>
+              <input type="checkbox" id="hotspot" name="hotspot" value="ja" form="boeken">
+              Hotspot erbij boeken voor € 25 om goed te kunnen werken of streamen (v.a. 2 weken 50 euro)
+            </label>
+          </p>
+
+          <p>Let op: 'gewone' wifi kunt u zelf kopen bij de receptie. Verbinding is niet altijd optimaal.</p>
+
+          
+
+          <img src="../afbeeldingen/wifi.jpg" alt="Foto van wifikosten">
+
+        </section>
+
+        <section class="section-gegevens">
+          <h3>Gegevens</h3>
+          <form action="https://formspree.io/f/manbvgbe" method="post" autocomplete="on" name="boeken" id="boeken">
+            <p><label>Naam:<input type="text" name="Naam" size="40" required autocomplete="name"></label></p>
+            <p><label>Adres:<input type="text" name="Adres" size="40" required></label></p>
+            <p><label>Postcode:<input type="text" size="7" name="Postcode" pattern="^[0-9]{4}\s?[A-Z]{2}$" placeholder="1111AE" required></label></p>
+            <p><label>Woonplaats:<input type="text" name="Woonplaats" required autocomplete="address-level2"></label></p>
+            <p><label>Land:<input type="text" name="Land" required autocomplete="country-name"></label></p>
+            <p><label>Telefoonnummer:<input type="tel" name="Telefoonnummer" size="20" pattern="^0\d{1,3}[-|\s]?\d{6,8}$" required autocomplete="tel"></label></p>
+            <p><label>E-mailadres:<input type="email" name="email" size="40" required autocomplete="email"></label></p>
+            <input type="hidden" name="Aankomst" id="arrival-hidden">
+            <input type="hidden" name="Vertrek"   id="departure-hidden">
+            <input type="text" name="_gotcha" style="display:none">
+            <input type="hidden" name="_cc" id="cc-email">
+            <input type="hidden" name="_subject" value="Nieuwe reserveringsaanvraag stacaravan">
+            <input type="hidden" name="_replyto" value="">
+          </form>  
+        
+          <p><label>Opmerkingen:
+            <textarea name="Opmerkingen" cols="50" rows="8" form="boeken"></textarea>
+            </label>
+          </p>
+          <p>Let op: Na invullen en verzenden van dit formulier sturen we u een mail terug of de reservering kan doorgaan en de kosten. U heeft pas definitief geboekt als u deze mail beantwoord. Wij houden de reservering 48 uur voor u vast vanaf het moment dat wij u een mail terug hebben gestuurd met een bevestiging en de kosten.</p>
+          <p>NB: Tegenover de camping, op 200 m. hemelsbreed van de caravan, zit het bedrijf Teerds (stort / handel in metalen), op werkdagen onder werktijden (maandag-zaterdag 09:00 - 12:30 & 13:00 - 17:00) kunt u geluiden daarvan horen. Deze zijn wat ons betreft niet storend en ook niet de hele dag te horen, maar willen we graag wel vermeld hebben.</p>
+          <button type="submit" form="boeken">Verzend reserveringsaanvraag</button>
+        </section>
+        
+        <section class="section-overzicht" id="submission-receipt" style="display:none">
+          <h3>Bedankt! We hebben uw aanvraag ontvangen.</h3>
+          <p>Hieronder ziet u een overzicht van wat u heeft ingevuld. U kunt deze pagina ook printen of opslaan als PDF.</p>
+
+          <!-- prijsindicatie van je bestaande blokken (we nemen ze over) -->
+          <div id="receipt-price-summary"></div>
+          <div id="receipt-price-spec"></div>
+
+          <!-- tabel met alle velden -->
+          <div class="table-wrap">
+            <table class="rate-table rate-two-col" id="receipt-table">
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <button type="button" id="receipt-print">Print / Bewaar als PDF</button>
+        </section>
+        <section class="section-tarieven">
+          <h3>Tarieven</h3>
+          <div class="tarieven-kort">
+            <ul>
+              <li>Weekend (vr–ma): <strong>v.a. € 145</strong></li>
+              <li>Paasweekend (vr–ma/di): <strong>€ 250-275</strong></li>
+              <li>Midweek (ma–vr): <strong>v.a. € 195</strong></li>
+              <li>Week: <strong>v.a. € 245</strong></li>
+              <li>Herfstvakantie: <strong>€ 320</strong></li>
+              <li>Tussen 28 oktober en 2 april in overleg</li>
+              <li>Meivakantie, Hemelvaartsweekend en Pinksterweekend niet beschikbaar</li>
+              <li>Zomervakantie: <strong>Week v.a. € 395</strong> <small>(weken buiten Noord / 1e week Noord))</small></li>
+            </ul>
+            <p>De <em>exacte</em> prijs wordt automatisch berekend zodra u hieronder een aankomst- en vertrekdatum kiest.</p>
+            <p class="tarieven-footnotes">
+              <small>* Exclusief toeristenbelasting (€4 p.p.p.n. voor volwassenen en kinderen van 1-17 jaar), borg, schoonmaakkosten en evt. linnengoed/handdoeken.</small>
+            </p>
+          </div>
+        </section>
+
+        <section class="section-tarieven-details">
+          <h4>Verdere tarieven huur caravan</h4>
+          <div class="table-wrap">
+            <table class="rate-table rate-two-col">
+              <tbody>
+                <tr><th>Eindschoonmaak kosten (als u dit door ons laat doen)</th><td class="num">&euro; 50,-</td></tr>
+                <tr><th>Borg huurcaravan</th><td class="num">&euro; 100,-</td></tr>
+                <tr><th>Toeristenbelasting p.p.p.n. (vanaf 3 jaar)</th><td class="num">&euro; 4,-</td></tr>
+                <tr><th>Huur linnengoed</th><td class="num">&euro; 4,- p.p. (totaal)</td></tr>
+                <tr><th>Huur handdoeken (week)</th><td class="num">&euro; 4,- per set (1 set = 2 grote en 2 kleine)</td></tr>
+                <tr><th>Hotspot (snelle wifi in de caravan)</th><td class="num">&euro; 25,- (totaal)</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>Tarieven camping</h4>
+          <div class="table-wrap">
+            <table class="rate-table rate-two-col">
+              <tbody>
+                <tr><th>Borg slagboom</th><td> &euro; 25,- (bij aankomst bij receptie)</td></tr>
+                <tr><th>Wifi (week)</th><td class="num">&euro; 15,-</td></tr>
+                <tr><th>Wifi (per dag)</th><td class="num">&euro; 5,-</td></tr>
+                <tr><th>Zwembad (Pinksteren–sept)</th><td>Gratis</td></tr>
+                <tr><th>Douches</th><td>Gratis. Let op: Gebouw vlakbij caravan open ca. Hemelvaart–sept; hoofdgebouw heel jaar.</td></tr>
+                <tr><th>Wasmachine</th><td class="num">&euro; 4,50 per munt</td></tr>
+                <tr><th>Droger</th><td class="num">&euro; 4,50 per munt</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+<aside class="right-col">
+
+        <!-- Last minutes -->
+        <div data-include="../partials/last-minutes.html"></div>
+
+        <!-- Praktische info -->
+        <section class="aside-card">
+          <h3>Praktische informatie</h3>
+          <ul class="aside-info">
+            <li>👨‍👩‍👧 Geschikt voor 4 personen</li>
+            <li>🚲 Overdekte fietsenplek met oplaadpunt</li>
+            <li>🏊 Zwembad op de camping</li>
+            <li>🌳 Rustige plek midden in Twente</li>
+            <li>🧒 Speeltuin schuin tegenover</li>
+            <li>🚗 Parkeerplek op eigen terrein</li>
+          </ul>
+        </section>
+
+        <!-- Voor wie geschikt -->
+        <section class="aside-card">
+          <h3>Voor wie is deze plek ideaal?</h3>
+          <ul class="aside-info">
+            <li>🚴 50-plussers die willen fietsen</li>
+            <li>👨‍👩‍👧 Gezinnen met jonge kinderen</li>
+            <li>🌿 Rustzoekers en natuurliefhebbers</li>
+          </ul>
+        </section>
+
+        <!-- Prijs indicatie -->
+        <section class="aside-card prijsblok">
+          <h3>Prijsindicatie</h3>
+          <p>Week: vanaf € 295,- *</p>
+          <p>Weekend: vanaf € 195,- *</p>
+          <p>* excl. toeristenbelasting en extra's</p>
+        </section>
+
+        <!-- Reserveren -->
+        <section class="aside-card boekblok">
+          <h3>Beschikbaarheid bekijken</h3>
+          <p>Bekijk wanneer de stacaravan nog vrij is en reserveer eenvoudig online.</p>
+          <a href="../html/reserveren.html" class="cta-knop">Bekijk beschikbaarheid</a>
+        </section>
+
+      </aside>
+
+
+      <div class="item5">
+        <p>Stacaravan te huur in Diepenheim, Twente – op camping De Mölnhöfte. Bekijk de <a href="reserveren.html">beschikbaarheid en reserveringsmogelijkheden</a>.</p>
+      </div>
+    </div>
+
+    <!-- Carrousel functionaliteit, zet onderaan vóór </body> -->
+    <script>
+      function updateCarouselArrows(container) {
+        const wrapper = container.querySelector('.carousel-wrapper');
+        const leftBtn = container.querySelector('.carousel-arrow.left');
+        const rightBtn = container.querySelector('.carousel-arrow.right');
+        if (!wrapper || !leftBtn || !rightBtn) return;
+
+        // Alleen tonen als scrollen nodig is
+        if (wrapper.scrollWidth > wrapper.clientWidth) {
+          leftBtn.style.display = '';
+          rightBtn.style.display = '';
+        } else {
+          leftBtn.style.display = 'none';
+          rightBtn.style.display = 'none';
+        }
+
+        // Optioneel: disable knoppen als je aan het begin/eind bent
+        leftBtn.disabled = wrapper.scrollLeft === 0;
+        rightBtn.disabled = Math.ceil(wrapper.scrollLeft + wrapper.clientWidth) >= wrapper.scrollWidth;
+      }
+
+      // Initialiseren én bij resize/updaten
+      function initAllCarousels() {
+        document.querySelectorAll('.carousel-container').forEach(function(container) {
+          const wrapper = container.querySelector('.carousel-wrapper');
+          const leftBtn = container.querySelector('.carousel-arrow.left');
+          const rightBtn = container.querySelector('.carousel-arrow.right');
+          if (!wrapper || !leftBtn || !rightBtn) return;
+
+          // Scroll
+          function getScrollAmount() {
+            // Scroll precies één foto-breedte
+            const firstChild = wrapper.querySelector('a, img, div');
+            return firstChild ? firstChild.offsetWidth : 250;
+          }
+
+          leftBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            wrapper.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
+          });
+          rightBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            wrapper.scrollBy({ left: +getScrollAmount(), behavior: 'smooth' });
+          });
+
+          // Update pijltjes bij scrollen
+          wrapper.addEventListener('scroll', function() {
+            updateCarouselArrows(container);
+          });
+
+          // Initieel tonen
+          updateCarouselArrows(container);
+        });
+      }
+
+      // Opnieuw pijltjes tonen bij resize/orientatie-wissel
+      window.addEventListener('resize', initAllCarousels);
+      window.addEventListener('DOMContentLoaded', initAllCarousels);
+    </script>
+    <script src="../js/script.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll("[data-include]").forEach(function (el) {
+        fetch(el.getAttribute("data-include"))
+          .then(response => response.text())
+          .then(data => el.outerHTML = data)
+          .catch(err => console.error("Include mislukt:", err));
+      });
+    });
+    </script>   
+
+
+
+  </body>
+</html>

@@ -1,0 +1,449 @@
+@charset "utf-8";
+
+/* ==========================================
+   Reserveren / boeken pagina
+   ========================================== */
+
+/* ---------- Kalender ---------- */
+.calendar-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.calendar-box {
+  flex: 1 1 320px;
+  background: #f8f6f2;
+  border: 1px solid #ddd6c8;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  min-width: 0;
+}
+
+.calendar-box h3 {
+  margin-top: 0;
+  color: white;
+}
+
+.month-picker {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.month-picker button {
+  background: #c97f5a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.month-picker button:hover {
+  background: #b96d48;
+  transform: translateY(-1px);
+}
+
+.month-picker span {
+  font-weight: 600;
+  color: #4a3d34;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.35rem;
+  width: 100%;
+}
+
+.day {
+  min-height: 48px;
+  background: #fffdf9;
+  border: 1px solid #e6ddd2;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  position: relative;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.day.header {
+  background: #e8dfd3;
+  color: #5a4a3f;
+  font-weight: 600;
+  border: none;
+}
+
+.day.available {
+  background: #f6efe4;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.day.available:hover {
+  background: #ead7bf;
+  border-color: #d0b08b;
+  transform: scale(1.03);
+}
+
+.day.booked {
+  background: #d96c6c;
+  color: white;
+  border-color: #c45757;
+}
+
+.day.unavailable {
+  background: #f1f1f1;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.day.selected-start,
+.day.selected-end {
+  background: #7aa874 !important;
+  color: white;
+  border-color: #5f8d59;
+  font-weight: 700;
+}
+
+.day.selected-range {
+  background: #dcebd8 !important;
+  color: #3f4f3c;
+  border-color: #b8d0b1;
+}
+
+.wk-badge {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  font-size: 0.6rem;
+  color: #7a6d63;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 1px 4px;
+  border-radius: 6px;
+}
+
+#selected-arrival,
+#selected-departure {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--darkblue);
+  display: inline-block;
+}
+
+/* ---------- Formulier ---------- */
+form {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="tel"],
+form select,
+form textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.section-gegevens form,
+.section-gegevens form p,
+.section-gegevens form label,
+.section-gegevens input,
+.section-gegevens textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.section-gegevens textarea {
+  resize: vertical;
+  min-height: 140px;
+}
+
+.section-gegevens input[type="text"],
+.section-gegevens input[type="email"],
+.section-gegevens input[type="tel"],
+.section-gegevens select,
+.section-gegevens textarea {
+  font-size: 1rem;
+  padding: 0.5rem;
+}
+
+/* ---------- Tabellen ---------- */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0.75rem 0;
+}
+
+.rate-table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  background: #fff;
+}
+
+.rate-table caption {
+  text-align: left;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: var(--darkblue);
+}
+
+.rate-table th,
+.rate-table td {
+  padding: 0.6rem 0.7rem;
+  border-bottom: 1px solid #e9eef3;
+  vertical-align: top;
+  text-align: left;
+  white-space: normal;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.rate-table thead th {
+  background: var(--lightestblue);
+  color: var(--blue);
+  border-bottom: 2px solid #dfe8f0;
+}
+
+.rate-table tbody tr:hover {
+  background: #fafcff;
+}
+
+.rate-table .num {
+  text-align: left;
+}
+
+/* Gelijke kolombreedtes voor two-col tabellen */
+table.rate-table.rate-two-col {
+  table-layout: fixed;
+}
+
+table.rate-table.rate-two-col th:first-child,
+table.rate-table.rate-two-col td:first-child {
+  width: 75%;
+}
+
+table.rate-table.rate-two-col th:last-child,
+table.rate-table.rate-two-col td:last-child {
+  width: 25%;
+}
+
+/* Extra prijstabel */
+table.prijs-tabel {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+table.prijs-tabel th,
+table.prijs-tabel td {
+  border: 1px solid #ccc;
+  padding: 0.6rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+table.prijs-tabel th {
+  background-color: #f3f7fc;
+  color: var(--darkblue);
+}
+
+table.prijs-tabel .price-total {
+  background-color: #e6f2ff;
+}
+
+/* ---------- Afbeelding wifi ---------- */
+img[alt="Foto van wifikosten"] {
+  max-width: 50%;
+  height: auto;
+  display: block;
+  margin: 1rem auto;
+}
+
+/* ---------- Kleine correcties ---------- */
+.item3 > p {
+  padding: 0 1rem;
+  word-break: break-word;
+}
+
+/* ==========================================
+   Responsive
+   ========================================== */
+
+@media (max-width: 768px) {
+  .calendar-box {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .calendar {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .calendar-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .calendar-box,
+  .calendar,
+  form,
+  .item3,
+  .section-gegevens form,
+  .section-gegevens form p,
+  .section-gegevens form label,
+  .section-gegevens input,
+  .section-gegevens textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .item3 {
+    padding: 0 0.8rem;
+  }
+
+  form {
+    padding: 0 0.8rem;
+  }
+
+  .calendar {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+
+  .calendar .day {
+    font-size: 0.7rem;
+    padding: 5px 2px;
+    min-height: auto;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .month-picker {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  #selected-arrival,
+  #selected-departure {
+    display: block;
+    margin-top: 0.3rem;
+  }
+
+  img[alt="Foto van wifikosten"] {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  img[alt="Foto van wifikosten"] {
+    max-width: 30%;
+  }
+}
+
+@media (min-width: 2560px) {
+  img[alt="Foto van wifikosten"] {
+    max-width: 20%;
+  }
+
+  form input[type="text"],
+  form input[type="email"],
+  form input[type="tel"] {
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    height: 2.75rem;
+  }
+
+  form label {
+    padding-bottom: 0.3rem;
+  }
+
+  button {
+    font-size: 1.4rem;
+    padding: 0.3rem;
+  }
+
+  select {
+    font-size: 1rem;
+    padding: 0.2rem;
+    height: 2rem;
+  }
+}
+/* verzendknop reserveringsformulier */
+button[type="submit"][form="boeken"] {
+  background-color: #2a7a2e;
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  display: block;
+  margin: 1.5rem auto 0 auto;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+button[type="submit"][form="boeken"]:hover {
+  background-color: #246524;
+  transform: translateY(-1px);
+}
+.calendar-wrapper{
+max-width:650px;
+margin:auto;
+}
+
+.calendar-nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
+
+.calendar{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+gap:4px;
+}
+.day.selected-start,
+.day.selected-end {
+  background: #7aa874 !important;
+  color: white;
+  border-color: #5f8d59;
+  font-weight: 700;
+}
+
+.day.selected-range {
+  background: #dcefd8 !important;
+  color: #2f4f2f;
+  border-color: #b9d7b3;
+}
+
+.day.available.arrival-option {
+  background: #f6efe4;
+}
+
+.day.available.departure-option {
+  background: #e8f3ff;
+}

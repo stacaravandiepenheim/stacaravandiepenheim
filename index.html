@@ -19,10 +19,22 @@
         in de omgeving. De plek is ideaal voor mensen die willen fietsen, wandelen
         of gewoon genieten van een ontspannen vakantie in Twente.
         </p>
-      <div class="header-images">
-        <img src="afbeeldingen/caravanvoorkant_groot.jpg" alt="Stacaravan in Diepenheim op camping De Mölnhöfte in Twente" class="header-image">
-        <img src="afbeeldingen/buitenkant_groot.jpg" alt="Buitenkant stacaravan in Diepenheim op camping De Mölnhöfte in Twente" class="header-image">
-        <img src="afbeeldingen/luchtfoto_groot.jpg" alt="Luchtfoto van de camping in Diepenheim" class="header-image">
+      <div class="header-carousel carousel-container">
+        <button class="carousel-arrow left" aria-label="Vorige foto">&#10094;</button>
+
+        <div class="header-images carousel-wrapper">
+          <div class="header-slide">
+            <img src="afbeeldingen/caravanvoorkant_groot.jpg" alt="Stacaravan in Diepenheim op camping De Mölnhöfte in Twente" class="header-image">
+          </div>
+          <div class="header-slide">
+            <img src="afbeeldingen/buitenkant_groot.jpg" alt="Buitenkant stacaravan in Diepenheim op camping De Mölnhöfte in Twente" class="header-image">
+          </div>
+          <div class="header-slide">
+            <img src="afbeeldingen/luchtfoto_groot.jpg" alt="Luchtfoto van de camping in Diepenheim" class="header-image">
+          </div>
+        </div>
+
+        <button class="carousel-arrow right" aria-label="Volgende foto">&#10095;</button>
       </div>
       <div class="top-cta">
         <a href="html/reserveren.html" class="reserveer-button">Bekijk beschikbaarheid</a>
@@ -34,6 +46,9 @@
         <p>📅 Nog veel weken beschikbaar dit seizoen</p>
       </div>
     </div>
+      <button class="menu-toggle" aria-label="Menu openen">
+        ☰
+      </button>
       <nav class="item2" aria-label="Hoofdmenu">
         <ul>
           <li><a href="index.html" aria-current="page">De stacaravan</a></li>
@@ -73,8 +88,7 @@
             Camping de Mölnhöfte is een rustige, kleinschalige camping midden in de natuur met vriendelijke eigenaren. Met een zwembad vanaf Pinksteren tot aan het einde van de zomervakantie, een restaurant met heerlijke (afhaal)gerechten en ijsjes en een grote speeltuin aan de voorkant. 
             <a href="html/camping.html">Lees hier meer over camping de Mölnhöfte.</a>
             </p>
-            <P
-        <p>Benieuwd naar de mogelijkheden? <a href="html/reserveren.html">Bekijk hier de beschikbaarheid en reserveringsinformatie.</a></p>
+            <p>Benieuwd naar de mogelijkheden? <a href="html/reserveren.html">Bekijk hier de beschikbaarheid en reserveringsinformatie.</a></p>
         </section>
         
         <h2>Stacaravan huren in Twente voor 4 personen</h2>
@@ -84,7 +98,7 @@
       
       
       </div>
-<aside class="right-col">
+      <aside class="right-col">
 
         <!-- Last minutes -->
         <div data-include="partials/last-minutes.html"></div>
@@ -143,7 +157,12 @@
         const rightBtn = container.querySelector('.carousel-arrow.right');
         if (!wrapper || !leftBtn || !rightBtn) return;
 
-        // Alleen tonen als scrollen nodig is
+        if (window.innerWidth > 600) {
+          leftBtn.style.display = 'none';
+          rightBtn.style.display = 'none';
+          return;
+        }
+
         if (wrapper.scrollWidth > wrapper.clientWidth) {
           leftBtn.style.display = '';
           rightBtn.style.display = '';
@@ -152,12 +171,10 @@
           rightBtn.style.display = 'none';
         }
 
-        // Optioneel: disable knoppen als je aan het begin/eind bent
-        leftBtn.disabled = wrapper.scrollLeft === 0;
-        rightBtn.disabled = Math.ceil(wrapper.scrollLeft + wrapper.clientWidth) >= wrapper.scrollWidth;
+        leftBtn.disabled = wrapper.scrollLeft <= 5;
+        rightBtn.disabled = Math.ceil(wrapper.scrollLeft + wrapper.clientWidth) >= wrapper.scrollWidth - 5;
       }
 
-      // Initialiseren én bij resize/updaten
       function initAllCarousels() {
         document.querySelectorAll('.carousel-container').forEach(function(container) {
           const wrapper = container.querySelector('.carousel-wrapper');
@@ -165,45 +182,77 @@
           const rightBtn = container.querySelector('.carousel-arrow.right');
           if (!wrapper || !leftBtn || !rightBtn) return;
 
-          // Scroll
+          if (container.dataset.carouselInitialized === 'true') return;
+          container.dataset.carouselInitialized = 'true';
+
           function getScrollAmount() {
-            // Scroll precies één foto-breedte
-            const firstChild = wrapper.querySelector('a, img, div');
-            return firstChild ? firstChild.offsetWidth : 250;
+            const firstSlide = wrapper.querySelector('.header-slide, a, img, div');
+            return firstSlide ? firstSlide.offsetWidth : wrapper.clientWidth;
           }
 
           leftBtn.addEventListener('click', function(e) {
             e.preventDefault();
             wrapper.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
           });
+
           rightBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            wrapper.scrollBy({ left: +getScrollAmount(), behavior: 'smooth' });
+            wrapper.scrollBy({ left: getScrollAmount(), behavior: 'smooth' });
           });
 
-          // Update pijltjes bij scrollen
           wrapper.addEventListener('scroll', function() {
             updateCarouselArrows(container);
           });
 
-          // Initieel tonen
+          if (container.classList.contains('header-carousel')) {
+            let autoSlide;
+
+            function startAutoSlide() {
+              if (window.innerWidth > 600) return;
+
+              stopAutoSlide();
+              autoSlide = setInterval(() => {
+                const scrollAmount = getScrollAmount();
+                const maxScroll = wrapper.scrollWidth - wrapper.clientWidth;
+
+                if (wrapper.scrollLeft + scrollAmount >= maxScroll - 5) {
+                  wrapper.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                  wrapper.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                }
+              }, 4000);
+            }
+
+            function stopAutoSlide() {
+              if (autoSlide) clearInterval(autoSlide);
+            }
+
+            container.addEventListener('mouseenter', stopAutoSlide);
+            container.addEventListener('mouseleave', startAutoSlide);
+            container.addEventListener('touchstart', stopAutoSlide, { passive: true });
+            container.addEventListener('touchend', startAutoSlide);
+
+            startAutoSlide();
+            window.addEventListener('resize', startAutoSlide);
+          }
+
           updateCarouselArrows(container);
         });
       }
 
-      // Opnieuw pijltjes tonen bij resize/orientatie-wissel
-      window.addEventListener('resize', initAllCarousels);
-      window.addEventListener('DOMContentLoaded', initAllCarousels);
-    </script>
-     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      document.querySelectorAll("[data-include]").forEach(function (el) {
-        fetch(el.getAttribute("data-include"))
-          .then(response => response.text())
-          .then(data => el.outerHTML = data)
-          .catch(err => console.error("Include mislukt:", err));
+      window.addEventListener('resize', function() {
+        document.querySelectorAll('.carousel-container').forEach(updateCarouselArrows);
       });
-    });
-    </script>  
+
+      window.addEventListener('DOMContentLoaded', initAllCarousels);
+      document.addEventListener("DOMContentLoaded", function() {
+        const toggle = document.querySelector(".menu-toggle");
+        const menu = document.querySelector(".item2");
+
+        toggle.addEventListener("click", function() {
+          menu.classList.toggle("open");
+        });
+      });
+    </script>
   </body>
 </html>

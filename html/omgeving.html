@@ -200,74 +200,81 @@
     </div>
 
     <!-- Carrousel functionaliteit, zet onderaan vóór </body> -->
-    <script>
-      function updateCarouselArrows(container) {
-        const wrapper = container.querySelector('.carousel-wrapper');
-        const leftBtn = container.querySelector('.carousel-arrow.left');
-        const rightBtn = container.querySelector('.carousel-arrow.right');
-        if (!wrapper || !leftBtn || !rightBtn) return;
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-        // Alleen tonen als scrollen nodig is
-        if (wrapper.scrollWidth > wrapper.clientWidth) {
-          leftBtn.style.display = '';
-          rightBtn.style.display = '';
-        } else {
-          leftBtn.style.display = 'none';
-          rightBtn.style.display = 'none';
-        }
+  /* =========================
+     CARROUSEL
+  ========================= */
 
-        // Optioneel: disable knoppen als je aan het begin/eind bent
-        leftBtn.disabled = wrapper.scrollLeft === 0;
-        rightBtn.disabled = Math.ceil(wrapper.scrollLeft + wrapper.clientWidth) >= wrapper.scrollWidth;
+  const carousels = document.querySelectorAll('.carousel-container');
+
+  carousels.forEach(function (container) {
+    const wrapper = container.querySelector('.carousel-wrapper');
+    const leftBtn = container.querySelector('.carousel-arrow.left');
+    const rightBtn = container.querySelector('.carousel-arrow.right');
+
+    if (!wrapper || !leftBtn || !rightBtn) return;
+
+    function getScrollAmount() {
+      const firstItem = wrapper.querySelector('a, img, div');
+      return firstItem ? firstItem.offsetWidth + 16 : 250;
+    }
+
+    function updateArrows() {
+      const maxScrollLeft = wrapper.scrollWidth - wrapper.clientWidth;
+
+      if (wrapper.scrollWidth <= wrapper.clientWidth + 5) {
+        leftBtn.style.display = 'none';
+        rightBtn.style.display = 'none';
+        return;
+      } else {
+        leftBtn.style.display = '';
+        rightBtn.style.display = '';
       }
 
-      // Initialiseren én bij resize/updaten
-      function initAllCarousels() {
-        document.querySelectorAll('.carousel-container').forEach(function(container) {
-          const wrapper = container.querySelector('.carousel-wrapper');
-          const leftBtn = container.querySelector('.carousel-arrow.left');
-          const rightBtn = container.querySelector('.carousel-arrow.right');
-          if (!wrapper || !leftBtn || !rightBtn) return;
+      leftBtn.disabled = wrapper.scrollLeft <= 5;
+      rightBtn.disabled = wrapper.scrollLeft >= maxScrollLeft - 5;
+    }
 
-          // Scroll
-          function getScrollAmount() {
-            // Scroll precies één foto-breedte
-            const firstChild = wrapper.querySelector('a, img, div');
-            return firstChild ? firstChild.offsetWidth : 250;
-          }
-
-          leftBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            wrapper.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
-          });
-          rightBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            wrapper.scrollBy({ left: +getScrollAmount(), behavior: 'smooth' });
-          });
-
-          // Update pijltjes bij scrollen
-          wrapper.addEventListener('scroll', function() {
-            updateCarouselArrows(container);
-          });
-
-          // Initieel tonen
-          updateCarouselArrows(container);
-        });
-      }
-
-      // Opnieuw pijltjes tonen bij resize/orientatie-wissel
-      window.addEventListener('resize', initAllCarousels);
-      window.addEventListener('DOMContentLoaded', initAllCarousels);
-    </script>
-     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      document.querySelectorAll("[data-include]").forEach(function (el) {
-        fetch(el.getAttribute("data-include"))
-          .then(response => response.text())
-          .then(data => el.outerHTML = data)
-          .catch(err => console.error("Include mislukt:", err));
+    leftBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      wrapper.scrollBy({
+        left: -getScrollAmount(),
+        behavior: 'smooth'
       });
     });
-    </script>  
+
+    rightBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      wrapper.scrollBy({
+        left: getScrollAmount(),
+        behavior: 'smooth'
+      });
+    });
+
+    wrapper.addEventListener('scroll', updateArrows);
+    window.addEventListener('resize', updateArrows);
+
+    updateArrows();
+  });
+
+
+  /* =========================
+     HAMBURGERMENU
+  ========================= */
+
+  const menuToggle = document.querySelector('.menu-toggle');
+  const nav = document.querySelector('.item2');
+
+  if (menuToggle && nav) {
+    menuToggle.addEventListener('click', function () {
+      nav.classList.toggle('open');
+      menuToggle.classList.toggle('open');
+    });
+  }
+
+});
+</script>
   </body>
 </html>

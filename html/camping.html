@@ -196,59 +196,80 @@
 
     <!-- Carrousel functionaliteit, zet onderaan vóór </body> -->
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        const carousels = document.querySelectorAll('.carousel-container');
+    document.addEventListener('DOMContentLoaded', function () {
 
-        carousels.forEach(function (container) {
-          const wrapper = container.querySelector('.carousel-wrapper');
-          const leftBtn = container.querySelector('.carousel-arrow.left');
-          const rightBtn = container.querySelector('.carousel-arrow.right');
+      /* =========================
+        CARROUSEL
+      ========================= */
 
-          if (!wrapper || !leftBtn || !rightBtn) return;
+      const carousels = document.querySelectorAll('.carousel-container');
 
-          function getScrollAmount() {
-            const firstItem = wrapper.querySelector('a, img, div');
-            return firstItem ? firstItem.offsetWidth + 16 : 250;
+      carousels.forEach(function (container) {
+        const wrapper = container.querySelector('.carousel-wrapper');
+        const leftBtn = container.querySelector('.carousel-arrow.left');
+        const rightBtn = container.querySelector('.carousel-arrow.right');
+
+        if (!wrapper || !leftBtn || !rightBtn) return;
+
+        function getScrollAmount() {
+          const firstItem = wrapper.querySelector('a, img, div');
+          return firstItem ? firstItem.offsetWidth + 16 : 250;
+        }
+
+        function updateArrows() {
+          const maxScrollLeft = wrapper.scrollWidth - wrapper.clientWidth;
+
+          if (wrapper.scrollWidth <= wrapper.clientWidth + 5) {
+            leftBtn.style.display = 'none';
+            rightBtn.style.display = 'none';
+            return;
+          } else {
+            leftBtn.style.display = '';
+            rightBtn.style.display = '';
           }
 
-          function updateArrows() {
-            const maxScrollLeft = wrapper.scrollWidth - wrapper.clientWidth;
+          leftBtn.disabled = wrapper.scrollLeft <= 5;
+          rightBtn.disabled = wrapper.scrollLeft >= maxScrollLeft - 5;
+        }
 
-            if (wrapper.scrollWidth <= wrapper.clientWidth + 5) {
-              leftBtn.style.display = 'none';
-              rightBtn.style.display = 'none';
-              return;
-            } else {
-              leftBtn.style.display = '';
-              rightBtn.style.display = '';
-            }
-
-            leftBtn.disabled = wrapper.scrollLeft <= 5;
-            rightBtn.disabled = wrapper.scrollLeft >= maxScrollLeft - 5;
-          }
-
-          leftBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            wrapper.scrollBy({
-              left: -getScrollAmount(),
-              behavior: 'smooth'
-            });
+        leftBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          wrapper.scrollBy({
+            left: -getScrollAmount(),
+            behavior: 'smooth'
           });
-
-          rightBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            wrapper.scrollBy({
-              left: getScrollAmount(),
-              behavior: 'smooth'
-            });
-          });
-
-          wrapper.addEventListener('scroll', updateArrows);
-          window.addEventListener('resize', updateArrows);
-
-          updateArrows();
         });
+
+        rightBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          wrapper.scrollBy({
+            left: getScrollAmount(),
+            behavior: 'smooth'
+          });
+        });
+
+        wrapper.addEventListener('scroll', updateArrows);
+        window.addEventListener('resize', updateArrows);
+
+        updateArrows();
       });
-      </script>
+
+
+      /* =========================
+        HAMBURGERMENU
+      ========================= */
+
+      const menuToggle = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('.item2');
+
+      if (menuToggle && nav) {
+        menuToggle.addEventListener('click', function () {
+          nav.classList.toggle('open');
+          menuToggle.classList.toggle('open');
+        });
+      }
+
+    });
+    </script>
   </body>
 </html>

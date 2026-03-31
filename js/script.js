@@ -53,10 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const weekdays = ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za'];
   const MIN_NIGHTS = 2;
 
-  // Pas vanaf 3 dagen vanaf vandaag boekbaar
+  // Gewone boekregel: andere aankomstdagen minimaal 3 dagen van tevoren
   const SEASON_START = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3);
   const SEASON_END = new Date(today.getFullYear(), today.getMonth() + 13, 0);
 
+// Vrijdag-aankomsten mogen nog tot vrijdag 10:00 geboekt worden
+const FRIDAY_LAST_MINUTE_HOUR = 10;
   // ----------------------
   // Beschikbaarheid
   // ----------------------
@@ -248,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function isBookableWindow(dateObj) {
-    return dateObj >= SEASON_START && dateObj <= SEASON_END;
+    return dateObj <= SEASON_END;
   }
 
   function isBlocked(dateYMD) {
@@ -421,9 +423,33 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   }
 
+  function isFridayLastMinuteAllowed(dateObj) {
+  const fridayDeadline = new Date(
+    dateObj.getFullYear(),
+    dateObj.getMonth(),
+    dateObj.getDate(),
+    10, 0, 0, 0
+  );
+
+  return new Date() <= fridayDeadline;
+}
+
   function isAllowedArrival(dateYMD) {
     const dateObj = parseYMD(dateYMD);
-    return isBookableWindow(dateObj) && !isBlocked(dateYMD);
+
+    if (!isBookableWindow(dateObj) || isBlocked(dateYMD)) {
+      return false;
+    }
+
+    const wd = dateObj.getDay(); // 5 = vrijdag
+
+    // Vrijdag-aankomsten mogen nog tot vrijdag 10:00 uur geboekt worden
+    if (wd === 5) {
+      return isFridayLastMinuteAllowed(dateObj);
+    }
+
+    // Andere aankomstdagen: minimaal 3 dagen van tevoren
+    return dateObj >= SEASON_START;
   }
 
   function getAllowedDepartureSet(arrivalYMD) {

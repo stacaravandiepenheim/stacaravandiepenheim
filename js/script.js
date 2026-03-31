@@ -262,6 +262,20 @@ const FRIDAY_LAST_MINUTE_HOUR = 10;
   function hasArrivalSelection() {
     return arrivalDateYMD !== '';
   }
+  function monthHasAllowedArrival(year, month) {
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateObj = new Date(year, month, day);
+      const dateKey = ymd(dateObj);
+
+      if (isAllowedArrival(dateKey)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   function clearSelection() {
     arrivalDateYMD = '';
@@ -408,7 +422,14 @@ const FRIDAY_LAST_MINUTE_HOUR = 10;
     }
     return 0;
   }
+  function isPaasweekendActie(aYMD, dYMD, cls) {
+  if (cls.label !== 'Paasweekend') return false;
 
+  return (
+    (aYMD === '2026-04-03' && dYMD === '2026-04-06') ||
+    (aYMD === '2026-04-03' && dYMD === '2026-04-07')
+  );
+  }
   // ----------------------
   // Range- en kliklogica
   // ----------------------
@@ -669,6 +690,8 @@ const FRIDAY_LAST_MINUTE_HOUR = 10;
     }
 
     const X = computeExtras(a, d);
+    const paasweekendActie = isPaasweekendActie(a, d, cls);
+    const toeristenbelastingKorting = paasweekendActie ? X.toerBel : 0;
 
     if (priceSpecEl) {
       const tableRows = [];
@@ -688,6 +711,13 @@ const FRIDAY_LAST_MINUTE_HOUR = 10;
         <td>Toeristenbelasting<br><small>(${tbParts.join(' ')} × ${X.nights} nachten)</small></td>
         <td><strong>${euro(X.toerBel)}</strong></td>
       </tr>`);
+      
+      if (toeristenbelastingKorting > 0) {
+        tableRows.push(`<tr>
+          <td>Korting actie<br><small>Toeristenbelasting Paasweekend cadeau</small></td>
+          <td><strong>-${euro(toeristenbelastingKorting)}</strong></td>
+        </tr>`);
+      }
 
       if (cleanSel?.checked) {
         tableRows.push(`<tr><td>Eindschoonmaak (door ons uitgevoerd)</td><td><strong>${euro(X.schoon)}</strong></td></tr>`);
@@ -713,7 +743,7 @@ const FRIDAY_LAST_MINUTE_HOUR = 10;
         tableRows.push(`<tr><td>Hotspot (wifi in caravan)</td><td><strong>${euro(X.hotspot)}</strong></td></tr>`);
       }
 
-      const subtotal = (price || 0) + X.toerBel + X.schoon + X.linenCost + X.towelCost + X.hotspot;
+      const subtotal = (price || 0) + X.toerBel - toeristenbelastingKorting + X.schoon + X.linenCost + X.towelCost + X.hotspot;
 
       tableRows.push(`<tr class="price-total">
         <td><strong>Totaalbedrag</strong><br><small>excl. borg en campingextra’s</small></td>
@@ -773,6 +803,10 @@ const FRIDAY_LAST_MINUTE_HOUR = 10;
         lines.push('');
         lines.push('--- EXTRA\'S ---');
         lines.push(`Toeristenbelasting: ${euro(X.toerBel)}`);
+        
+        if (toeristenbelastingKorting > 0) {
+          lines.push(`Korting actie Paasweekend (toeristenbelasting cadeau): -${euro(toeristenbelastingKorting)}`);
+        }
 
         if (X.schoon) {
           lines.push(`Schoonmaak: ${euro(X.schoon)}`);
@@ -803,11 +837,24 @@ const FRIDAY_LAST_MINUTE_HOUR = 10;
   // Kalender genereren
   // ----------------------
   function renderCalendar() {
-    calendarEl.innerHTML = '';
+  // Alleen automatisch doorschuiven als er nog géén aankomst is gekozen
+  if (!hasArrivalSelection()) {
+    let guard = 0;
+
+    while (!monthHasAllowedArrival(currentYear, currentMonth) && guard < 24) {
+      currentMonth++;
+      if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      guard++;
+    }
+  }
+
+  calendarEl.innerHTML = '';
 
     const firstOfMonth = new Date(currentYear, currentMonth, 1);
     monthYearEl.textContent = `${firstOfMonth.toLocaleString('default', { month: 'long' })} ${currentYear}`;
-
     weekdays.forEach(lbl => {
       const h = document.createElement('div');
       h.className = 'day header';

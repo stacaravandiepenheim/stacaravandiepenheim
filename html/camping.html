@@ -57,22 +57,23 @@
         <p>Camping de Mölnhöfte ligt net buiten het charmante dorpje Diepenheim. Het is een kleinschalige en gemoedelijke camping met veel voorzieningen voor jong en oud.</p>
 
         <p>In het midden vind je een groot zwembad met peuterbadje en aan de voorkant een ruime speeltuin. Verder is er een tafeltennistafel en verschillende fitness/sportapparaten. </p>
+        
         <div class="carousel-container">
           <button class="carousel-arrow left" aria-label="Vorige">&larr;</button>
           <div class="carousel-wrapper gallery-landscape">
             <a href="../afbeeldingen/luchtfoto_groot.jpg" target="_blank">
-              <img src="../afbeeldingen/luchtfoto_klein.jpg"  alt="Luchtfoto camping">
+              <img src="../afbeeldingen/luchtfoto_klein.jpg" alt="Luchtfoto camping">
             </a>
             <a href="../afbeeldingen/speeltuin_groot.jpg" target="_blank">
-              <img src="../afbeeldingen/speeltuin_klein.jpg"  alt="Speeltuin camping">
-            </a>	
-            <a href="../afbeeldingen/zwembad_groot.jpg" target="_blank">
-              <img src="../afbeeldingen/zwembad_klein.jpg"  alt="Zwembad camping">
+              <img src="../afbeeldingen/speeltuin_klein.jpg" alt="Speeltuin camping">
             </a>
+            <a href="../afbeeldingen/zwembad_groot.jpg" target="_blank">
+              <img src="../afbeeldingen/zwembad_klein.jpg" alt="Zwembad camping">
+            </a>
+          </div>
           <button class="carousel-arrow right" aria-label="Volgende">&rarr;</button>
-				  </div>
-        </div>
-        <p>Er zijn meerdere kleine speeltuintjes verspreid over het terrein – ideaal voor de allerkleinsten. Eentje (zie foto's hieronder) zit schuin tegenover onze caravan (gele pijl) </p>
+        </div>        
+      <p>Er zijn meerdere kleine speeltuintjes verspreid over het terrein – ideaal voor de allerkleinsten. Eentje (zie foto's hieronder) zit schuin tegenover onze caravan (gele pijl) </p>
         <div class="carousel-container">
           <button class="carousel-arrow left" aria-label="Vorige">&larr;</button>
           <div class="carousel-wrapper gallery-landscape">
@@ -145,7 +146,7 @@
       <aside class="right-col">
 
         <!-- Last minutes -->
-        <div data-include="partials/last-minutes.html"></div>
+        <div data-include="../partials/last-minutes.html"></div>
         
         <!-- Praktische info -->
         <section class="aside-card">
@@ -182,7 +183,7 @@
         <section class="aside-card boekblok">
           <h3>Beschikbaarheid bekijken</h3>
           <p>Bekijk wanneer de stacaravan nog vrij is en reserveer eenvoudig online.</p>
-          <a href="html/reserveren.html#kalender" class="cta-knop">Bekijk beschikbaarheid</a>
+          <a href="reserveren.html#kalender" class="cta-knop">Bekijk beschikbaarheid</a>
         </section>
 
       </aside>
@@ -195,73 +196,59 @@
 
     <!-- Carrousel functionaliteit, zet onderaan vóór </body> -->
     <script>
-      function updateCarouselArrows(container) {
-        const wrapper = container.querySelector('.carousel-wrapper');
-        const leftBtn = container.querySelector('.carousel-arrow.left');
-        const rightBtn = container.querySelector('.carousel-arrow.right');
-        if (!wrapper || !leftBtn || !rightBtn) return;
+      document.addEventListener('DOMContentLoaded', function () {
+        const carousels = document.querySelectorAll('.carousel-container');
 
-        // Alleen tonen als scrollen nodig is
-        if (wrapper.scrollWidth > wrapper.clientWidth) {
-          leftBtn.style.display = '';
-          rightBtn.style.display = '';
-        } else {
-          leftBtn.style.display = 'none';
-          rightBtn.style.display = 'none';
-        }
-
-        // Optioneel: disable knoppen als je aan het begin/eind bent
-        leftBtn.disabled = wrapper.scrollLeft === 0;
-        rightBtn.disabled = Math.ceil(wrapper.scrollLeft + wrapper.clientWidth) >= wrapper.scrollWidth;
-      }
-
-      // Initialiseren én bij resize/updaten
-      function initAllCarousels() {
-        document.querySelectorAll('.carousel-container').forEach(function(container) {
+        carousels.forEach(function (container) {
           const wrapper = container.querySelector('.carousel-wrapper');
           const leftBtn = container.querySelector('.carousel-arrow.left');
           const rightBtn = container.querySelector('.carousel-arrow.right');
+
           if (!wrapper || !leftBtn || !rightBtn) return;
 
-          // Scroll
           function getScrollAmount() {
-            // Scroll precies één foto-breedte
-            const firstChild = wrapper.querySelector('a, img, div');
-            return firstChild ? firstChild.offsetWidth : 250;
+            const firstItem = wrapper.querySelector('a, img, div');
+            return firstItem ? firstItem.offsetWidth + 16 : 250;
           }
 
-          leftBtn.addEventListener('click', function(e) {
+          function updateArrows() {
+            const maxScrollLeft = wrapper.scrollWidth - wrapper.clientWidth;
+
+            if (wrapper.scrollWidth <= wrapper.clientWidth + 5) {
+              leftBtn.style.display = 'none';
+              rightBtn.style.display = 'none';
+              return;
+            } else {
+              leftBtn.style.display = '';
+              rightBtn.style.display = '';
+            }
+
+            leftBtn.disabled = wrapper.scrollLeft <= 5;
+            rightBtn.disabled = wrapper.scrollLeft >= maxScrollLeft - 5;
+          }
+
+          leftBtn.addEventListener('click', function (e) {
             e.preventDefault();
-            wrapper.scrollBy({ left: -getScrollAmount(), behavior: 'smooth' });
-          });
-          rightBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            wrapper.scrollBy({ left: +getScrollAmount(), behavior: 'smooth' });
+            wrapper.scrollBy({
+              left: -getScrollAmount(),
+              behavior: 'smooth'
+            });
           });
 
-          // Update pijltjes bij scrollen
-          wrapper.addEventListener('scroll', function() {
-            updateCarouselArrows(container);
+          rightBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            wrapper.scrollBy({
+              left: getScrollAmount(),
+              behavior: 'smooth'
+            });
           });
 
-          // Initieel tonen
-          updateCarouselArrows(container);
+          wrapper.addEventListener('scroll', updateArrows);
+          window.addEventListener('resize', updateArrows);
+
+          updateArrows();
         });
-      }
-
-      // Opnieuw pijltjes tonen bij resize/orientatie-wissel
-      window.addEventListener('resize', initAllCarousels);
-      window.addEventListener('DOMContentLoaded', initAllCarousels);
-    </script>
-     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      document.querySelectorAll("[data-include]").forEach(function (el) {
-        fetch(el.getAttribute("data-include"))
-          .then(response => response.text())
-          .then(data => el.outerHTML = data)
-          .catch(err => console.error("Include mislukt:", err));
       });
-    });
-    </script>  
+      </script>
   </body>
 </html>

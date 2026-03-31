@@ -252,7 +252,9 @@ const FRIDAY_LAST_MINUTE_HOUR = 10;
   function isBookableWindow(dateObj) {
     return dateObj <= SEASON_END;
   }
-
+  function stripTime(dateObj) {
+    return new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+  }
   function isBlocked(dateYMD) {
     return availability[dateYMD] === 1;
   }
@@ -436,21 +438,32 @@ const FRIDAY_LAST_MINUTE_HOUR = 10;
 
   function isAllowedArrival(dateYMD) {
     const dateObj = parseYMD(dateYMD);
+    const arrivalDay = stripTime(dateObj);
 
     if (!isBookableWindow(dateObj) || isBlocked(dateYMD)) {
       return false;
     }
 
-    const wd = dateObj.getDay(); // 5 = vrijdag
+    const wd = arrivalDay.getDay(); // 5 = vrijdag
 
     // Vrijdag-aankomsten mogen nog tot vrijdag 10:00 uur geboekt worden
     if (wd === 5) {
-      return isFridayLastMinuteAllowed(dateObj);
-    }
+     const fridayDeadline = new Date(
+      arrivalDay.getFullYear(),
+      arrivalDay.getMonth(),
+      arrivalDay.getDate(),
+       FRIDAY_LAST_MINUTE_HOUR,
+      0,
+      0,
+      0
+    );
+    return new Date() <= fridayDeadline;
+  }
 
     // Andere aankomstdagen: minimaal 3 dagen van tevoren
-    return dateObj >= SEASON_START;
-  }
+  const normalEarliestArrival = stripTime(SEASON_START);
+  return arrivalDay >= normalEarliestArrival;
+}
 
   function getAllowedDepartureSet(arrivalYMD) {
     const set = new Set();

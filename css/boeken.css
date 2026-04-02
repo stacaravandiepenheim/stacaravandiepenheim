@@ -85,15 +85,15 @@
 }
 
 .day.available {
-  background: #f6efe4;
+  background:#7aa874;
   cursor: pointer;
   text-decoration: underline;
 }
 
 .day.available:hover {
-  background: #ead7bf;
   border-color: #d0b08b;
   transform: scale(1.03);
+  background: #5f8d59;
 }
 
 .day.booked {

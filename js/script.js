@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const SEASON_START = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3);
   const SEASON_END = new Date(today.getFullYear(), today.getMonth() + 13, 0);
 
-// Vrijdag-aankomsten mogen nog tot vrijdag 10:00 geboekt worden
-const FRIDAY_LAST_MINUTE_HOUR = 10;
+// Vrijdag/zat/zon-aankomsten mogen nog tot vrijdag/za/zo 10:00 geboekt worden
+const LAST_MINUTE_HOUR = 10;
   // ----------------------
   // Beschikbaarheid
   // ----------------------
@@ -457,7 +457,7 @@ const FRIDAY_LAST_MINUTE_HOUR = 10;
   return new Date() <= fridayDeadline;
 }
 
-  function isAllowedArrival(dateYMD) {
+    function isAllowedArrival(dateYMD) {
     const dateObj = parseYMD(dateYMD);
     const arrivalDay = stripTime(dateObj);
 
@@ -465,27 +465,41 @@ const FRIDAY_LAST_MINUTE_HOUR = 10;
       return false;
     }
 
-    const wd = arrivalDay.getDay(); // 5 = vrijdag
+    const wd = arrivalDay.getDay(); // 0=zo, 1=ma, 2=di, 3=wo, 4=do, 5=vr, 6=za
+    const now = new Date();
 
-    // Vrijdag-aankomsten mogen nog tot vrijdag 10:00 uur geboekt worden
+    // Vrijdag aankomst -> boeken t/m vrijdag 10:00
     if (wd === 5) {
-     const fridayDeadline = new Date(
-      arrivalDay.getFullYear(),
-      arrivalDay.getMonth(),
-      arrivalDay.getDate(),
-       FRIDAY_LAST_MINUTE_HOUR,
-      0,
-      0,
-      0
-    );
-    return new Date() <= fridayDeadline;
-  }
+      const deadline = new Date(
+        arrivalDay.getFullYear(),
+        arrivalDay.getMonth(),
+        arrivalDay.getDate(),
+        LAST_MINUTE_HOUR,
+        0,
+        0,
+        0
+      );
+      return now <= deadline;
+    }
+
+    // Zaterdag, zondag, maandag aankomst -> boeken t/m de dag ervoor 10:00
+    if (wd === 6 || wd === 0 || wd === 1) {
+      const deadline = new Date(
+        arrivalDay.getFullYear(),
+        arrivalDay.getMonth(),
+        arrivalDay.getDate() - 1,
+        LAST_MINUTE_HOUR,
+        0,
+        0,
+        0
+      );
+      return now <= deadline;
+    }
 
     // Andere aankomstdagen: minimaal 3 dagen van tevoren
-  const normalEarliestArrival = stripTime(SEASON_START);
-  return arrivalDay >= normalEarliestArrival;
-}
-
+    const normalEarliestArrival = stripTime(SEASON_START);
+    return arrivalDay >= normalEarliestArrival;
+  }
   function getAllowedDepartureSet(arrivalYMD) {
     const set = new Set();
     if (!arrivalYMD) return set;

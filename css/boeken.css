@@ -250,11 +250,18 @@ table.prijs-tabel {
   border-collapse: collapse;
   margin-top: 1rem;
 }
+/* Extra prijstabel */
+table.prijs-tabel {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
 
 table.prijs-tabel th,
 table.prijs-tabel td {
   border: 1px solid #ccc;
-  padding: 0.6rem;
+  padding: 0.5rem 0.6rem;
   text-align: left;
   vertical-align: top;
 }
@@ -264,13 +271,19 @@ table.prijs-tabel th {
   color: var(--darkblue);
 }
 
+table.prijs-tabel td:last-child,
+table.prijs-tabel th:last-child {
+  white-space: nowrap;
+  text-align: right;
+}
+
 table.prijs-tabel .price-total {
   background-color: #e6f2ff;
 }
 
 /* ---------- Afbeelding wifi ---------- */
 img[alt="Foto van wifikosten"] {
-  max-width: 50%;
+  max-width: 20%;
   height: auto;
   display: block;
   margin: 1rem auto;
@@ -353,6 +366,15 @@ img[alt="Foto van wifikosten"] {
 
   img[alt="Foto van wifikosten"] {
     max-width: 100%;
+  }
+  table.prijs-tabel {
+  font-size: 0.9rem;
+  
+  }
+
+  table.prijs-tabel th,
+  table.prijs-tabel td {
+    padding: 0.45rem;
   }
 }
 

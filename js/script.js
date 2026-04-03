@@ -57,8 +57,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const SEASON_START = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3);
   const SEASON_END = new Date(today.getFullYear(), today.getMonth() + 13, 0);
 
-// Vrijdag/zat/zon-aankomsten mogen nog tot vrijdag/za/zo 10:00 geboekt worden
-const LAST_MINUTE_HOUR = 10;
+  // Vrijdag/zat/zon/ma-aankomsten mogen nog tot een deadline van 10:00 geboekt worden
+  const LAST_MINUTE_HOUR = 10;
+
   // ----------------------
   // Beschikbaarheid
   // ----------------------
@@ -73,7 +74,7 @@ const LAST_MINUTE_HOUR = 10;
     }
   }
 
-  addDateRange('2026-04-28', '2026-05-07', 1); // meivakantie
+  addDateRange('2026-04-29', '2026-05-07', 1); // meivakantie
   addDateRange('2026-05-14', '2026-05-18', 1); // hemelvaart
   addDateRange('2026-05-22', '2026-05-25', 1); // pinksteren
   addDateRange('2026-07-12', '2026-08-14', 1); // zomervakantie noord (niet te boeken)
@@ -93,15 +94,6 @@ const LAST_MINUTE_HOUR = 10;
       night_sun: 45
     },
     {
-      name: 'Paasweekend 2026',
-      start: '2026-04-03',
-      end: '2026-04-05',
-      night_mon_thu: null,
-      night_fri: 85,
-      night_sat: 85,
-      night_sun: 80
-    },
-    {
       name: 'Laagseizoen voorjaar 2026',
       start: '2026-04-06',
       end: '2026-04-23',
@@ -111,7 +103,7 @@ const LAST_MINUTE_HOUR = 10;
       night_sun: 45
     },
     {
-      name: 'Meivakantie-weekend 2026',
+      name: 'Meivakantieweekend 2026',
       start: '2026-04-24',
       end: '2026-04-27',
       night_mon_thu: 85,
@@ -119,9 +111,18 @@ const LAST_MINUTE_HOUR = 10;
       night_sat: 85,
       night_sun: 80
     },
+     {
+      name: 'Laagseizoen voorjaar 2026',
+      start: '2026-04-27',
+      end: '2026-04-28',
+      night_mon_thu: 85,
+      night_fri: 85,
+      night_sat: 85,
+      night_sun: 80
+    },
     {
       name: 'Meivakantie 2026',
-      start: '2026-04-28',
+      start: '2026-04-29',
       end: '2026-05-07',
       night_mon_thu: null,
       night_fri: null,
@@ -252,9 +253,11 @@ const LAST_MINUTE_HOUR = 10;
   function isBookableWindow(dateObj) {
     return dateObj <= SEASON_END;
   }
+
   function stripTime(dateObj) {
     return new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
   }
+
   function isBlocked(dateYMD) {
     return availability[dateYMD] === 1;
   }
@@ -262,6 +265,7 @@ const LAST_MINUTE_HOUR = 10;
   function hasArrivalSelection() {
     return arrivalDateYMD !== '';
   }
+
   function monthHasAllowedArrival(year, month) {
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
@@ -297,11 +301,12 @@ const LAST_MINUTE_HOUR = 10;
     const aWD = a.getDay();
     const dWD = d.getDay();
 
-    if (aYMD === '2026-04-03' && dYMD === '2026-04-06') {
-      return { type: 'paasweekend', label: 'Paasweekend', nights };
+    if (aYMD === '2026-04-24' && dYMD === '2026-04-27') {
+      return { type: 'meiweekend', label: 'Meiweekend', nights };
     }
-    if (aYMD === '2026-04-03' && dYMD === '2026-04-07') {
-      return { type: 'paasweekend', label: 'Paasweekend', nights };
+
+    if (aYMD === '2026-04-24' && dYMD === '2026-04-28') {
+      return { type: 'meiweekend', label: 'Meiweekend', nights };
     }
 
     for (const p of STAY_PATTERNS) {
@@ -311,6 +316,15 @@ const LAST_MINUTE_HOUR = 10;
     }
 
     return { type: 'other', label: `${nights} nacht${nights === 1 ? '' : 'en'}`, nights };
+  }
+
+  function isMeiweekendActie(aYMD, dYMD, cls) {
+    if (cls.label !== 'Meiweekend') return false;
+
+    return (
+      (aYMD === '2026-04-24' && dYMD === '2026-04-27') ||
+      (aYMD === '2026-04-24' && dYMD === '2026-04-28')
+    );
   }
 
   function getSeasonFor(dateStrYMD) {
@@ -422,14 +436,7 @@ const LAST_MINUTE_HOUR = 10;
     }
     return 0;
   }
-  function isPaasweekendActie(aYMD, dYMD, cls) {
-  if (cls.label !== 'Paasweekend') return false;
 
-  return (
-    (aYMD === '2026-04-03' && dYMD === '2026-04-06') ||
-    (aYMD === '2026-04-03' && dYMD === '2026-04-07')
-  );
-  }
   // ----------------------
   // Range- en kliklogica
   // ----------------------
@@ -446,18 +453,7 @@ const LAST_MINUTE_HOUR = 10;
     return true;
   }
 
-  function isFridayLastMinuteAllowed(dateObj) {
-  const fridayDeadline = new Date(
-    dateObj.getFullYear(),
-    dateObj.getMonth(),
-    dateObj.getDate(),
-    10, 0, 0, 0
-  );
-
-  return new Date() <= fridayDeadline;
-}
-
-    function isAllowedArrival(dateYMD) {
+  function isAllowedArrival(dateYMD) {
     const dateObj = parseYMD(dateYMD);
     const arrivalDay = stripTime(dateObj);
 
@@ -465,7 +461,7 @@ const LAST_MINUTE_HOUR = 10;
       return false;
     }
 
-    const wd = arrivalDay.getDay(); // 0=zo, 1=ma, 2=di, 3=wo, 4=do, 5=vr, 6=za
+    const wd = arrivalDay.getDay();
     const now = new Date();
 
     // Vrijdag aankomst -> boeken t/m vrijdag 10:00
@@ -500,6 +496,7 @@ const LAST_MINUTE_HOUR = 10;
     const normalEarliestArrival = stripTime(SEASON_START);
     return arrivalDay >= normalEarliestArrival;
   }
+
   function getAllowedDepartureSet(arrivalYMD) {
     const set = new Set();
     if (!arrivalYMD) return set;
@@ -533,8 +530,10 @@ const LAST_MINUTE_HOUR = 10;
 
       arrivalDateYMD = dateYMD;
       departureDateYMD = '';
+
       if (selectedArrival) selectedArrival.textContent = formatDate(arrivalDateYMD);
       if (selectedDeparture) selectedDeparture.textContent = '';
+
       updateSelectedPeriodText();
       updatePriceAndExtras();
       renderCalendar();
@@ -552,8 +551,10 @@ const LAST_MINUTE_HOUR = 10;
       if (!allowedDepartureSet.has(dateYMD) && isAllowedArrival(dateYMD)) {
         arrivalDateYMD = dateYMD;
         departureDateYMD = '';
+
         if (selectedArrival) selectedArrival.textContent = formatDate(arrivalDateYMD);
         if (selectedDeparture) selectedDeparture.textContent = '';
+
         updateSelectedPeriodText();
         updatePriceAndExtras();
         renderCalendar();
@@ -563,7 +564,9 @@ const LAST_MINUTE_HOUR = 10;
       if (!allowedDepartureSet.has(dateYMD)) return;
 
       departureDateYMD = dateYMD;
+
       if (selectedDeparture) selectedDeparture.textContent = formatDate(departureDateYMD);
+
       updateSelectedPeriodText();
       updatePriceAndExtras();
       renderCalendar();
@@ -653,6 +656,8 @@ const LAST_MINUTE_HOUR = 10;
     }
 
     const cls = classifyStay(a, d);
+    const meiweekendActie = isMeiweekendActie(a, d, cls);
+
     if (stayHidden) stayHidden.value = cls.label || '';
 
     if (cls.nights < MIN_NIGHTS) {
@@ -682,12 +687,19 @@ const LAST_MINUTE_HOUR = 10;
         : `${euro(price)}`;
 
       if (priceSummary) {
-        priceSummary.textContent =
-          `Je wilt boeken van ${formatDate(a)} t/m ${formatDate(d)} (${cls.label}). De huurprijs voor deze periode is ${baseText} — exclusief toeristenbelasting, borg en extra’s. Vul het formulier in voor een preciezere prijs excl. borg en campingkosten.`;
+        if (meiweekendActie) {
+          priceSummary.textContent =
+            `Je wilt boeken van ${formatDate(a)} t/m ${formatDate(d)} (${cls.label}). De huurprijs voor deze periode is ${baseText} inclusief toeristenbelasting — exclusief borg en extra’s. Vul het formulier in voor een preciezere prijs excl. borg en campingkosten.`;
+        } else {
+          priceSummary.textContent =
+            `Je wilt boeken van ${formatDate(a)} t/m ${formatDate(d)} (${cls.label}). De huurprijs voor deze periode is ${baseText} — exclusief toeristenbelasting, borg en extra’s. Vul het formulier in voor een preciezere prijs excl. borg en campingkosten.`;
+        }
       }
 
       if (priceHidden) {
-        priceHidden.value = baseText;
+        priceHidden.value = meiweekendActie
+          ? `${baseText} inclusief toeristenbelasting`
+          : `${baseText} exclusief toeristenbelasting`;
       }
     } else {
       const unavailableText = priceInfo.unavailableDate
@@ -704,8 +716,7 @@ const LAST_MINUTE_HOUR = 10;
     }
 
     const X = computeExtras(a, d);
-    const paasweekendActie = isPaasweekendActie(a, d, cls);
-    const toeristenbelastingKorting = paasweekendActie ? X.toerBel : 0;
+    const toeristenbelastingKorting = meiweekendActie ? X.toerBel : 0;
 
     if (priceSpecEl) {
       const tableRows = [];
@@ -725,10 +736,10 @@ const LAST_MINUTE_HOUR = 10;
         <td>Toeristenbelasting<br><small>(${tbParts.join(' ')} × ${X.nights} nachten)</small></td>
         <td><strong>${euro(X.toerBel)}</strong></td>
       </tr>`);
-      
+
       if (toeristenbelastingKorting > 0) {
         tableRows.push(`<tr>
-          <td>Korting actie<br><small>Toeristenbelasting Paasweekend cadeau</small></td>
+          <td>Korting actie<br><small>Toeristenbelasting Meiweekend cadeau</small></td>
           <td><strong>-${euro(toeristenbelastingKorting)}</strong></td>
         </tr>`);
       }
@@ -817,9 +828,9 @@ const LAST_MINUTE_HOUR = 10;
         lines.push('');
         lines.push('--- EXTRA\'S ---');
         lines.push(`Toeristenbelasting: ${euro(X.toerBel)}`);
-        
+
         if (toeristenbelastingKorting > 0) {
-          lines.push(`Korting actie Paasweekend (toeristenbelasting cadeau): -${euro(toeristenbelastingKorting)}`);
+          lines.push(`Korting actie Meiweekend (toeristenbelasting cadeau): -${euro(toeristenbelastingKorting)}`);
         }
 
         if (X.schoon) {
@@ -851,24 +862,24 @@ const LAST_MINUTE_HOUR = 10;
   // Kalender genereren
   // ----------------------
   function renderCalendar() {
-  // Alleen automatisch doorschuiven als er nog géén aankomst is gekozen
-  if (!hasArrivalSelection()) {
-    let guard = 0;
+    if (!hasArrivalSelection()) {
+      let guard = 0;
 
-    while (!monthHasAllowedArrival(currentYear, currentMonth) && guard < 24) {
-      currentMonth++;
-      if (currentMonth > 11) {
-        currentMonth = 0;
-        currentYear++;
+      while (!monthHasAllowedArrival(currentYear, currentMonth) && guard < 24) {
+        currentMonth++;
+        if (currentMonth > 11) {
+          currentMonth = 0;
+          currentYear++;
+        }
+        guard++;
       }
-      guard++;
     }
-  }
 
-  calendarEl.innerHTML = '';
+    calendarEl.innerHTML = '';
 
     const firstOfMonth = new Date(currentYear, currentMonth, 1);
     monthYearEl.textContent = `${firstOfMonth.toLocaleString('default', { month: 'long' })} ${currentYear}`;
+
     weekdays.forEach(lbl => {
       const h = document.createElement('div');
       h.className = 'day header';

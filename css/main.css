@@ -1083,3 +1083,63 @@ img[alt="Fietsenplekje"] {
   }
 
 }
+.lm-block {
+  display: none;
+}
+.header-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.taal-knop{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:#019bf2;
+  color:white;
+  text-decoration:none;
+  padding:6px 10px;
+  border-radius:5px;
+  font-size:0.9rem;
+}
+
+.taal-knop img{
+  width:18px;
+  height:auto;
+}
+
+.taal-knop:hover{
+  background:#007acc;
+}
+.header-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.taal-switch{
+  display:flex;
+  gap:8px;
+}
+
+.taal-knop{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:#019bf2;
+  color:white;
+  text-decoration:none;
+  padding:6px 10px;
+  border-radius:5px;
+  font-size:0.9rem;
+}
+
+.taal-knop img{
+  width:18px;
+  height:auto;
+}
+
+.taal-knop:hover{
+  background:#007acc;
+}

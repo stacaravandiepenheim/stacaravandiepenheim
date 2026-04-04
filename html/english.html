@@ -10,15 +10,14 @@
   <link rel="canonical" href="https://www.stacaravandiepenheim.nl/html/english.html">
 
   <script src="../js/script.js" defer></script>
-  <script src="../js/lang-lastminutes.js" defer></script>
+  
 </head>
 <body>
   <div class="grid-container">
 
     <div class="item1">
       <h1>Mobile home for rent in Diepenheim, Twente</h1>
-      <button class="menu-toggle" aria-label="Open menu">☰</button>
-
+      
       <p class="introzin">
         Cosy mobile home for 4 persons at campsite De Mölnhöfte – ideal for peace, nature, cycling, walking and families with young children.
       </p>
@@ -407,7 +406,7 @@
     </div>
 
     <aside class="right-col">
-      <div data-include="../partials/last-minutes.html"></div>
+      <div id="last-minutes-container">Laden...</div>
 
       <section class="aside-card">
         <h3>Practical information</h3>
@@ -425,5 +424,34 @@
       <p>&copy; Stacaravan Diepenheim</p>
     </div>
   </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+    const container = document.getElementById('last-minutes-container');
+    const pageLang = document.documentElement.lang || 'nl';
+
+    try {
+        const response = await fetch('../partials/last-minutes.html');
+        if (!response.ok) {
+        throw new Error('Kon partial niet laden: ' + response.status);
+        }
+
+        const html = await response.text();
+        container.innerHTML = html;
+
+        const blocks = container.querySelectorAll('.lm-block');
+
+        blocks.forEach(block => {
+        if (block.dataset.lang === pageLang) {
+            block.style.display = 'block';
+        } else {
+            block.style.display = 'none';
+        }
+        });
+    } catch (error) {
+        console.error(error);
+        container.innerHTML = '<p>Last minutes konden niet worden geladen.</p>';
+    }
+    });
+    </script>
 </body>
 </html>

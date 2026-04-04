@@ -10,14 +10,14 @@
   <link rel="canonical" href="https://www.stacaravandiepenheim.nl/html/deutsch.html">
 
   <script src="../js/script.js" defer></script>
-  <script src="../js/lang-lastminutes.js" defer></script>
+  
 </head>
 <body>
   <div class="grid-container">
 
     <div class="item1">
       <h1>Mobilheim in Diepenheim, Twente mieten</h1>
-      <button class="menu-toggle" aria-label="Menü öffnen">☰</button>
+      
 
       <p class="introzin">
         Gemütliches Mobilheim für 4 Personen auf dem Campingplatz De Mölnhöfte – ideal für Ruhe, Natur, Radfahren, Wandern und Familien mit kleinen Kindern.
@@ -94,7 +94,7 @@
         </p>
 
         <p>
-          Auf dem Platz selbst können Sie das Schwimmbad und weitere Einrichtungen nutzen. Das Mobilheim ist besonders geeignet für Gäste, die Ruhe, Natur und eine angenehme Umgebung schätzen.
+          Das Mobilheim ist besonders geeignet für Gäste, die Ruhe, Natur und eine angenehme Umgebung schätzen.
         </p>
       </section>
 
@@ -102,7 +102,7 @@
         <h2>Der Campingplatz</h2>
         <p>
           Der Campingplatz De Mölnhöfte liegt etwas außerhalb des charmanten Dorfes Diepenheim. Es ist ein kleiner, gemütlicher Campingplatz mit Einrichtungen für Jung und Alt.
-          In der Mitte des Platzes befindet sich ein großes Schwimmbad mit Kinderbecken, außerdem gibt es Spielplätze, Sportmöglichkeiten und ein Restaurant.
+          In der Mitte des Platzes befindet sich ein großes Schwimmbad mit Kinderbecken (ab Pfingsten), außerdem gibt es Spielplätze, Sportmöglichkeiten und ein Restaurant.
         </p>
 
         <div class="carousel-container">
@@ -196,8 +196,7 @@
 
         <p id="price-summary" style="font-weight:600;margin:.5rem 0;"></p>
         <div id="price-spec"></div>
-        <p id="price-summary" style="font-weight:600;margin:.5rem 0;"></p>
-        <div id="price-spec"></div>
+
 
         <div class="translation-help-box">
         <h4>Hinweis zur niederländischen Preisübersicht</h4>
@@ -407,7 +406,7 @@
     </div>
 
     <aside class="right-col">
-      <div data-include="../partials/last-minutes.html"></div>
+      <div id="last-minutes-container">Laden...</div>
 
       <section class="aside-card">
         <h3>Praktische Informationen</h3>
@@ -426,5 +425,34 @@
       <p>&copy; Stacaravan Diepenheim</p>
     </div>
   </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+    const container = document.getElementById('last-minutes-container');
+    const pageLang = document.documentElement.lang || 'nl';
+
+    try {
+        const response = await fetch('../partials/last-minutes.html');
+        if (!response.ok) {
+        throw new Error('Kon partial niet laden: ' + response.status);
+        }
+
+        const html = await response.text();
+        container.innerHTML = html;
+
+        const blocks = container.querySelectorAll('.lm-block');
+
+        blocks.forEach(block => {
+        if (block.dataset.lang === pageLang) {
+            block.style.display = 'block';
+        } else {
+            block.style.display = 'none';
+        }
+        });
+    } catch (error) {
+        console.error(error);
+        container.innerHTML = '<p>Last minutes konden niet worden geladen.</p>';
+    }
+    });
+    </script>
 </body>
 </html>

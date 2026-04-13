@@ -335,6 +335,30 @@ document.addEventListener('DOMContentLoaded', () => {
       (aYMD === '2026-04-24' && dYMD === '2026-04-28')
     );
   }
+  function isMeiweekendNacht(dateYMD) {
+  return (
+    dateYMD >= '2026-04-24' &&
+    dateYMD <= '2026-04-26'
+  );
+}
+
+  function getMeiweekendToeristenbelastingKorting(aYMD, dYMD, payingPersons) {
+    let kortingNachten = 0;
+    let current = parseYMD(aYMD);
+    const end = parseYMD(dYMD);
+
+    while (current < end) {
+      const dateKey = ymd(current);
+
+      if (isMeiweekendNacht(dateKey)) {
+        kortingNachten++;
+      }
+
+      current = addDays(current, 1);
+    }
+
+    return 4 * payingPersons * kortingNachten;
+  }
 
   function getSeasonFor(dateStrYMD) {
     return PRICING.find(s => between(dateStrYMD, s.start, s.end)) || null;
@@ -689,6 +713,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const basePrice = rawBasePrice == null ? null : rawBasePrice + shortStaySurcharge;
     const discountInfo = getLongStayDiscount(basePrice, cls.nights);
     const price = discountInfo.discountedPrice;
+    const X = computeExtras(a, d);
+    const toeristenbelastingKorting = getMeiweekendToeristenbelastingKorting(a, d, X.payingPersons);
 
     if (price != null) {
       const baseText = seasonLabel
@@ -696,9 +722,12 @@ document.addEventListener('DOMContentLoaded', () => {
         : `${euro(price)}`;
 
       if (priceSummary) {
-        if (meiweekendActie) {
+        if (toeristenbelastingKorting > 0 && toeristenbelastingKorting === X.toerBel) {
           priceSummary.textContent =
             `Je wilt boeken van ${formatDate(a)} t/m ${formatDate(d)} (${cls.label}). De huurprijs voor deze periode is ${baseText} inclusief toeristenbelasting — exclusief borg en extra’s. Vul het formulier in voor een preciezere prijs excl. borg en campingkosten.`;
+        } else if (toeristenbelastingKorting > 0) {
+          priceSummary.textContent =
+            `Je wilt boeken van ${formatDate(a)} t/m ${formatDate(d)} (${cls.label}). De huurprijs voor deze periode is ${baseText} met korting op een deel van de toeristenbelasting — exclusief borg en overige extra’s. Vul het formulier in voor een preciezere prijs excl. borg en campingkosten.`;
         } else {
           priceSummary.textContent =
             `Je wilt boeken van ${formatDate(a)} t/m ${formatDate(d)} (${cls.label}). De huurprijs voor deze periode is ${baseText} — exclusief toeristenbelasting, borg en extra’s. Vul het formulier in voor een preciezere prijs excl. borg en campingkosten.`;
@@ -706,9 +735,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (priceHidden) {
-        priceHidden.value = meiweekendActie
-          ? `${baseText} inclusief toeristenbelasting`
-          : `${baseText} exclusief toeristenbelasting`;
+        if (toeristenbelastingKorting > 0 && toeristenbelastingKorting === X.toerBel) {
+          priceHidden.value = `${baseText} inclusief toeristenbelasting`;
+        } else if (toeristenbelastingKorting > 0) {
+          priceHidden.value = `${baseText} met gedeeltelijke korting op toeristenbelasting`;
+        } else {
+          priceHidden.value = `${baseText} exclusief toeristenbelasting`;
+        }
       }
     } else {
       const unavailableText = priceInfo.unavailableDate
@@ -723,9 +756,6 @@ document.addEventListener('DOMContentLoaded', () => {
         priceHidden.value = unavailableText;
       }
     }
-
-    const X = computeExtras(a, d);
-    const toeristenbelastingKorting = meiweekendActie ? X.toerBel : 0;
 
     if (priceSpecEl) {
       const tableRows = [];
@@ -748,7 +778,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (toeristenbelastingKorting > 0) {
         tableRows.push(`<tr>
-          <td>Korting actie<br><small>Toeristenbelasting Meivakantie cadeau</small></td>
+          <td>Korting actie<br><small>Toeristenbelasting Meivakantie eerste weekend cadeau</small></td>
           <td><strong>-${euro(toeristenbelastingKorting)}</strong></td>
         </tr>`);
       }

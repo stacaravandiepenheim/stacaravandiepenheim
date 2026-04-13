@@ -74,9 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  addDateRange('2026-04-29', '2026-05-07', 1); // meivakantie
-  addDateRange('2026-05-14', '2026-05-18', 1); // hemelvaart
-  addDateRange('2026-05-22', '2026-05-25', 1); // pinksteren
+  addDateRange('2026-05-02', '2026-05-03', 1); // meivakantie
+  addDateRange('2026-05-14', '2026-05-17', 1); // hemelvaart
+  addDateRange('2026-05-22', '2026-05-24', 1); // pinksteren
   addDateRange('2026-07-12', '2026-08-14', 1); // zomervakantie noord (niet te boeken)
   addDateRange('2026-10-23', '2027-04-02', 1); // winter dicht
 
@@ -97,9 +97,9 @@ document.addEventListener('DOMContentLoaded', () => {
       name: 'Laagseizoen voorjaar 2026',
       start: '2026-04-06',
       end: '2026-04-23',
-      night_mon_thu: 45,
+      night_mon_thu: 40,
       night_fri: 50,
-      night_sat: 55,
+      night_sat: 50,
       night_sun: 45
     },
     {
@@ -107,6 +107,15 @@ document.addEventListener('DOMContentLoaded', () => {
       start: '2026-04-24',
       end: '2026-04-27',
       night_mon_thu: 85,
+      night_fri: 85,
+      night_sat: 85,
+      night_sun: 80
+    },
+    {
+      name: 'Meivakantieweek 2026',
+      start: '2026-04-24',
+      end: '2026-05-02',
+      night_mon_thu: 75,
       night_fri: 85,
       night_sat: 85,
       night_sun: 80
@@ -122,8 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
       name: 'Meivakantie 2026',
-      start: '2026-04-29',
-      end: '2026-05-07',
+      start: '2026-05-02',
+      end: '2026-05-03',
       night_mon_thu: null,
       night_fri: null,
       night_sat: null,
@@ -131,11 +140,11 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
       name: 'Middenseizoen 2026',
-      start: '2026-05-08',
+      start: '2026-05-04',
       end: '2026-07-02',
-      night_mon_thu: 50,
-      night_fri: 60,
-      night_sat: 65,
+      night_mon_thu: 40,
+      night_fri: 50,
+      night_sat: 55,
       night_sun: 50
     },
     {
@@ -739,7 +748,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (toeristenbelastingKorting > 0) {
         tableRows.push(`<tr>
-          <td>Korting actie<br><small>Toeristenbelasting Meiweekend cadeau</small></td>
+          <td>Korting actie<br><small>Toeristenbelasting Meivakantie cadeau</small></td>
           <td><strong>-${euro(toeristenbelastingKorting)}</strong></td>
         </tr>`);
       }

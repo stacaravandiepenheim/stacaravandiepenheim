@@ -282,8 +282,8 @@
 
 <aside class="right-col">
 
-        <!-- Last minutes -->
-        <div data-include="../partials/last-minutes.html"></div>
+         <!-- Last minutes -->
+        <div id="last-minutes-container">Laden...</div>
 
         <!-- Praktische info -->
         <section class="aside-card">
@@ -416,7 +416,35 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(err => console.error("Include mislukt:", err));
     });
     </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+      const container = document.getElementById('last-minutes-container');
+      const pageLang = document.documentElement.lang || 'nl';
 
+      try {
+        const response = await fetch('../partials/last-minutes.html');
+        if (!response.ok) {
+          throw new Error('Kon partial niet laden: ' + response.status);
+        }
+
+        const html = await response.text();
+        container.innerHTML = html;
+
+        const blocks = container.querySelectorAll('.lm-block');
+
+        blocks.forEach(block => {
+          if (block.dataset.lang === pageLang) {
+            block.style.display = 'block';
+          } else {
+            block.style.display = 'none';
+          }
+        });
+      } catch (error) {
+        console.error(error);
+        container.innerHTML = '<p>Last minutes konden niet worden geladen.</p>';
+      }
+    });
+    </script>
 
   </body>
 </html>

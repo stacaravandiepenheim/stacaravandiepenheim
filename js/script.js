@@ -249,7 +249,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function euro(n) {
-    return n == null ? 'n.v.t.' : `€ ${Number(n).toFixed(0)},-`;
+    return n == null
+      ? 'n.v.t.'
+      : `€ ${Number(n).toFixed(2).replace('.', ',')}`;
   }
 
   function getWeekNumber(d) {
@@ -838,32 +840,13 @@ document.addEventListener('DOMContentLoaded', () => {
         lines.push(`Periode: ${formatDate(a)} t/m ${formatDate(d)}`);
         lines.push(`Verblijfstype: ${cls.label}`);
         lines.push(`Aantal nachten: ${cls.nights}`);
-
         lines.push('');
         lines.push('--- HUURPRIJS ---');
+        lines.push(`Huur ${cls.label} (${formatDate(a)} t/m ${formatDate(d)}): ${euro(price)}`);
 
-        if (rawBasePrice != null) {
-          lines.push(`Huur zonder toeslag/korting: ${euro(rawBasePrice)}`);
-        }
-
-        if (shortStaySurcharge > 0) {
-          lines.push(`Toeslag kort verblijf (2 nachten): ${euro(shortStaySurcharge)}`);
-        }
-
-        if (basePrice != null) {
-          lines.push(`Huur vóór korting: ${euro(basePrice)}`);
-        }
-
-        if (discountInfo.discountPercent > 0) {
-          lines.push(`Korting lang verblijf (${discountInfo.discountPercent}%): -${euro(discountInfo.discountAmount)}`);
-          lines.push(`Huur na korting: ${euro(price)}`);
-        } else {
-          lines.push(`Huur: ${euro(price)}`);
-        }
-
-        if (priceInfo.parts && priceInfo.parts.length > 0) {
+        if (priceInfo.parts && priceInfo.parts.length > 1) {
           lines.push('');
-          lines.push('--- OPBOUW PRIJS ---');
+          lines.push('--- OPBOUW BASISHUUR ---');
           priceInfo.parts.forEach(part => {
             lines.push(`${part.nights} nacht${part.nights === 1 ? '' : 'en'} ${part.seasonName}: ${euro(part.amount)}`);
           });

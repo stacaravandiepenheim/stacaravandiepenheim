@@ -490,3 +490,19 @@ gap:4px;
 .day.booked.bezet {
   background-color: #e67e22; /* donkeroranje */
 }
+.dekbed-keuze {
+  margin: 1rem 0 1.25rem 0;
+}
+
+.dekbed-keuze p {
+  margin-bottom: 0.5rem;
+}
+
+.dekbed-keuze label {
+  display: inline-block;
+  margin-bottom: 0.35rem;
+}
+.verborgen-vraag {
+  display: none;
+  margin: 0.75rem 0 1rem 1.25rem;
+}

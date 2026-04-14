@@ -114,22 +114,34 @@
               <option value="1">1</option>
               <option value="2">2</option>
             </select>
-          </p>
+          </p>         
+          <div id="dekbed-keuze-blok" class="form-group dekbed-keuze">
+            <p>Welk beddengoed / dekbed wilt u? (alleen invullen als u met 2 personen in de grootste slaapkamer wilt slapen)</p>
 
-          <p><strong>Extra's</strong></p>
-
-          <p>
             <label>
-              <input type="checkbox" id="schoonmaak" name="schoonmaak" value="ja" form="boeken">
-              Eindschoonmaak door ons laten doen voor € 50*
-            </label>
-          </p>
+              <input type="radio" name="dekbed_type" value="Tweepersoonsdekbed / tweepersoons linnengoed" form="boeken">
+              Tweepersoonsdekbed / tweepersoons linnengoed
+            </label><br>
 
-          <p class="letop">
-            <small>De caravan dient sowieso altijd met een schone vaat en met een lege koelkast en vriezer te worden achtergelaten, tevens moeten meubels en keukengerei zoveel mogelijk op dezelfde plek terug worden gezet/gelegd als bij aankomst aangetroffen, in geval van verplaatsing. Het afval brengt u ook altijd zelf naar de containers voor aan de camping.
-            </br></br>*Let op: als u er voor kiest om zelf de eindschoonmaak te doen, dan moet u het net zo schoon achterlaten als u het heeft aangetroffen. Stofzuigen, dweilen en een sopje over/door alle platte oppervlakken, wasbakken en wc, trapje buiten aanvegen. Wanneer dit bij controle niet blijkt, kunnen wij alsnog schoonmaakkosten in rekening brengen door het in te houden van de borg.
-            </small>
-          </p>
+            <label>
+              <input type="radio" name="dekbed_type" value="Twee losse eenpersoonsdekbedden / eenpersoons linnengoed" form="boeken">
+              Twee losse eenpersoonsdekbedden / eenpersoons linnengoed
+            </label>
+          </div>
+          <div id="bed-opstelling-vraag" class="verborgen-vraag">
+            <p>Hoe wilt u de bedden?</p>
+
+            <label>
+              <input type="radio" name="bed_opstelling" value="Tegen elkaar aan" form="boeken">
+              Tegen elkaar aan
+            </label><br>
+
+            <label>
+              <input type="radio" name="bed_opstelling" value="Van elkaar af" form="boeken">
+              Van elkaar af
+            </label>
+          </div>
+          <p><strong>Extra's</strong></p>
 
           <p>
             <label>
@@ -137,7 +149,7 @@
               Linnengoed huren voor € 4 per persoon
             </label><br>
             <small>Bij aanvinken rekenen we linnengoed voor alle opgegeven volwassenen en kinderen van 1-17 jaar. Voor uitzonderingen kunt u dit invullen bij opmerkingen.</small>
-          </p>
+          </p>    
 
           <p>
             <select id="handdoeken-aantal" name="handdoeken_aantal" form="boeken">
@@ -152,7 +164,17 @@
             
             <small>1 set = 2 grote en 2 kleine handdoeken.</small>
           </p>
+          <p>
+            <label>
+              <input type="checkbox" id="schoonmaak" name="schoonmaak" value="ja" form="boeken">
+              Eindschoonmaak door ons laten doen voor € 50*
+            </label>
+          </p>
 
+          <p class="letop">
+            <small>De caravan dient sowieso altijd met een schone vaat en met een lege koelkast en vriezer te worden achtergelaten, tevens moeten meubels en keukengerei zoveel mogelijk op dezelfde plek terug worden gezet/gelegd als bij aankomst aangetroffen, in geval van verplaatsing. Het afval brengt u ook altijd zelf naar de containers voor aan de camping.
+            </br></br>*Let op: als u er voor kiest om zelf de eindschoonmaak te doen, dan moet u het net zo schoon achterlaten als u het heeft aangetroffen. Stofzuigen, dweilen en een sopje over/door alle platte oppervlakken, wasbakken en wc, trapje buiten aanvegen. Wanneer dit bij controle niet blijkt, kunnen wij alsnog schoonmaakkosten in rekening brengen door het in te houden van de borg.
+            </small>
           <p>
             <label>
               <input type="checkbox" id="campingbedje" name="campingbedje" value="ja" form="boeken">
@@ -212,7 +234,7 @@
         
         <section class="section-overzicht" id="submission-receipt" style="display:none">
           <h3>Bedankt! We hebben uw aanvraag ontvangen.</h3>
-          <p>Hieronder ziet u een overzicht van wat u heeft ingevuld. U kunt deze pagina ook printen of opslaan als PDF.</p>
+          <p>Hieronder ziet u een overzicht van wat u heeft ingevuld. Deze gegevens zijn naar ons verzonden. U krijgt zelf ook de mail die naar ons verzonden is. U kunt deze pagina eventueel printen of opslaan als PDF. U krijgt zo snel mogelijk van ons bericht of uw reserveringsaanvraag kan worden bevestigt.</p>
 
           <!-- prijsindicatie van je bestaande blokken (we nemen ze over) -->
           <div id="receipt-price-summary"></div>
@@ -445,6 +467,62 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
     </script>
+     <script>
+document.addEventListener('DOMContentLoaded', function () {
+  const personenSelect = document.getElementById('personen');
+  const dekbedBlok = document.getElementById('dekbed-keuze-blok');
+  const dekbedRadios = document.querySelectorAll('input[name="dekbed_type"]');
 
+  const bedOpstellingBlok = document.getElementById('bed-opstelling-vraag');
+  const bedOpstellingRadios = document.querySelectorAll('input[name="bed_opstelling"]');
+
+  function clearDekbedKeuze() {
+    dekbedRadios.forEach(radio => {
+      radio.checked = false;
+    });
+  }
+
+  function clearBedOpstelling() {
+    bedOpstellingRadios.forEach(radio => {
+      radio.checked = false;
+    });
+  }
+
+  function updateDekbedEnBedOpstelling() {
+    const aantalPersonen = parseInt(personenSelect?.value || '1', 10);
+    const geselecteerdDekbed = document.querySelector('input[name="dekbed_type"]:checked');
+
+    if (aantalPersonen >= 2) {
+      dekbedBlok.style.display = 'block';
+    } else {
+      dekbedBlok.style.display = 'none';
+      bedOpstellingBlok.style.display = 'none';
+      clearDekbedKeuze();
+      clearBedOpstelling();
+      return;
+    }
+
+    if (
+      geselecteerdDekbed &&
+      geselecteerdDekbed.value === 'Twee losse eenpersoonsdekbedden / eenpersoons linnengoed'
+    ) {
+      bedOpstellingBlok.style.display = 'block';
+    } else {
+      bedOpstellingBlok.style.display = 'none';
+      clearBedOpstelling();
+    }
+  }
+
+  if (personenSelect) {
+    personenSelect.addEventListener('change', updateDekbedEnBedOpstelling);
+  }
+
+  dekbedRadios.forEach(radio => {
+    radio.addEventListener('change', updateDekbedEnBedOpstelling);
+  });
+
+  updateDekbedEnBedOpstelling();
+});
+</script> 
   </body>
 </html>

@@ -65,21 +65,22 @@ document.addEventListener('DOMContentLoaded', () => {
   // ----------------------
   const availability = {};
 
-  function addDateRange(startDate, endDate, status) {
+  function addDateRange(startDate, endDate, status = 'unavailable') {
     const start = new Date(startDate);
     const end = new Date(endDate);
+
     while (start <= end) {
       availability[start.toISOString().split('T')[0]] = status;
       start.setDate(start.getDate() + 1);
     }
   }
 
-  addDateRange('2026-05-02', '2026-05-03', 1); // meivakantie
-  addDateRange('2026-05-14', '2026-05-17', 1); // hemelvaart
-  addDateRange('2026-05-22', '2026-05-24', 1); // pinksteren
-  addDateRange('2026-07-12', '2026-08-14', 1); // zomervakantie noord (niet te boeken)
-  addDateRange('2026-10-23', '2027-04-02', 1); // winter dicht
-
+  addDateRange('2026-05-02', '2026-05-03', 'unavailable'); // meivakantie
+  addDateRange('2026-05-04', '2026-05-13', 'bezet');       // verhuurd / bezet
+  addDateRange('2026-05-14', '2026-05-17', 'unavailable'); // hemelvaart
+  addDateRange('2026-05-22', '2026-05-24', 'unavailable'); // pinksteren
+  addDateRange('2026-07-12', '2026-08-14', 'unavailable'); // zomervakantie noord (niet te boeken)
+  addDateRange('2026-10-23', '2027-04-02', 'unavailable'); // winter dicht
   // ----------------------
   // Prijzen
   // ----------------------
@@ -268,7 +269,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function isBlocked(dateYMD) {
-    return availability[dateYMD] === 1;
+  return !!availability[dateYMD];
+  }
+
+  function getAvailabilityStatus(dateYMD) {
+    return availability[dateYMD] || null;
   }
 
   function hasArrivalSelection() {
@@ -962,10 +967,22 @@ document.addEventListener('DOMContentLoaded', () => {
         calendarEl.appendChild(cell);
         continue;
       }
-
       if (isBlocked(dateKey)) {
+        const status = getAvailabilityStatus(dateKey);
+
         cell.classList.add('booked');
         cell.disabled = true;
+
+        if (status === 'bezet') {
+        cell.classList.add('bezet'); // 👈 NIEUW
+
+        cell.setAttribute('aria-label', `${d} ${monthYearEl.textContent}: bezet`);
+
+        const label = document.createElement('div');
+        label.className = 'day-status-label';
+        label.textContent = 'Verhuurd';
+        cell.appendChild(label);
+      }
         calendarEl.appendChild(cell);
         continue;
       }

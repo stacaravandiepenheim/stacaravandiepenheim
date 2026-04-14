@@ -469,3 +469,24 @@ gap:4px;
 .day.available.departure-option {
   background: #e8f3ff;
 }
+.day.booked {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
+}
+
+.day-status-label {
+  font-size: 9px;
+  margin-top: 2px;
+}
+.day.booked {
+  background-color: #e74c3c; /* jouw rood */
+  color: white;
+}
+
+.day.booked.bezet {
+  background-color: #e67e22; /* donkeroranje */
+}

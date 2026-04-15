@@ -107,29 +107,21 @@ document.addEventListener('DOMContentLoaded', () => {
       name: 'Meivakantieweekend 2026',
       start: '2026-04-24',
       end: '2026-04-27',
-      night_mon_thu: 50,
-      night_fri: 60,
+      night_mon_thu: 55,
+      night_fri: 65,
       night_sat: 65,
-      night_sun: 55
+      night_sun: 60
     },
     {
       name: 'Meivakantieweek 2026',
       start: '2026-04-24',
       end: '2026-05-02',
-      night_mon_thu: 50,
-      night_fri: 60,
-      night_sat: 65,
-      night_sun: 55
+        night_mon_thu: 55,
+        night_fri: 65,
+        night_sat: 65,
+        night_sun: 60
     },
-     {
-      name: 'Laagseizoen voorjaar 2026',
-      start: '2026-04-27',
-      end: '2026-04-28',
-      night_mon_thu: 50,
-      night_fri: 60,
-      night_sat: 65,
-      night_sun: 55
-    },
+  
     {
       name: 'Meivakantie 2026',
       start: '2026-05-02',

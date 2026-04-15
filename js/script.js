@@ -107,28 +107,28 @@ document.addEventListener('DOMContentLoaded', () => {
       name: 'Meivakantieweekend 2026',
       start: '2026-04-24',
       end: '2026-04-27',
-      night_mon_thu: 85,
-      night_fri: 85,
-      night_sat: 85,
-      night_sun: 80
+      night_mon_thu: 50,
+      night_fri: 60,
+      night_sat: 65,
+      night_sun: 55
     },
     {
       name: 'Meivakantieweek 2026',
       start: '2026-04-24',
       end: '2026-05-02',
-      night_mon_thu: 75,
-      night_fri: 85,
-      night_sat: 85,
-      night_sun: 80
+      night_mon_thu: 50,
+      night_fri: 60,
+      night_sat: 65,
+      night_sun: 55
     },
      {
       name: 'Laagseizoen voorjaar 2026',
       start: '2026-04-27',
       end: '2026-04-28',
-      night_mon_thu: 85,
-      night_fri: 85,
-      night_sat: 85,
-      night_sun: 80
+      night_mon_thu: 50,
+      night_fri: 60,
+      night_sat: 65,
+      night_sun: 55
     },
     {
       name: 'Meivakantie 2026',
@@ -153,8 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
       start: '2026-07-03',
       end: '2026-07-11',
       night_mon_thu: 60,
-      night_fri: 70,
-      night_sat: 75,
+      night_fri: 65,
+      night_sat: 70,
       night_sun: 60
     },
     {
@@ -171,26 +171,26 @@ document.addEventListener('DOMContentLoaded', () => {
       start: '2026-08-14',
       end: '2026-08-28',
       night_mon_thu: 60,
-      night_fri: 70,
-      night_sat: 75,
+      night_fri: 65,
+      night_sat: 70,
       night_sun: 60
     },
     {
       name: 'Laagseizoen najaar 2026',
       start: '2026-08-28',
       end: '2026-10-09',
-      night_mon_thu: 45,
+      night_mon_thu: 40,
       night_fri: 50,
       night_sat: 55,
-      night_sun: 45
+      night_sun: 40
     },
     {
       name: 'Herfstvakantie 2026',
       start: '2026-10-09',
       end: '2026-10-23',
       night_mon_thu: 50,
-      night_fri: 60,
-      night_sat: 65,
+      night_fri: 55,
+      night_sat: 66,
       night_sun: 50
     }
   ];

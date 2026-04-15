@@ -107,10 +107,10 @@ document.addEventListener('DOMContentLoaded', () => {
       name: 'Meivakantieweekend 2026',
       start: '2026-04-24',
       end: '2026-04-27',
-      night_mon_thu: 55,
-      night_fri: 65,
-      night_sat: 65,
-      night_sun: 60
+      night_mon_thu: 60,
+      night_fri: 70,
+      night_sat: 70,
+      night_sun: 65
     },
     {
       name: 'Meivakantieweek 2026',

@@ -136,10 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
       name: 'Zomervakantie 2026 (1e week Noord)',
       start: '2026-07-03',
       end: '2026-07-11',
-      night_mon_thu: 60,
-      night_fri: 65,
-      night_sat: 70,
-      night_sun: 60
+      night_mon_thu: 62,
+      night_fri: 70,
+      night_sat: 75,
+      night_sun: 70
     },
     {
       name: 'Zomervakantie 2026',

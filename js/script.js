@@ -60,6 +60,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Vrijdag/zat/zon/ma-aankomsten mogen nog tot een deadline van 10:00 geboekt worden
   const LAST_MINUTE_HOUR = 10;
 
+  const SPECIAL_LAST_MINUTE_ARRIVALS = {
+    '2026-04-21': {
+      deadline: '2026-04-20T21:00:00'
+    }
+  };
   // ----------------------
   // Beschikbaarheid
   // ----------------------
@@ -97,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       name: 'Laagseizoen voorjaar 2026',
       start: '2026-04-06',
-      end: '2026-04-23',
+      end: '2026-04-18',
       night_mon_thu: 40,
       night_fri: 50,
       night_sat: 50,
@@ -105,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
       name: 'Meivakantie 2026',
-      start: '2026-04-24',
+      start: '2026-04-19',
       end: '2026-05-02',
       night_mon_thu: 48,
       night_fri: 75,
@@ -438,7 +443,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return true;
   }
 
-  function isAllowedArrival(dateYMD) {
+    function isAllowedArrival(dateYMD) {
     const dateObj = parseYMD(dateYMD);
     const arrivalDay = stripTime(dateObj);
 
@@ -446,8 +451,15 @@ document.addEventListener('DOMContentLoaded', () => {
       return false;
     }
 
-    const wd = arrivalDay.getDay();
     const now = new Date();
+
+    // Eenmalige uitzonderingen
+    if (SPECIAL_LAST_MINUTE_ARRIVALS[dateYMD]) {
+      const deadline = new Date(SPECIAL_LAST_MINUTE_ARRIVALS[dateYMD].deadline);
+      return now <= deadline;
+    }
+
+    const wd = arrivalDay.getDay();
 
     // Vrijdag aankomst -> boeken t/m vrijdag 10:00
     if (wd === 5) {

@@ -506,3 +506,9 @@ gap:4px;
   display: none;
   margin: 0.75rem 0 1rem 1.25rem;
 }
+.section-gegevens input[type="checkbox"],
+.section-gegevens input[type="radio"] {
+  width: auto;
+  max-width: none;
+  box-sizing: border-box;
+}

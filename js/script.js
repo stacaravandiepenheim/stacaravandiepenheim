@@ -262,7 +262,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function isBlocked(dateYMD) {
   return !!availability[dateYMD];
   }
+  function isChangeoverDay(dateYMD) {
+    if (!isBlocked(dateYMD)) return false;
 
+    const previousDay = ymd(addDays(parseYMD(dateYMD), -1));
+
+    // Als de dag ervoor niet geblokkeerd is, kan deze datum vertrekdag zijn.
+    return !isBlocked(previousDay);
+  }
   function getAvailabilityStatus(dateYMD) {
     return availability[dateYMD] || null;
   }
@@ -882,16 +889,41 @@ document.addEventListener('DOMContentLoaded', () => {
         continue;
       }
       if (arrivalDateYMD && !departureDateYMD && allowedDepartureSet.has(dateKey)) {
-        cell.classList.add('available', 'departure-option');
+        if (isBlocked(dateKey)) {
+          cell.classList.add('changeover-day', 'departure-option');
+          cell.setAttribute(
+            'aria-label',
+            `${d} ${monthYearEl.textContent}: vertrek mogelijk, aankomst niet mogelijk`
+          );
+        } else {
+          cell.classList.add('available', 'departure-option');
+        }
+
         cell.addEventListener('click', () => selectDate(dateKey));
         calendarEl.appendChild(cell);
         continue;
       }
-      if (isBlocked(dateKey)) {
-        const status = getAvailabilityStatus(dateKey);
+        if (isBlocked(dateKey)) {
+  const status = getAvailabilityStatus(dateKey);
 
-        cell.classList.add('booked');
-        cell.disabled = true;
+   if (isChangeoverDay(dateKey)) {
+      cell.classList.add('changeover-day');
+
+      if (departureDateYMD && dateKey === departureDateYMD) {
+        cell.classList.add('selected-end');
+      }
+
+      cell.disabled = true;
+      cell.setAttribute(
+        'aria-label',
+        `${d} ${monthYearEl.textContent}: vertrek mogelijk, aankomst niet mogelijk`
+      );
+      calendarEl.appendChild(cell);
+      continue;
+    }
+
+    cell.classList.add('booked');
+    cell.disabled = true;
 
         if (status === 'bezet') {
         cell.classList.add('bezet'); // 👈 NIEUW

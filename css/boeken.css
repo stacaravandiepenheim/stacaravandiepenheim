@@ -512,3 +512,48 @@ gap:4px;
   max-width: none;
   box-sizing: border-box;
 }
+.day.changeover-day {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  color: #2a2a2a; /* of gewoon black */
+  background: linear-gradient(
+    135deg,
+    #f6efe4 0%,
+    #f6efe4 49%,
+    #e74c3c 50%,
+    #e74c3c 100%
+  );
+  border-color: #c45757;
+}
+
+.day.changeover-day::after {
+  content: "vertrek";
+  position: absolute;
+  bottom: 3px;
+  right: 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+.day.changeover-day.selected-end {
+  background: linear-gradient(
+    135deg,
+    #7aa874 0%,      /* groen (zelfde als selected-start) */
+    #7aa874 49%,
+    #e74c3c 50%,     /* rood blijft */
+    #e74c3c 100%
+  );
+  color: white;
+  border-color: #5f8d59;
+}
+.day.changeover-day.selected-end {
+  background: linear-gradient(
+    135deg,
+    #7aa874 0%,
+    #7aa874 49%,
+    #e74c3c 50%,
+    #e74c3c 100%
+  ) !important;
+  color: white !important;
+  border-color: #5f8d59;
+}

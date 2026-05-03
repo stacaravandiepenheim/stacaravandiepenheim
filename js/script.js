@@ -84,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
   addDateRange('2026-05-04', '2026-05-13', 'bezet');       // verhuurd / bezet
   addDateRange('2026-05-14', '2026-05-17', 'unavailable'); // hemelvaart
   addDateRange('2026-05-22', '2026-05-24', 'unavailable'); // pinksteren
+  addDateRange('2026-05-30', '2026-06-04', 'bezet');       // verhuurd / bezet
   addDateRange('2026-07-12', '2026-08-14', 'unavailable'); // zomervakantie noord (niet te boeken)
   addDateRange('2026-10-23', '2027-04-02', 'unavailable'); // winter dicht
   // ----------------------
@@ -263,13 +264,24 @@ document.addEventListener('DOMContentLoaded', () => {
   return !!availability[dateYMD];
   }
   function isChangeoverDay(dateYMD) {
-    if (!isBlocked(dateYMD)) return false;
+  if (!isBlocked(dateYMD)) return false;
+
+  const previousDay = ymd(addDays(parseYMD(dateYMD), -1));
+
+  // Als de dag ervoor niet geblokkeerd is → vertrekdag
+  return !isBlocked(previousDay);
+}
+
+  function isArrivalChangeoverDay(dateYMD) {
+    if (isBlocked(dateYMD)) return false;
 
     const previousDay = ymd(addDays(parseYMD(dateYMD), -1));
 
-    // Als de dag ervoor niet geblokkeerd is, kan deze datum vertrekdag zijn.
-    return !isBlocked(previousDay);
+    // Als vorige dag bezet is → aankomstdag na bezetting
+    return isBlocked(previousDay);
   }
+
+
   function getAvailabilityStatus(dateYMD) {
     return availability[dateYMD] || null;
   }
@@ -936,8 +948,12 @@ document.addEventListener('DOMContentLoaded', () => {
             `${d} ${monthYearEl.textContent}: vertrek mogelijk, aankomst niet mogelijk`
           );
         } else {
-          cell.classList.add('available', 'departure-option');
+        cell.classList.add('available', 'departure-option');
+
+        if (isArrivalChangeoverDay(dateKey)) {
+          cell.classList.add('changeover-arrival');
         }
+      }
 
         cell.addEventListener('click', () => selectDate(dateKey));
         calendarEl.appendChild(cell);
@@ -992,14 +1008,19 @@ document.addEventListener('DOMContentLoaded', () => {
       let isClickable = false;
 
       if (!arrivalDateYMD || (arrivalDateYMD && departureDateYMD)) {
-        if (isAllowedArrival(dateKey)) {
-          cell.classList.add('available', 'arrival-option');
-          isClickable = true;
-        } else {
-          cell.classList.add('unavailable');
-          cell.disabled = true;
+      if (isAllowedArrival(dateKey)) {
+        cell.classList.add('available', 'arrival-option');
+
+        if (isArrivalChangeoverDay(dateKey)) {
+          cell.classList.add('changeover-arrival');
         }
+
+        isClickable = true;
       } else {
+        cell.classList.add('unavailable');
+        cell.disabled = true;
+      }
+    } else {
         if (dateKey === arrivalDateYMD) {
           cell.classList.add('available', 'arrival-option');
           isClickable = true;

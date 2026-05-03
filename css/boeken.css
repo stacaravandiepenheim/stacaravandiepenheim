@@ -557,3 +557,26 @@ gap:4px;
   color: white !important;
   border-color: #5f8d59;
 }
+.day.changeover-arrival {
+  background: linear-gradient(
+    135deg,
+    #e67e22 0%,
+    #e67e22 49%,
+    #f6efe4 50%,
+    #f6efe4 100%
+  );
+  color: #2a2a2a;
+  border-color: #c96f1f;
+}
+.day.available.arrival-option.changeover-arrival,
+.day.available.departure-option.changeover-arrival {
+  background: linear-gradient(
+    135deg,
+    #e67e22 0%,
+    #e67e22 49%,
+    #f6efe4 50%,
+    #f6efe4 100%
+  ) !important;
+  color: #2a2a2a !important;
+  border-color: #c96f1f !important;
+}

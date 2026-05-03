@@ -435,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const end = parseYMD(dYMD);
 
     const current = new Date(start);
-    while (current <= end) {
+    while (current < end) {
       const key = ymd(current);
       if (isBlocked(key)) return false;
       current.setDate(current.getDate() + 1);
@@ -507,7 +507,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const depYMD = ymd(current);
 
       if (!isBookableWindow(current)) break;
-      if (isBlocked(depYMD)) break;
 
       if (isRangeFree(arrivalYMD, depYMD)) {
         set.add(depYMD);
@@ -879,6 +878,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!isBookableWindow(jsDate)) {
         cell.classList.add('unavailable');
         cell.disabled = true;
+        calendarEl.appendChild(cell);
+        continue;
+      }
+      if (arrivalDateYMD && !departureDateYMD && allowedDepartureSet.has(dateKey)) {
+        cell.classList.add('available', 'departure-option');
+        cell.addEventListener('click', () => selectDate(dateKey));
         calendarEl.appendChild(cell);
         continue;
       }

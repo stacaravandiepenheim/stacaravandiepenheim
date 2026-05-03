@@ -96,17 +96,17 @@ document.addEventListener('DOMContentLoaded', () => {
       end: '2026-04-02',
       night_mon_thu: 45,
       night_fri: 50,
-      night_sat: 55,
-      night_sun: 45
+      night_sat: 50,
+      night_sun: 50
     },
     {
       name: 'Laagseizoen voorjaar 2026',
       start: '2026-04-06',
       end: '2026-04-18',
-      night_mon_thu: 40,
+      night_mon_thu: 45,
       night_fri: 50,
       night_sat: 50,
-      night_sun: 45
+      night_sun: 50
     },
     {
       name: 'Meivakantie 2026',
@@ -132,19 +132,19 @@ document.addEventListener('DOMContentLoaded', () => {
       name: 'Middenseizoen 2026',
       start: '2026-05-04',
       end: '2026-07-02',
-      night_mon_thu: 40,
+      night_mon_thu: 45,
       night_fri: 50,
-      night_sat: 55,
+      night_sat: 50,
       night_sun: 50
     },
     {
       name: 'Zomervakantie 2026 (1e week Noord)',
       start: '2026-07-03',
       end: '2026-07-11',
-      night_mon_thu: 62,
-      night_fri: 70,
-      night_sat: 75,
-      night_sun: 70
+      night_mon_thu: 50,
+      night_fri: 55,
+      night_sat: 55,
+      night_sun: 55
     },
     {
       name: 'Zomervakantie 2026',
@@ -168,10 +168,10 @@ document.addEventListener('DOMContentLoaded', () => {
       name: 'Laagseizoen najaar 2026',
       start: '2026-08-28',
       end: '2026-10-09',
-      night_mon_thu: 40,
+      night_mon_thu: 45,
       night_fri: 50,
-      night_sat: 55,
-      night_sun: 40
+      night_sat: 50,
+      night_sun: 50
     },
     {
       name: 'Herfstvakantie 2026',
@@ -179,8 +179,8 @@ document.addEventListener('DOMContentLoaded', () => {
       end: '2026-10-23',
       night_mon_thu: 50,
       night_fri: 55,
-      night_sat: 66,
-      night_sun: 50
+      night_sat: 55,
+      night_sun: 55
     }
   ];
 
@@ -354,50 +354,91 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function getPriceForRange(arrivalYMD, departureYMD) {
-    const start = parseYMD(arrivalYMD);
-    const end = parseYMD(departureYMD);
+  const cls = classifyStay(arrivalYMD, departureYMD);
 
-    let current = new Date(start);
-    let total = 0;
-    const parts = [];
-
-    while (current < end) {
-      const dateKey = ymd(current);
-      const { nightPrice, seasonName } = getNightPriceForDate(dateKey);
-
-      if (nightPrice == null) {
-        return {
-          price: null,
-          seasonName: null,
-          parts: [],
-          unavailableDate: dateKey
-        };
-      }
-
-      const existing = parts.find(p => p.seasonName === seasonName);
-      if (existing) {
-        existing.nights += 1;
-        existing.amount += nightPrice;
-      } else {
-        parts.push({
-          seasonName,
-          nights: 1,
-          amount: nightPrice
-        });
-      }
-
-      total += nightPrice;
-      current = addDays(current, 1);
+  // Vaste pakketprijzen, allemaal exclusief toeristenbelasting
+  const packagePrices = {
+    weekend: {
+      price: 150,
+      label: 'Weekend'
+    },
+    midweek: {
+      price: 160,
+      label: 'Midweek'
+    },
+    week: {
+      price: 250,
+      label: 'Week'
+    },
+    anderhalveweek: {
+      price: 350,
+      label: '1,5 week'
+    },
+    tweeweken: {
+      price: 475,
+      label: '2 weken'
     }
+  };
+
+  if (packagePrices[cls.type]) {
+    const pkg = packagePrices[cls.type];
 
     return {
-      price: Math.round(total * 100) / 100,
-      seasonName: parts.map(p => p.seasonName).join(' + '),
-      parts,
+      price: pkg.price,
+      seasonName: pkg.label,
+      parts: [{
+        seasonName: pkg.label,
+        nights: cls.nights,
+        amount: pkg.price
+      }],
       unavailableDate: null
     };
   }
 
+  // Alle andere periodes: losse nachten volgens dagprijzen
+  const start = parseYMD(arrivalYMD);
+  const end = parseYMD(departureYMD);
+
+  let current = new Date(start);
+  let total = 0;
+  const parts = [];
+
+  while (current < end) {
+    const dateKey = ymd(current);
+    const { nightPrice, seasonName } = getNightPriceForDate(dateKey);
+
+    if (nightPrice == null) {
+      return {
+        price: null,
+        seasonName: null,
+        parts: [],
+        unavailableDate: dateKey
+      };
+    }
+
+    const existing = parts.find(p => p.seasonName === seasonName);
+    if (existing) {
+      existing.nights += 1;
+      existing.amount += nightPrice;
+    } else {
+      parts.push({
+        seasonName,
+        nights: 1,
+        amount: nightPrice
+      });
+    }
+
+    total += nightPrice;
+    current = addDays(current, 1);
+  }
+
+  return {
+    price: Math.round(total * 100) / 100,
+    seasonName: parts.map(p => p.seasonName).join(' + '),
+    parts,
+    unavailableDate: null
+  };
+}
   function getLongStayDiscount(basePrice, nights) {
     if (basePrice == null) {
       return {
@@ -680,8 +721,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const shortStaySurcharge = getShortStaySurcharge(cls.nights);
     const basePrice = rawBasePrice == null ? null : rawBasePrice + shortStaySurcharge;
-    const discountInfo = getLongStayDiscount(basePrice, cls.nights);
-    const price = discountInfo.discountedPrice;
+    const price = basePrice;
     const X = computeExtras(a, d);
     if (price != null) {
   const baseText = seasonLabel

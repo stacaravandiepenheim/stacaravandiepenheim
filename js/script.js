@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
   addDateRange('2026-05-14', '2026-05-17', 'unavailable'); // hemelvaart
   addDateRange('2026-05-22', '2026-05-24', 'unavailable'); // pinksteren
   addDateRange('2026-05-30', '2026-06-04', 'bezet');       // verhuurd / bezet
+  addDateRange('2026-06-15', '2026-06-21', 'bezet');       // verhuurd / bezet
   addDateRange('2026-07-12', '2026-08-14', 'unavailable'); // zomervakantie noord (niet te boeken)
   addDateRange('2026-10-23', '2027-04-02', 'unavailable'); // winter dicht
   // ----------------------

@@ -86,7 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
   addDateRange('2026-05-22', '2026-05-24', 'unavailable'); // pinksteren
   addDateRange('2026-05-30', '2026-06-04', 'bezet');       // verhuurd / bezet
   addDateRange('2026-06-15', '2026-06-21', 'bezet');       // verhuurd / bezet
-  addDateRange('2026-07-12', '2026-08-14', 'unavailable'); // zomervakantie noord (niet te boeken)
+  addDateRange('2026-07-04', '2026-07-11', 'bezet');       // verhuurd / bezet
+  addDateRange('2026-07-12', '2026-08-06', 'unavailable'); // zomervakantie noord (niet te boeken)
   addDateRange('2026-10-23', '2027-04-02', 'unavailable'); // winter dicht
   // ----------------------
   // Prijzen
@@ -149,22 +150,22 @@ document.addEventListener('DOMContentLoaded', () => {
       night_sun: 55
     },
     {
-      name: 'Zomervakantie 2026',
+      name: 'Zomervakantie 2026 Bezet',
       start: '2026-07-12',
-      end: '2026-08-14',
+      end: '2026-08-06',
       night_mon_thu: null,
       night_fri: null,
       night_sat: null,
       night_sun: null
     },
     {
-      name: 'Zomervakantie 2026 (Zuid, Midden)',
-      start: '2026-08-14',
-      end: '2026-08-28',
-      night_mon_thu: 60,
-      night_fri: 65,
-      night_sat: 70,
-      night_sun: 60
+      name: 'Zomervakantie 2026',
+      start: '2026-08-06',
+      end: '2026-08-29',
+      night_mon_thu: 55,
+      night_fri: 55,
+      night_sat: 55,
+      night_sun: 55
     },
     {
       name: 'Laagseizoen najaar 2026',
@@ -369,6 +370,40 @@ document.addEventListener('DOMContentLoaded', () => {
   function getPriceForRange(arrivalYMD, departureYMD) {
   const cls = classifyStay(arrivalYMD, departureYMD);
 
+    const arrival = parseYMD(arrivalYMD);
+    const departure = parseYMD(departureYMD);
+
+    const summerStart = parseYMD('2026-08-06');
+    const summerEnd = parseYMD('2026-08-29');
+
+    // Alleen als het hele verblijf binnen augustus/zomervakantie valt
+    const isAugustSummerStay = arrival >= summerStart && departure <= summerEnd;
+
+    if (isAugustSummerStay && cls.type === 'tweeweken') {
+      return {
+        price: 695,
+        seasonName: '2 weken zomervakantie augustus',
+        parts: [{
+          seasonName: '2 weken zomervakantie augustus',
+          nights: cls.nights,
+          amount: 695
+        }],
+        unavailableDate: null
+      };
+    }
+
+    if (isAugustSummerStay && cls.type === 'drieweken') {
+      return {
+        price: 995,
+        seasonName: '3 weken zomervakantie augustus',
+        parts: [{
+          seasonName: '3 weken zomervakantie augustus',
+          nights: cls.nights,
+          amount: 995
+        }],
+        unavailableDate: null
+      };
+    }
   // Vaste pakketprijzen, allemaal exclusief toeristenbelasting
   const packagePrices = {
     weekend: {

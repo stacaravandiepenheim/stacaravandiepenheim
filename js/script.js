@@ -373,13 +373,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const arrival = parseYMD(arrivalYMD);
     const departure = parseYMD(departureYMD);
 
-    const summerStart = parseYMD('2026-08-06');
+    const summerStart = parseYMD('2026-07-03');
     const summerEnd = parseYMD('2026-08-29');
 
     // Alleen als het hele verblijf binnen augustus/zomervakantie valt
-    const isAugustSummerStay = arrival >= summerStart && departure <= summerEnd;
+    const isSummerStay = arrival >= summerStart && departure <= summerEnd;
 
-    if (isAugustSummerStay && cls.type === 'tweeweken') {
+    if (SummerStay && cls.type === 'tweeweken') {
       return {
         price: 695,
         seasonName: '2 weken zomervakantie augustus',
@@ -392,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
 
-    if (isAugustSummerStay && cls.type === 'drieweken') {
+    if (isSummerStay && cls.type === 'drieweken') {
       return {
         price: 995,
         seasonName: '3 weken zomervakantie augustus',
@@ -405,6 +405,20 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
   // Vaste pakketprijzen, allemaal exclusief toeristenbelasting
+  // Zomervakantie vaste prijzen
+    if (isSummerStay && cls.type === 'week') {
+      return {
+        price: 385,
+        seasonName: '1 week zomervakantie',
+        parts: [{
+          seasonName: '1 week zomervakantie',
+          nights: cls.nights,
+          amount: 385
+        }],
+        unavailableDate: null
+      };
+    }
+  
   const packagePrices = {
     weekend: {
       price: 150,

@@ -98,7 +98,7 @@
         <!-- wordt dynamisch gevuld -->
         </p>
           <p>
-            <label for="personen">Aantal personen (v.a. 3 jaar)</label>
+            <label for="personen">Aantal personen (v.a. 3 jaar)*</label>
             <select id="personen" name="personen" form="boeken">
               <option value="1">1</option>
               <option value="2">2</option>
@@ -207,10 +207,11 @@
 
         <section class="section-gegevens">
           <h3>Gegevens</h3>
+          <p>Velden met een * zijn verplicht.</p>
           <form action="https://formspree.io/f/manbvgbe" method="post" autocomplete="on" name="boeken" id="boeken">
-            <p><label>Naam:<input type="text" name="Naam" size="40" required autocomplete="name"></label></p>
-            <p><label>Adres:<input type="text" name="Adres" size="40" required></label></p>
-            <p><label>Postcode:<input 
+            <p><label>Naam*:<input type="text" name="Naam" size="40" required autocomplete="name"></label></p>
+            <p><label>Adres*:<input type="text" name="Adres" size="40" required></label></p>
+            <p><label>Postcode*:<input 
               type="text" 
               size="8" 
               name="Postcode" 
@@ -220,14 +221,14 @@
               autocomplete="postal-code"
               title="Vul een postcode in zoals 7900 AB of 7900AB"
             >
-            <p><label>Woonplaats:<input type="text" name="Woonplaats" required autocomplete="address-level2"></label></p>
-            <p><label>Land:<input type="text" name="Land" required autocomplete="country-name"></label></p>
-            <p><label>Telefoonnummer:<input
+            <p><label>Woonplaats*:<input type="text" name="Woonplaats" required autocomplete="address-level2"></label></p>
+            <p><label>Land*:<input type="text" name="Land" required autocomplete="country-name"></label></p>
+            <p><label>Telefoonnummer*:<input
               type="tel"
               name="Telefoonnummer"
               required
               autocomplete="tel">
-            <p><label>E-mailadres:<input type="email" name="email" size="40" required autocomplete="email"></label></p>
+            <p><label>E-mailadres*:<input type="email" name="email" size="40" required autocomplete="email"></label></p>
             <input type="hidden" name="Aankomst" id="arrival-hidden">
             <input type="hidden" name="Vertrek"   id="departure-hidden">
             <input type="text" name="_gotcha" style="display:none">
@@ -237,8 +238,8 @@
           </form>  
           <p>
             <label>
-              <input type="checkbox" name="Akkoord huisregels" value="Ja" required>
-              Ik ga akkoord met de huisregels: de stacaravan blijft rookvrij, ik respecteer de rust tussen 22:00 en 08:00, laat de accommodatie netjes achter en maak geen open vuur op het campingterrein.
+              <input type="checkbox" name="Akkoord huisregels" value="Ja" required form="boeken">
+              Ik ga akkoord met de huisregels: de stacaravan blijft rookvrij, ik respecteer de rust tussen 22:00 en 08:00, laat de accommodatie netjes achter en maak geen open vuur op het campingterrein.*
             </label>
           </p>
           <p><label>Opmerkingen:

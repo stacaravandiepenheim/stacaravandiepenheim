@@ -1148,6 +1148,10 @@ document.addEventListener('DOMContentLoaded', () => {
   async function submitToFormspree(ev) {
     ev.preventDefault();
 
+     if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+     }
     const fd = new FormData(form);
     const mail = fd.get('email') || '';
 

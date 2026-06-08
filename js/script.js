@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { key: 'week', label: 'Week', nights: 7, arrivalWD: [1, 5], departureWD: [1, 5] },
     { key: 'anderhalveweek', label: '1,5 week', nights: 10, arrivalWD: [5], departureWD: [1] },
     { key: 'anderhalveweek', label: '1,5 week', nights: 11, arrivalWD: [1], departureWD: [5] },
-    { key: 'tweeweken', label: '2 weken', nights: 14, arrivalWD: [1, 5], departureWD: [1, 5] },
+    { key: 'tweeweken', label: '2 weken', nights: 14, arrivalWD: [1, 5, 6], departureWD: [1, 5, 6] },
     { key: 'tweeenhalveweek', label: '2,5 week', nights: 17, arrivalWD: [5], departureWD: [1] },
     { key: 'tweeenhalveweek', label: '2,5 week', nights: 18, arrivalWD: [1], departureWD: [5] },
     { key: 'drieweken', label: '3 weken', nights: 21, arrivalWD: [1, 5], departureWD: [1, 5] }
@@ -379,7 +379,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Alleen als het hele verblijf binnen augustus/zomervakantie valt
     const isSummerStay = arrival >= summerStart && departure <= summerEnd;
+    // 2 weken zomeractie + extra nachten daarna
+    
+    const twoWeeksEnd = addDays(arrival, 14);
+    const twoWeeksEndYMD = ymd(twoWeeksEnd);
 
+    if (
+      arrival >= summerStart &&
+      twoWeeksEnd <= summerEnd &&
+      departure > twoWeeksEnd
+    ) {
+      let current = new Date(twoWeeksEnd);
+      let extraTotal = 0;
+      const parts = [{
+        seasonName: '2 weken zomervakantie augustus',
+        nights: 14,
+        amount: 695
+      }];
+
+      while (current < departure) {
+        const dateKey = ymd(current);
+        const { nightPrice, seasonName } = getNightPriceForDate(dateKey);
+
+        if (nightPrice == null) {
+          return {
+            price: null,
+            seasonName: null,
+            parts: [],
+            unavailableDate: dateKey
+          };
+        }
+
+        extraTotal += nightPrice;
+
+        const existing = parts.find(p => p.seasonName === seasonName);
+        if (existing) {
+          existing.nights += 1;
+          existing.amount += nightPrice;
+        } else {
+          parts.push({
+            seasonName,
+            nights: 1,
+            amount: nightPrice
+          });
+        }
+
+        current = addDays(current, 1);
+      }
+
+      return {
+        price: 695 + extraTotal,
+        seasonName: parts.map(p => p.seasonName).join(' + '),
+        parts,
+        unavailableDate: null
+      };
+    }
     if (isSummerStay && cls.type === 'tweeweken') {
       return {
         price: 695,
@@ -571,6 +625,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const wd = arrivalDay.getDay();
+    // In de periode 14 t/m 29 augustus alleen aankomst op vrijdag of zaterdag
+    if (dateYMD >= '2026-08-14' && dateYMD < '2026-08-29') {
+      return wd === 5 || wd === 6; // vrijdag of zaterdag
+    }
 
     // Vrijdag aankomst -> boeken t/m vrijdag 10:00
     if (wd === 5) {
@@ -604,6 +662,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const normalEarliestArrival = stripTime(SEASON_START);
     return arrivalDay >= normalEarliestArrival;
   }
+    
+  function isLateAugustWeekOnly(arrivalYMD, departureYMD) {
+
+  if (arrivalYMD >= '2026-08-14' && arrivalYMD < '2026-08-29') {
+
+    // Vanaf 28 augustus mag elke vertrekdatum weer
+    if (departureYMD >= '2026-08-28') {
+      return true;
+    }
+
+    const arrival = parseYMD(arrivalYMD);
+    const nights = diffNights(arrivalYMD, departureYMD);
+    const arrivalDay = arrival.getDay();
+
+    return (
+      (arrivalDay === 5 || arrivalDay === 6) &&
+      (nights === 7 || nights === 14)
+    );
+  }
+
+  return true;
+}
 
   function getAllowedDepartureSet(arrivalYMD) {
     const set = new Set();
@@ -619,11 +699,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!isBookableWindow(current)) break;
 
-      if (isRangeFree(arrivalYMD, depYMD)) {
-        set.add(depYMD);
-      } else {
-        break;
-      }
+      if (isRangeFree(arrivalYMD, depYMD) && isLateAugustWeekOnly(arrivalYMD, depYMD)) {
+          set.add(depYMD);
+        } else if (!isRangeFree(arrivalYMD, depYMD)) {
+          break;
+        }
 
       current = addDays(current, 1);
     }
@@ -655,7 +735,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const allowedDepartureSet = getAllowedDepartureSet(arrivalDateYMD);
 
-      if (!allowedDepartureSet.has(dateYMD) && isAllowedArrival(dateYMD)) {
+      if (
+        !allowedDepartureSet.has(dateYMD) &&
+        isAllowedArrival(dateYMD) &&
+        !(arrivalDateYMD >= '2026-08-14' && arrivalDateYMD < '2026-08-29')
+      ) {
         arrivalDateYMD = dateYMD;
         departureDateYMD = '';
 
@@ -1056,36 +1140,40 @@ document.addEventListener('DOMContentLoaded', () => {
       if (isSelectedEnd) cell.classList.add('selected-end');
       if (isInRange) cell.classList.add('selected-range');
 
+
       let isClickable = false;
 
-      if (!arrivalDateYMD || (arrivalDateYMD && departureDateYMD)) {
-      if (isAllowedArrival(dateKey)) {
-        cell.classList.add('available', 'arrival-option');
+if (!arrivalDateYMD || (arrivalDateYMD && departureDateYMD)) {
+  if (isAllowedArrival(dateKey)) {
+    cell.classList.add('available', 'arrival-option');
 
-        if (isArrivalChangeoverDay(dateKey)) {
-          cell.classList.add('changeover-arrival');
-        }
+    if (isArrivalChangeoverDay(dateKey)) {
+      cell.classList.add('changeover-arrival');
+    }
 
-        isClickable = true;
-      } else {
-        cell.classList.add('unavailable');
-        cell.disabled = true;
-      }
-    } else {
-        if (dateKey === arrivalDateYMD) {
-          cell.classList.add('available', 'arrival-option');
-          isClickable = true;
-        } else if (allowedDepartureSet.has(dateKey)) {
-          cell.classList.add('available', 'departure-option');
-          isClickable = true;
-        } else if (isAllowedArrival(dateKey)) {
-          cell.classList.add('available', 'arrival-option');
-          isClickable = true;
-        } else {
-          cell.classList.add('unavailable');
-          cell.disabled = true;
-        }
-      }
+    isClickable = true;
+  } else {
+    cell.classList.add('unavailable');
+    cell.disabled = true;
+  }
+} else {
+  if (dateKey === arrivalDateYMD) {
+    cell.classList.add('available', 'arrival-option');
+    isClickable = true;
+  } else if (allowedDepartureSet.has(dateKey)) {
+    cell.classList.add('available', 'departure-option');
+    isClickable = true;
+  } else if (
+    isAllowedArrival(dateKey) &&
+    !(arrivalDateYMD >= '2026-08-14' && arrivalDateYMD < '2026-08-29')
+  ) {
+    cell.classList.add('available', 'arrival-option');
+    isClickable = true;
+  } else {
+    cell.classList.add('unavailable');
+    cell.disabled = true;
+  }
+}
 
       if (isClickable) {
         cell.addEventListener('click', () => selectDate(dateKey));

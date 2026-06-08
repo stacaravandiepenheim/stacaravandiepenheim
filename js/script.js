@@ -380,7 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Alleen als het hele verblijf binnen augustus/zomervakantie valt
     const isSummerStay = arrival >= summerStart && departure <= summerEnd;
 
-    if (SummerStay && cls.type === 'tweeweken') {
+    if (isSummerStay && cls.type === 'tweeweken') {
       return {
         price: 695,
         seasonName: '2 weken zomervakantie augustus',

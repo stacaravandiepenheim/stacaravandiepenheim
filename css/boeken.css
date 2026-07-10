@@ -96,11 +96,7 @@
   background: #5f8d59;
 }
 
-.day.booked {
-  background: #d96c6c;
-  color: white;
-  border-color: #c45757;
-}
+
 
 .day.unavailable {
   background: #f1f1f1;
@@ -475,6 +471,11 @@ gap:4px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  background-color: #e74c3c;
+  color: white;
+  border-color: #c45757;
+
   line-height: 1.1;
 }
 
@@ -482,10 +483,7 @@ gap:4px;
   font-size: 9px;
   margin-top: 2px;
 }
-.day.booked {
-  background-color: #e74c3c; /* jouw rood */
-  color: white;
-}
+
 
 .day.booked.bezet {
   background-color: #e67e22; /* donkeroranje */
@@ -512,71 +510,132 @@ gap:4px;
   max-width: none;
   box-sizing: border-box;
 }
+/* ==========================================
+   Wisseldagen bij verhuurde periodes
+   ========================================== */
+
+/*
+Eerste dag van een verhuurde periode:
+linkerbovenhelft vrij, rechteronderhelft oranje.
+Deze dag krijgt het label 'vertrek'.
+*/
 .day.changeover-day {
   position: relative;
   overflow: hidden;
-  cursor: pointer;
-  color: #2a2a2a; /* of gewoon black */
+  color: #2a2a2a;
+  border-color: #c96f1f;
+
   background: linear-gradient(
     135deg,
     #f6efe4 0%,
-    #f6efe4 49%,
-    #e74c3c 50%,
-    #e74c3c 100%
+    #f6efe4 49.5%,
+    #e67e22 50%,
+    #e67e22 100%
   );
-  border-color: #c45757;
 }
 
 .day.changeover-day::after {
   content: "vertrek";
   position: absolute;
-  bottom: 3px;
-  right: 4px;
-  font-size: 0.65rem;
+  left: 3px;
+  top: 3px;
+  z-index: 2;
+  font-size: 0.56rem;
+  line-height: 1;
   font-weight: 600;
+  color: #222;
+  pointer-events: none;
 }
-.day.changeover-day.selected-end {
-  background: linear-gradient(
-    135deg,
-    #7aa874 0%,      /* groen (zelfde als selected-start) */
-    #7aa874 49%,
-    #e74c3c 50%,     /* rood blijft */
-    #e74c3c 100%
-  );
-  color: white;
-  border-color: #5f8d59;
-}
-.day.changeover-day.selected-end {
-  background: linear-gradient(
-    135deg,
-    #7aa874 0%,
-    #7aa874 49%,
-    #e74c3c 50%,
-    #e74c3c 100%
-  ) !important;
-  color: white !important;
-  border-color: #5f8d59;
-}
+
+
+/*
+Laatste dag van een verhuurde periode:
+linkerbovenhelft oranje, rechteronderhelft vrij.
+Deze dag krijgt het label 'aankomst'.
+*/
 .day.changeover-arrival {
+  position: relative;
+  overflow: hidden;
+  color: #2a2a2a;
+  border-color: #c96f1f;
+
   background: linear-gradient(
     135deg,
     #e67e22 0%,
-    #e67e22 49%,
+    #e67e22 49.5%,
     #f6efe4 50%,
     #f6efe4 100%
   );
-  color: #2a2a2a;
-  border-color: #c96f1f;
 }
+
+.day.changeover-arrival::after {
+  content: "aankomst";
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  z-index: 2;
+  font-size: 0.52rem;
+  line-height: 1;
+  font-weight: 600;
+  color: #222;
+  pointer-events: none;
+}
+
+
+/*
+Voorkomt dat de groene en lichtblauwe achtergrond van
+klikbare aankomst- of vertrekdagen het diagonale vlak overschrijft.
+*/
 .day.available.arrival-option.changeover-arrival,
 .day.available.departure-option.changeover-arrival {
   background: linear-gradient(
     135deg,
     #e67e22 0%,
-    #e67e22 49%,
+    #e67e22 49.5%,
     #f6efe4 50%,
     #f6efe4 100%
   ) !important;
+
   color: #2a2a2a !important;
   border-color: #c96f1f !important;
+}
+
+
+/*
+Wanneer een wisseldag als gekozen vertrekdatum wordt aangeklikt:
+de vrije helft wordt groen, de verhuurde helft blijft oranje.
+*/
+.day.changeover-day.selected-end {
+  background: linear-gradient(
+    135deg,
+    #7aa874 0%,
+    #7aa874 49.5%,
+    #e67e22 50%,
+    #e67e22 100%
+  ) !important;
+
+  color: white !important;
+  border-color: #5f8d59 !important;
+}
+
+
+/*
+Op kleine schermen moeten de woorden in het dagvak blijven passen.
+*/
+@media (max-width: 600px) {
+  .day.changeover-day::after {
+    right: 2px;
+    bottom: 2px;
+    font-size: 0.43rem;
+  }
+
+  .day.changeover-arrival::after {
+    left: 2px;
+    top: 2px;
+    font-size: 0.4rem;
+  }
+}
+.day.changeover-day.departure-option:not(:disabled) {
+  text-decoration: underline;
+  cursor: pointer;
 }

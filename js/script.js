@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Gewone boekregel: andere aankomstdagen minimaal 3 dagen van tevoren
   const SEASON_START = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3);
-  const SEASON_END = new Date(today.getFullYear(), today.getMonth() + 13, 0);
+  const SEASON_END = new Date(2027, 3, 1);
 
   // Vrijdag/zat/zon/ma-aankomsten mogen nog tot een deadline van 10:00 geboekt worden
   const LAST_MINUTE_HOUR = 10;
@@ -71,27 +71,51 @@ document.addEventListener('DOMContentLoaded', () => {
   const availability = {};
 
   function addDateRange(startDate, endDate, status = 'unavailable') {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+  const start = parseYMD(startDate);
+  const end = parseYMD(endDate);
 
-    while (start <= end) {
-      availability[start.toISOString().split('T')[0]] = status;
+  /*
+   * Bij een verhuurde periode is de einddatum de aankomstdag.
+   *
+   * 4 t/m 11 september betekent:
+   * - 4 september: vertrek / begin verhuur
+   * - 5 t/m 10 september: bezet
+   * - 11 september: aankomst / einde verhuur
+   *
+   * Daarom wordt 11 september niet volledig geblokkeerd.
+   */
+  if (status === 'bezet') {
+    while (start < end) {
+      availability[ymd(start)] = status;
       start.setDate(start.getDate() + 1);
     }
+
+    return;
   }
 
-  addDateRange('2026-05-02', '2026-05-03', 'unavailable'); // meivakantie
-  addDateRange('2026-05-04', '2026-05-13', 'bezet');       // verhuurd / bezet
-  addDateRange('2026-05-14', '2026-05-17', 'unavailable'); // hemelvaart
-  addDateRange('2026-05-22', '2026-05-24', 'unavailable'); // pinksteren
-  addDateRange('2026-05-30', '2026-06-04', 'bezet');       // verhuurd / bezet
-  addDateRange('2026-06-15', '2026-06-25', 'bezet');       // verhuurd / bezet
-  addDateRange('2026-07-03', '2026-07-11', 'bezet');       // verhuurd / bezet
+  /*
+   * Gewoon niet-beschikbare periodes blijven wel
+   * inclusief de einddatum geblokkeerd.
+   */
+  while (start <= end) {
+    availability[ymd(start)] = status;
+    start.setDate(start.getDate() + 1);
+  }
+}
+ 
+
+  addDateRange('2026-05-02', '2026-05-04', 'unavailable'); // meivakantie
+  addDateRange('2026-05-04', '2026-05-14', 'bezet');       // verhuurd / bezet
+  addDateRange('2026-05-14', '2026-05-18', 'unavailable'); // hemelvaart
+  addDateRange('2026-05-22', '2026-05-25', 'unavailable'); // pinksteren
+  addDateRange('2026-05-30', '2026-06-05', 'bezet');       // verhuurd / bezet
+  addDateRange('2026-06-15', '2026-06-26', 'bezet');       // verhuurd / bezet
+  addDateRange('2026-07-03', '2026-07-12', 'bezet');       // verhuurd / bezet
   addDateRange('2026-08-03', '2026-08-10', 'bezet');       // verhuurd / bezet
-  addDateRange('2026-08-10', '2026-08-13', 'bezet');       // verhuurd / bezet
-  addDateRange('2026-07-12', '2026-08-02', 'unavailable'); // zomervakantie noord (niet te boeken)
-  addDateRange('2026-09-04', '2026-09-10', 'bezet');       // verhuurd / bezet
-  addDateRange('2026-10-23', '2027-04-02', 'unavailable'); // winter dicht
+  addDateRange('2026-08-10', '2026-08-14', 'bezet');       // verhuurd / bezet
+  addDateRange('2026-07-12', '2026-08-03', 'unavailable'); // zomervakantie noord (niet te boeken)
+  addDateRange('2026-09-04', '2026-09-11', 'bezet');       // verhuurd / bezet
+  addDateRange('2026-10-23', '2027-04-03', 'unavailable'); // winter dicht
   // ----------------------
   // Prijzen
   // ----------------------
@@ -1016,19 +1040,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Kalender genereren
   // ----------------------
   function renderCalendar() {
-    if (!hasArrivalSelection()) {
-      let guard = 0;
-
-      while (!monthHasAllowedArrival(currentYear, currentMonth) && guard < 24) {
-        currentMonth++;
-        if (currentMonth > 11) {
-          currentMonth = 0;
-          currentYear++;
-        }
-        guard++;
-      }
-    }
-
     calendarEl.innerHTML = '';
 
     const firstOfMonth = new Date(currentYear, currentMonth, 1);

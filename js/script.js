@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
   addDateRange('2026-08-03', '2026-08-10', 'bezet');       // verhuurd / bezet
   addDateRange('2026-08-10', '2026-08-13', 'bezet');       // verhuurd / bezet
   addDateRange('2026-07-12', '2026-08-02', 'unavailable'); // zomervakantie noord (niet te boeken)
+  addDateRange('2026-09-04', '2026-09-10', 'bezet');       // verhuurd / bezet
   addDateRange('2026-10-23', '2027-04-02', 'unavailable'); // winter dicht
   // ----------------------
   // Prijzen
@@ -773,7 +774,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const persons = parseInt(personsInput?.value || '0', 10) || 0;
     const babies = parseInt(babiesInput?.value || '0', 10) || 0;
-    const payingPersons = Math.max(persons - babies, 0);
+    const payingPersons = persons;
 
     const toerBel = 4 * payingPersons * nights;
     const schoon = cleanSel?.checked ? 50 : 0;

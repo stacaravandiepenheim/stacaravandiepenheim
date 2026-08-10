@@ -53,6 +53,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const weekdays = ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za'];
   const MIN_NIGHTS = 2;
 
+  function getMinNightsForArrival(arrivalYMD) {
+    if (arrivalYMD >= '2026-08-14' && arrivalYMD <= '2026-08-23') {
+      return 5;
+    }
+
+    return MIN_NIGHTS;
+  }
+
   // Gewone boekregel: andere aankomstdagen minimaal 3 dagen van tevoren
   const SEASON_START = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 3);
   const SEASON_END = new Date(2027, 3, 1);
@@ -119,11 +127,24 @@ document.addEventListener('DOMContentLoaded', () => {
   // ----------------------
   // Prijzen
   // ----------------------
+  // ----------------------
+  // LAST MINUTES
+  // ----------------------
+  const LAST_MINUTE_DISCOUNT = 0.20;
+
+  const LAST_MINUTES = [
+    { start: '2026-08-14', end: '2026-08-21' }
+  ];
+
+  // ----------------------
+  // PRIJZEN PER SEIZOEN
+  // ----------------------
+  
   const PRICING = [
     {
       name: 'Laagseizoen voorjaar 2026',
       start: '2026-03-13',
-      end: '2026-04-02',
+      end: '2026-04-05',
       night_mon_thu: 45,
       night_fri: 50,
       night_sat: 50,
@@ -188,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       name: 'Zomervakantie 2026',
       start: '2026-08-03',
-      end: '2026-08-29',
+      end: '2026-08-27',
       night_mon_thu: 55,
       night_fri: 55,
       night_sat: 55,
@@ -197,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       name: 'Laagseizoen najaar 2026',
       start: '2026-08-28',
-      end: '2026-10-09',
+      end: '2026-10-08',
       night_mon_thu: 45,
       night_fri: 50,
       night_sat: 50,
@@ -365,46 +386,165 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  function getSeasonFor(dateStrYMD) {
-    return PRICING.find(s => between(dateStrYMD, s.start, s.end)) || null;
-  }
-
-  function getNightPriceForDate(dateStrYMD) {
-    const season = getSeasonFor(dateStrYMD);
-    if (!season) return { nightPrice: null, seasonName: null };
-
-    const dateObj = parseYMD(dateStrYMD);
-    const wd = dateObj.getDay();
-
-    let nightPrice = null;
-
-    if (wd >= 1 && wd <= 4) {
-      nightPrice = season.night_mon_thu;
-    } else if (wd === 5) {
-      nightPrice = season.night_fri;
-    } else if (wd === 6) {
-      nightPrice = season.night_sat;
-    } else if (wd === 0) {
-      nightPrice = season.night_sun;
+    function getSeasonFor(dateStrYMD) {
+      return PRICING.find(s => between(dateStrYMD, s.start, s.end)) || null;
     }
 
-    return {
-      nightPrice: typeof nightPrice === 'number' ? nightPrice : null,
-      seasonName: season.name
-    };
-  }
 
-  function getPriceForRange(arrivalYMD, departureYMD) {
-  const cls = classifyStay(arrivalYMD, departureYMD);
+    // Controleert of het hele verblijf binnen een last-minuteperiode valt
+      function isLastMinuteStay(arrivalYMD, departureYMD) {
+        return LAST_MINUTES.some(lm => {
+          return arrivalYMD >= lm.start && departureYMD <= lm.end;
+        });
+      }
 
-    const arrival = parseYMD(arrivalYMD);
-    const departure = parseYMD(departureYMD);
+    function getNightPriceForDate(dateStrYMD) {
+      const season = getSeasonFor(dateStrYMD);
 
-    const summerStart = parseYMD('2026-07-03');
-    const summerEnd = parseYMD('2026-08-29');
+      if (!season) {
+        return {
+          nightPrice: null,
+          seasonName: null
+        };
+      }
+
+      const dateObj = parseYMD(dateStrYMD);
+      const wd = dateObj.getDay();
+
+      let nightPrice = null;
+
+      if (wd >= 1 && wd <= 4) {
+        nightPrice = season.night_mon_thu;
+      } else if (wd === 5) {
+        nightPrice = season.night_fri;
+      } else if (wd === 6) {
+        nightPrice = season.night_sat;
+      } else if (wd === 0) {
+        nightPrice = season.night_sun;
+      }
+
+      return {
+        nightPrice: typeof nightPrice === 'number' ? nightPrice : null,
+        seasonName: season.name
+      };
+    }
+
+    function getPriceForRange(arrivalYMD, departureYMD) {
+      const cls = classifyStay(arrivalYMD, departureYMD);
+
+      const arrival = parseYMD(arrivalYMD);
+      const departure = parseYMD(departureYMD);
+
+      const summerStart = parseYMD('2026-07-03');
+      const summerEnd = parseYMD('2026-08-27');
 
     // Alleen als het hele verblijf binnen augustus/zomervakantie valt
     const isSummerStay = arrival >= summerStart && departure <= summerEnd;
+
+    // Verblijf vanaf 14 augustus dat doorloopt richting laagseizoen
+    if (
+      arrivalYMD >= '2026-08-14' &&
+      arrivalYMD <= '2026-08-23'
+    ) {
+      let current = new Date(arrival);
+      let regularTotal = 0;
+      let nightsCounted = 0;
+
+      while (current < departure) {
+        const dateKey = ymd(current);
+        const { nightPrice } = getNightPriceForDate(dateKey);
+
+        if (nightPrice == null) {
+          return {
+            price: null,
+            seasonName: null,
+            parts: [],
+            unavailableDate: dateKey
+          };
+        }
+
+        regularTotal += nightPrice;
+        nightsCounted++;
+        current = addDays(current, 1);
+      }
+
+      // Minder dan 14 nachten:
+      // normale prijs, maar nooit duurder dan de 2-wekenactie
+      if (nightsCounted < 14) {
+        const finalPrice = Math.min(regularTotal, 695);
+
+        return {
+          price: Math.round(finalPrice * 100) / 100,
+          seasonName: 'Zomervakantie / overgang laagseizoen',
+          parts: [{
+            seasonName: 'Verblijf augustus',
+            nights: nightsCounted,
+            amount: Math.round(finalPrice * 100) / 100
+          }],
+          unavailableDate: null
+        };
+      }
+
+      // Precies 14 nachten: vaste actieprijs
+      if (nightsCounted === 14) {
+        return {
+          price: 695,
+          seasonName: '2 weken zomervakantie augustus',
+          parts: [{
+            seasonName: '2 weken zomervakantie augustus',
+            nights: 14,
+            amount: 695
+          }],
+          unavailableDate: null
+        };
+      }
+
+      // Meer dan 14 nachten:
+      // eerste 14 nachten = €695
+      // extra nachten = gewone dagprijs
+      const first14End = addDays(arrival, 14);
+      current = new Date(first14End);
+
+      let extraTotal = 0;
+      let extraNights = 0;
+
+      while (current < departure) {
+        const dateKey = ymd(current);
+        const { nightPrice } = getNightPriceForDate(dateKey);
+
+        if (nightPrice == null) {
+          return {
+            price: null,
+            seasonName: null,
+            parts: [],
+            unavailableDate: dateKey
+          };
+        }
+
+        extraTotal += nightPrice;
+        extraNights++;
+        current = addDays(current, 1);
+      }
+
+      return {
+        price: Math.round((695 + extraTotal) * 100) / 100,
+        seasonName: '2 weken zomervakantie augustus + extra nachten',
+        parts: [
+          {
+            seasonName: '2 weken zomervakantie augustus',
+            nights: 14,
+            amount: 695
+          },
+          {
+            seasonName: 'Extra nachten',
+            nights: extraNights,
+            amount: Math.round(extraTotal * 100) / 100
+          }
+        ],
+        unavailableDate: null
+      };
+    }
+
     // 2 weken zomeractie + extra nachten daarna
     
     const twoWeeksEnd = addDays(arrival, 14);
@@ -523,7 +663,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  if (packagePrices[cls.type]) {
+  const isMeivakantie =
+  arrivalYMD >= '2026-04-19' &&
+  arrivalYMD < '2026-05-02';
+
+  const isHerfstvakantie =
+    arrivalYMD >= '2026-10-09' &&
+    arrivalYMD < '2026-10-23';
+
+  const usePackagePrice =
+    packagePrices[cls.type] &&
+    !isMeivakantie &&
+    !isHerfstvakantie;
+
+  if (usePackagePrice) {
     const pkg = packagePrices[cls.type];
 
     return {
@@ -635,59 +788,60 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
     function isAllowedArrival(dateYMD) {
-    const dateObj = parseYMD(dateYMD);
-    const arrivalDay = stripTime(dateObj);
+  const dateObj = parseYMD(dateYMD);
+  const arrivalDay = stripTime(dateObj);
 
-    if (!isBookableWindow(dateObj) || isBlocked(dateYMD)) {
-      return false;
-    }
-
-    const now = new Date();
-
-    // Eenmalige uitzonderingen
-    if (SPECIAL_LAST_MINUTE_ARRIVALS[dateYMD]) {
-      const deadline = new Date(SPECIAL_LAST_MINUTE_ARRIVALS[dateYMD].deadline);
-      return now <= deadline;
-    }
-
-    const wd = arrivalDay.getDay();
-    // In de periode 14 t/m 29 augustus alleen aankomst op vrijdag of zaterdag
-    if (dateYMD >= '2026-08-14' && dateYMD < '2026-08-29') {
-      return wd === 5 || wd === 6; // vrijdag of zaterdag
-    }
-
-    // Vrijdag aankomst -> boeken t/m vrijdag 10:00
-    if (wd === 5) {
-      const deadline = new Date(
-        arrivalDay.getFullYear(),
-        arrivalDay.getMonth(),
-        arrivalDay.getDate(),
-        LAST_MINUTE_HOUR,
-        0,
-        0,
-        0
-      );
-      return now <= deadline;
-    }
-
-    // Zaterdag, zondag, maandag aankomst -> boeken t/m de dag ervoor 10:00
-    if (wd === 6 || wd === 0 || wd === 1) {
-      const deadline = new Date(
-        arrivalDay.getFullYear(),
-        arrivalDay.getMonth(),
-        arrivalDay.getDate() - 1,
-        LAST_MINUTE_HOUR,
-        0,
-        0,
-        0
-      );
-      return now <= deadline;
-    }
-
-    // Andere aankomstdagen: minimaal 3 dagen van tevoren
-    const normalEarliestArrival = stripTime(SEASON_START);
-    return arrivalDay >= normalEarliestArrival;
+  if (!isBookableWindow(dateObj) || isBlocked(dateYMD)) {
+    return false;
   }
+
+  const now = new Date();
+
+  // Eenmalige uitzonderingen
+  if (SPECIAL_LAST_MINUTE_ARRIVALS[dateYMD]) {
+    const deadline = new Date(SPECIAL_LAST_MINUTE_ARRIVALS[dateYMD].deadline);
+    return now <= deadline;
+  }
+
+  const wd = arrivalDay.getDay();
+
+  // 14 t/m 23 augustus 2026:
+  // iedere dag mag aankomstdag zijn
+  if (dateYMD >= '2026-08-14' && dateYMD <= '2026-08-23') {
+    return true;
+  }
+
+  // Vrijdag aankomst -> boeken t/m vrijdag 10:00
+  if (wd === 5) {
+    const deadline = new Date(
+      arrivalDay.getFullYear(),
+      arrivalDay.getMonth(),
+      arrivalDay.getDate(),
+      LAST_MINUTE_HOUR,
+      0,
+      0,
+      0
+    );
+    return now <= deadline;
+  }
+
+  // Zaterdag, zondag, maandag aankomst -> boeken t/m de dag ervoor 10:00
+  if (wd === 6 || wd === 0 || wd === 1) {
+    const deadline = new Date(
+      arrivalDay.getFullYear(),
+      arrivalDay.getMonth(),
+      arrivalDay.getDate() - 1,
+      LAST_MINUTE_HOUR,
+      0,
+      0,
+      0
+    );
+    return now <= deadline;
+  }
+
+  const normalEarliestArrival = stripTime(SEASON_START);
+  return arrivalDay >= normalEarliestArrival;
+}
     
   function isLateAugustWeekOnly(arrivalYMD, departureYMD) {
 
@@ -716,20 +870,28 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!arrivalYMD) return set;
 
     const arrivalObj = parseYMD(arrivalYMD);
+
+    const isLateAugust =
+      arrivalYMD >= '2026-08-14' &&
+      arrivalYMD <= '2026-08-23';
+
+    const minNights = isLateAugust ? 5 : MIN_NIGHTS;
+
     const maxDate = new Date(SEASON_END);
 
-    let current = addDays(arrivalObj, MIN_NIGHTS);
+    let current = addDays(arrivalObj, minNights);
 
     while (current <= maxDate) {
       const depYMD = ymd(current);
 
       if (!isBookableWindow(current)) break;
+      if (isBlocked(depYMD) && !isChangeoverDay(depYMD)) break;
 
-      if (isRangeFree(arrivalYMD, depYMD) && isLateAugustWeekOnly(arrivalYMD, depYMD)) {
-          set.add(depYMD);
-        } else if (!isRangeFree(arrivalYMD, depYMD)) {
-          break;
-        }
+      if (isRangeFree(arrivalYMD, depYMD)) {
+        set.add(depYMD);
+      } else {
+        break;
+      }
 
       current = addDays(current, 1);
     }
@@ -763,8 +925,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (
         !allowedDepartureSet.has(dateYMD) &&
-        isAllowedArrival(dateYMD) &&
-        !(arrivalDateYMD >= '2026-08-14' && arrivalDateYMD < '2026-08-29')
+        isAllowedArrival(dateYMD)
       ) {
         arrivalDateYMD = dateYMD;
         departureDateYMD = '';
@@ -876,18 +1037,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (stayHidden) stayHidden.value = cls.label || '';
 
-    if (cls.nights < MIN_NIGHTS) {
+    const minNightsForStay = getMinNightsForArrival(a);
+
+    if (cls.nights < minNightsForStay) {
       if (priceSummary) {
-        priceSummary.textContent = `Een verblijf van ${cls.nights} nacht${cls.nights === 1 ? '' : 'en'} is niet mogelijk. Reserveren kan vanaf ${MIN_NIGHTS} nachten.`;
+        priceSummary.textContent =
+          `Een verblijf van ${cls.nights} nacht${cls.nights === 1 ? '' : 'en'} is niet mogelijk. Reserveren kan in deze periode vanaf ${minNightsForStay} nachten.`;
       }
+
       if (priceSpecEl) priceSpecEl.innerHTML = '';
       if (priceHidden) priceHidden.value = '';
       if (priceSpecHidden) priceSpecHidden.value = '';
       return;
     }
 
-    const priceInfo = getPriceForRange(a, d);
-    const rawBasePrice = priceInfo.price;
+   const priceInfo = getPriceForRange(a, d);
+    const normalBasePrice = priceInfo.price;
+    const isLastMinute = isLastMinuteStay(a, d);
+    const rawBasePrice =
+      normalBasePrice != null && isLastMinute
+        ? Math.round(normalBasePrice * (1 - LAST_MINUTE_DISCOUNT) * 100) / 100
+        : normalBasePrice;
     const seasonLabel = priceInfo.parts
       ? [...new Set(priceInfo.parts.map(p => p.seasonName))].join(' + ')
       : '';
@@ -897,10 +1067,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const price = basePrice;
     const X = computeExtras(a, d);
     if (price != null) {
-  const baseText = seasonLabel
+  const baseText = isLastMinute
+  ? `${euro(price)} (incl. 20% last-minutekorting)`
+  : seasonLabel
     ? `${euro(price)} (${seasonLabel})`
     : `${euro(price)}`;
-
+    
   if (priceSummary) {
     priceSummary.textContent =
       `Je wilt boeken van ${formatDate(a)} t/m ${formatDate(d)} (${cls.label}). De huurprijs voor deze periode is ${baseText} — exclusief toeristenbelasting, borg en extra’s. Vul het formulier in voor een preciezere prijs excl. borg en campingkosten.`;
@@ -929,7 +1101,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const tbParts = [];
 
       tableRows.push(`<tr>
-        <td>Huur ${cls.label} (${formatDate(a)} t/m ${formatDate(d)})</td>
+        <td>Huurprijs${isLastMinute ? ' (incl. 20% last-minutekorting)' : ''}</td>
         <td><strong>${euro(price)}</strong></td>
       </tr>`);
 
@@ -1176,10 +1348,7 @@ if (!arrivalDateYMD || (arrivalDateYMD && departureDateYMD)) {
   } else if (allowedDepartureSet.has(dateKey)) {
     cell.classList.add('available', 'departure-option');
     isClickable = true;
-  } else if (
-    isAllowedArrival(dateKey) &&
-    !(arrivalDateYMD >= '2026-08-14' && arrivalDateYMD < '2026-08-29')
-  ) {
+  } else if (isAllowedArrival(dateKey)) {
     cell.classList.add('available', 'arrival-option');
     isClickable = true;
   } else {

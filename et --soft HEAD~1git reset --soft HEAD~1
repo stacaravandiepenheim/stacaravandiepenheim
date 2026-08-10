@@ -1,0 +1,102 @@
+[33mcommit 1143f975d4983cda391b94b975e6ca244eeed2e7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Annegreet <peterenannegreet@gmail.com>
+Date:   Mon Aug 10 10:27:33 2026 +0200
+
+    aanpassingentarieven
+
+ afbeeldingen/FB_IMG_1780727881091.jpg              | Bin [31m0[m -> [32m794752[m bytes
+ afbeeldingen/FB_IMG_1780727891768.jpg              | Bin [31m0[m -> [32m700484[m bytes
+ afbeeldingen/FB_IMG_1780727913138.jpg              | Bin [31m0[m -> [32m715338[m bytes
+ .../PXL_20260502_123419875 (Gemiddeld).jpg         | Bin [31m0[m -> [32m124046[m bytes
+ afbeeldingen/PXL_20260502_123419875.jpg            | Bin [31m0[m -> [32m2743668[m bytes
+ .../PXL_20260502_123427178 (Gemiddeld).jpg         | Bin [31m0[m -> [32m109916[m bytes
+ afbeeldingen/PXL_20260502_123427178.jpg            | Bin [31m0[m -> [32m2182246[m bytes
+ .../PXL_20260517_132831221 (Gemiddeld).jpg         | Bin [31m0[m -> [32m229594[m bytes
+ afbeeldingen/PXL_20260517_132831221.jpg            | Bin [31m0[m -> [32m6384439[m bytes
+ .../PXL_20260517_132836387 (Gemiddeld).jpg         | Bin [31m0[m -> [32m155042[m bytes
+ afbeeldingen/PXL_20260517_132836387.jpg            | Bin [31m0[m -> [32m2534023[m bytes
+ .../PXL_20260517_132849570 (Gemiddeld).jpg         | Bin [31m0[m -> [32m177402[m bytes
+ afbeeldingen/PXL_20260517_132849570.jpg            | Bin [31m0[m -> [32m4602845[m bytes
+ .../PXL_20260517_133123562 (Gemiddeld).jpg         | Bin [31m0[m -> [32m82755[m bytes
+ afbeeldingen/PXL_20260517_133123562.jpg            | Bin [31m0[m -> [32m2600992[m bytes
+ .../PXL_20260524_175556707 (Gemiddeld).jpg         | Bin [31m0[m -> [32m180510[m bytes
+ afbeeldingen/PXL_20260524_175556707.jpg            | Bin [31m0[m -> [32m4503067[m bytes
+ .../PXL_20260524_182646607 (Gemiddeld).jpg         | Bin [31m0[m -> [32m189166[m bytes
+ afbeeldingen/PXL_20260524_182646607.jpg            | Bin [31m0[m -> [32m6549637[m bytes
+ .../PXL_20260524_182650299 (1) (Gemiddeld).jpg     | Bin [31m0[m -> [32m166459[m bytes
+ afbeeldingen/PXL_20260524_182650299 (1).jpg        | Bin [31m0[m -> [32m5648441[m bytes
+ .../PXL_20260524_182650299 (Gemiddeld).jpg         | Bin [31m0[m -> [32m166459[m bytes
+ .../PXL_20260524_182655581 (Gemiddeld).jpg         | Bin [31m0[m -> [32m181339[m bytes
+ afbeeldingen/PXL_20260524_182655581.jpg            | Bin [31m0[m -> [32m6132564[m bytes
+ .../PXL_20260524_182703508 (Gemiddeld).jpg         | Bin [31m0[m -> [32m183764[m bytes
+ afbeeldingen/PXL_20260524_182703508.jpg            | Bin [31m0[m -> [32m6061681[m bytes
+ .../PXL_20260524_182709182 (Gemiddeld).jpg         | Bin [31m0[m -> [32m143541[m bytes
+ afbeeldingen/PXL_20260524_182709182.jpg            | Bin [31m0[m -> [32m4499023[m bytes
+ .../PXL_20260524_182944667.MP (1) (Gemiddeld).jpg  | Bin [31m0[m -> [32m192279[m bytes
+ afbeeldingen/PXL_20260524_182944667.MP (1).jpg     | Bin [31m0[m -> [32m9090835[m bytes
+ .../PXL_20260524_182944667.MP (Gemiddeld).jpg      | Bin [31m0[m -> [32m192279[m bytes
+ .../PXL_20260524_182957096.MP (Gemiddeld).jpg      | Bin [31m0[m -> [32m235992[m bytes
+ .../PXL_20260524_182959670 (Gemiddeld).jpg         | Bin [31m0[m -> [32m242494[m bytes
+ afbeeldingen/PXL_20260524_182959670.jpg            | Bin [31m0[m -> [32m7817796[m bytes
+ .../PXL_20260524_185148023 (Gemiddeld).jpg         | Bin [31m0[m -> [32m238624[m bytes
+ afbeeldingen/PXL_20260524_185148023.jpg            | Bin [31m0[m -> [32m6804275[m bytes
+ .../PXL_20260524_185211385 (1) (Gemiddeld).jpg     | Bin [31m0[m -> [32m111493[m bytes
+ ...85211385.jpg => PXL_20260524_185211385 (1).jpg} | Bin
+ .../PXL_20260524_185530582 (Gemiddeld).jpg         | Bin [31m0[m -> [32m141937[m bytes
+ .../PXL_20260524_185806637 (Gemiddeld).jpg         | Bin [31m0[m -> [32m210858[m bytes
+ afbeeldingen/PXL_20260524_185806637.jpg            | Bin [31m0[m -> [32m4702214[m bytes
+ afbeeldingen/PXL_20260525_075524009.mp4            | Bin [31m0[m -> [32m61216974[m bytes
+ afbeeldingen/PXL_20260525_075617824.mp4            | Bin [31m0[m -> [32m14908195[m bytes
+ .../PXL_20260525_075638146.NIGHT (Gemiddeld).jpg   | Bin [31m0[m -> [32m254843[m bytes
+ afbeeldingen/PXL_20260525_075638146.NIGHT.jpg      | Bin [31m0[m -> [32m3833182[m bytes
+ .../PXL_20260525_075644296 (Gemiddeld).jpg         | Bin [31m0[m -> [32m243497[m bytes
+ afbeeldingen/PXL_20260525_075644296.jpg            | Bin [31m0[m -> [32m3881847[m bytes
+ .../PXL_20260525_075726831 (Gemiddeld).jpg         | Bin [31m0[m -> [32m224925[m bytes
+ afbeeldingen/PXL_20260525_075726831.jpg            | Bin [31m0[m -> [32m3308158[m bytes
+ .../PXL_20260525_075740667 (1) (Gemiddeld).jpg     | Bin [31m0[m -> [32m237728[m bytes
+ afbeeldingen/PXL_20260525_075740667 (1).jpg        | Bin [31m0[m -> [32m3263964[m bytes
+ .../PXL_20260525_075740667 (Gemiddeld).jpg         | Bin [31m0[m -> [32m237728[m bytes
+ .../PXL_20260719_191451960 (Gemiddeld).jpg         | Bin [31m0[m -> [32m198803[m bytes
+ afbeeldingen/PXL_20260719_191451960.jpg            | Bin [31m0[m -> [32m2307158[m bytes
+ .../PXL_20260719_191506424 (Gemiddeld).jpg         | Bin [31m0[m -> [32m112327[m bytes
+ afbeeldingen/PXL_20260719_191506424.jpg            | Bin [31m0[m -> [32m2542412[m bytes
+ .../PXL_20260723_085005612 (Gemiddeld).jpg         | Bin [31m0[m -> [32m137098[m bytes
+ afbeeldingen/PXL_20260723_085005612.jpg            | Bin [31m0[m -> [32m6140575[m bytes
+ .../PXL_20260723_085036986 (Gemiddeld).jpg         | Bin [31m0[m -> [32m105237[m bytes
+ afbeeldingen/PXL_20260723_085036986.jpg            | Bin [31m0[m -> [32m3159598[m bytes
+ .../PXL_20260723_085106321 (Gemiddeld).jpg         | Bin [31m0[m -> [32m85642[m bytes
+ afbeeldingen/PXL_20260723_085106321.jpg            | Bin [31m0[m -> [32m4109251[m bytes
+ .../PXL_20260723_121423775 (Gemiddeld).jpg         | Bin [31m0[m -> [32m192901[m bytes
+ afbeeldingen/PXL_20260723_121423775.jpg            | Bin [31m0[m -> [32m5877120[m bytes
+ .../PXL_20260723_192938515 (Gemiddeld).jpg         | Bin [31m0[m -> [32m353359[m bytes
+ afbeeldingen/PXL_20260723_192938515.jpg            | Bin [31m0[m -> [32m3101188[m bytes
+ afbeeldingen/PXL_20260723_194217211.mp4            | Bin [31m0[m -> [32m111677745[m bytes
+ .../PXL_20260723_195731235 (Gemiddeld).jpg         | Bin [31m0[m -> [32m169592[m bytes
+ afbeeldingen/PXL_20260723_195731235.jpg            | Bin [31m0[m -> [32m3604039[m bytes
+ .../PXL_20260727_101221427 (Gemiddeld).jpg         | Bin [31m0[m -> [32m124488[m bytes
+ afbeeldingen/PXL_20260727_101221427.jpg            | Bin [31m0[m -> [32m3194911[m bytes
+ .../PXL_20260727_101254417 (Gemiddeld).jpg         | Bin [31m0[m -> [32m122594[m bytes
+ afbeeldingen/PXL_20260727_101254417.jpg            | Bin [31m0[m -> [32m2686081[m bytes
+ .../PXL_20260727_101313782 (Gemiddeld).jpg         | Bin [31m0[m -> [32m322881[m bytes
+ afbeeldingen/PXL_20260727_101313782.jpg            | Bin [31m0[m -> [32m5705060[m bytes
+ .../PXL_20260727_175850321 (Gemiddeld).jpg         | Bin [31m0[m -> [32m199136[m bytes
+ afbeeldingen/PXL_20260727_175850321.jpg            | Bin [31m0[m -> [32m2452357[m bytes
+ .../PXL_20260727_195419160 (Gemiddeld).jpg         | Bin [31m0[m -> [32m147588[m bytes
+ afbeeldingen/PXL_20260727_195419160.jpg            | Bin [31m0[m -> [32m1961091[m bytes
+ .../PXL_20260727_195425622 (Gemiddeld).jpg         | Bin [31m0[m -> [32m93206[m bytes
+ afbeeldingen/PXL_20260727_195425622.jpg            | Bin [31m0[m -> [32m2726055[m bytes
+ .../PXL_20260727_195832830 (Gemiddeld).jpg         | Bin [31m0[m -> [32m68607[m bytes
+ afbeeldingen/PXL_20260727_195832830.jpg            | Bin [31m0[m -> [32m2568692[m bytes
+ .../PXL_20260728_193722062 (Gemiddeld).jpg         | Bin [31m0[m -> [32m159435[m bytes
+ afbeeldingen/PXL_20260728_193722062.jpg            | Bin [31m0[m -> [32m2953463[m bytes
+ .../PXL_20260801_125017605 (Gemiddeld).jpg         | Bin [31m0[m -> [32m206400[m bytes
+ afbeeldingen/PXL_20260801_125017605.jpg            | Bin [31m0[m -> [32m3120393[m bytes
+ .../PXL_20260801_125510332 (Gemiddeld).jpg         | Bin [31m0[m -> [32m303293[m bytes
+ afbeeldingen/PXL_20260801_125510332.jpg            | Bin [31m0[m -> [32m4517108[m bytes
+ .../PXL_20260801_125516375 (Gemiddeld).jpg         | Bin [31m0[m -> [32m174686[m bytes
+ afbeeldingen/PXL_20260801_125516375.jpg            | Bin [31m0[m -> [32m4936551[m bytes
+ .../PXL_20260801_125521533 (Gemiddeld).jpg         | Bin [31m0[m -> [32m168766[m bytes
+ afbeeldingen/PXL_20260801_125521533.jpg            | Bin [31m0[m -> [32m4896781[m bytes
+ html/reserveren.html                               |   4 [32m+[m[31m-[m
+ js/script.js                                       | 263 [32m++++++++++++++++[m[31m-----[m
+ 95 files changed, 201 insertions(+), 66 deletions(-)

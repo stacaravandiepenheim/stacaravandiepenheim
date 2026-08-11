@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let arrivalDateYMD = '';
   let departureDateYMD = '';
 
-  const weekdays = ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za'];
+  const weekdays = ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'];
   const MIN_NIGHTS = 2;
 
   function getMinNightsForArrival(arrivalYMD) {
@@ -123,6 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
   addDateRange('2026-08-10', '2026-08-14', 'bezet');       // verhuurd / bezet
   addDateRange('2026-07-12', '2026-08-03', 'unavailable'); // zomervakantie noord (niet te boeken)
   addDateRange('2026-09-04', '2026-09-18', 'bezet');       // verhuurd / bezet
+  addDateRange('2026-08-24', '2026-08-28', 'bezet');       // verhuurd / bezet
+  addDateRange('2026-09-22', '2026-09-26', 'bezet');       // verhuurd / bezet
   addDateRange('2026-10-23', '2027-04-03', 'unavailable'); // winter dicht
   // ----------------------
   // Prijzen
@@ -1224,7 +1226,7 @@ document.addEventListener('DOMContentLoaded', () => {
       calendarEl.appendChild(h);
     });
 
-    const startWD = firstOfMonth.getDay();
+    const startWD = (firstOfMonth.getDay() + 6) % 7;
     const days = new Date(currentYear, currentMonth + 1, 0).getDate();
 
     for (let i = 0; i < startWD; i++) {
@@ -1246,7 +1248,7 @@ document.addEventListener('DOMContentLoaded', () => {
       cell.textContent = d;
       cell.dataset.date = dateKey;
 
-      if (wd === 0) {
+      if (wd === 1) {
         const wk = getWeekNumber(jsDate);
         const badge = document.createElement('div');
         badge.className = 'wk-badge';

@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function getMinNightsForArrival(arrivalYMD) {
     if (arrivalYMD >= '2026-08-14' && arrivalYMD <= '2026-08-23') {
-      return 5;
+      return 2;
     }
 
     return MIN_NIGHTS;
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const LAST_MINUTE_DISCOUNT = 0.20;
 
   const LAST_MINUTES = [
-    { start: '2026-08-14', end: '2026-08-21' }
+    { start: '2026-08-14', end: '2026-08-23' }
   ];
 
   // ----------------------
@@ -808,9 +808,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const wd = arrivalDay.getDay();
 
   // 14 t/m 23 augustus 2026:
-  // iedere dag mag aankomstdag zijn
+  // iedere dag mag aankomstdag zijn, maar niet last minute op de avond ervoor
   if (dateYMD >= '2026-08-14' && dateYMD <= '2026-08-23') {
-    return true;
+    const deadline = new Date(
+      arrivalDay.getFullYear(),
+      arrivalDay.getMonth(),
+      arrivalDay.getDate() - 1,
+      21,
+      0,
+      0,
+      0
+    );
+
+    return now <= deadline;
   }
 
   // Vrijdag aankomst -> boeken t/m vrijdag 10:00
@@ -847,7 +857,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
   function isLateAugustWeekOnly(arrivalYMD, departureYMD) {
 
-  if (arrivalYMD >= '2026-08-14' && arrivalYMD < '2026-08-29') {
+    // 14 t/m 23 augustus: elke verblijfsduur vanaf 2 nachten toegestaan
+    if (arrivalYMD >= '2026-08-14' && arrivalYMD <= '2026-08-23') {
+      return true;
+    }
 
     // Vanaf 28 augustus mag elke vertrekdatum weer
     if (departureYMD >= '2026-08-28') {
@@ -864,9 +877,6 @@ document.addEventListener('DOMContentLoaded', () => {
     );
   }
 
-  return true;
-}
-
   function getAllowedDepartureSet(arrivalYMD) {
     const set = new Set();
     if (!arrivalYMD) return set;
@@ -877,7 +887,7 @@ document.addEventListener('DOMContentLoaded', () => {
       arrivalYMD >= '2026-08-14' &&
       arrivalYMD <= '2026-08-23';
 
-    const minNights = isLateAugust ? 5 : MIN_NIGHTS;
+    const minNights = isLateAugust ? 2 : MIN_NIGHTS;
 
     const maxDate = new Date(SEASON_END);
 

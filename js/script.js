@@ -125,7 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
   addDateRange('2026-09-04', '2026-09-18', 'bezet');       // verhuurd / bezet
   addDateRange('2026-08-24', '2026-08-28', 'bezet');       // verhuurd / bezet
   addDateRange('2026-09-22', '2026-09-26', 'bezet');       // verhuurd / bezet
-  addDateRange('2026-10-23', '2027-04-03', 'unavailable'); // winter dicht
+  addDateRange('2026-10-10', '2026-10-17', 'bezet');       // verhuurd / bezet
+  addDateRange('2027-01-03', '2027-04-03', 'unavailable'); // winter dicht
   // ----------------------
   // Prijzen
   // ----------------------
@@ -229,12 +230,31 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       name: 'Herfstvakantie 2026',
       start: '2026-10-09',
-      end: '2026-10-23',
+      end: '2026-10-24',
       night_mon_thu: 50,
       night_fri: 55,
       night_sat: 55,
       night_sun: 55
-    }
+    },
+     {
+      name: 'Laagseizoen winter 2026',
+      start: '2026-10-24',
+      end: '2026-12-18',
+      night_mon_thu: 45,
+      night_fri: 50,
+      night_sat: 50,
+      night_sun: 50
+    },
+    {
+      name: 'Kerstvakantie 2026',
+      start: '2026-12-19',
+      end: '2027-01-03',
+      night_mon_wed: 55,
+      night_thu: 60,
+      night_fri: 60,
+      night_sat: 60,
+      night_sun: 55
+    },
   ];
 
   // ----------------------
@@ -401,20 +421,40 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
     function getNightPriceForDate(dateStrYMD) {
-      const season = getSeasonFor(dateStrYMD);
+    const season = getSeasonFor(dateStrYMD);
 
-      if (!season) {
-        return {
-          nightPrice: null,
-          seasonName: null
-        };
+    if (!season) {
+      return {
+        nightPrice: null,
+        seasonName: null
+      };
+    }
+
+    const dateObj = parseYMD(dateStrYMD);
+    const wd = dateObj.getDay();
+
+    let nightPrice = null;
+
+    // Als dit seizoen aparte prijzen heeft voor ma-wo en donderdag
+    if (
+      typeof season.night_mon_wed === 'number' ||
+      typeof season.night_thu === 'number'
+    ) {
+      if (wd >= 1 && wd <= 3) {
+        nightPrice = season.night_mon_wed;
+      } else if (wd === 4) {
+        nightPrice = season.night_thu;
+      } else if (wd === 5) {
+        nightPrice = season.night_fri;
+      } else if (wd === 6) {
+        nightPrice = season.night_sat;
+      } else if (wd === 0) {
+        nightPrice = season.night_sun;
       }
+    }
 
-      const dateObj = parseYMD(dateStrYMD);
-      const wd = dateObj.getDay();
-
-      let nightPrice = null;
-
+    // Voor alle gewone seizoenen met ma-do als één prijs
+    else {
       if (wd >= 1 && wd <= 4) {
         nightPrice = season.night_mon_thu;
       } else if (wd === 5) {
@@ -424,12 +464,13 @@ document.addEventListener('DOMContentLoaded', () => {
       } else if (wd === 0) {
         nightPrice = season.night_sun;
       }
-
-      return {
-        nightPrice: typeof nightPrice === 'number' ? nightPrice : null,
-        seasonName: season.name
-      };
     }
+
+    return {
+      nightPrice: typeof nightPrice === 'number' ? nightPrice : null,
+      seasonName: season.name
+    };
+  }
 
     function getPriceForRange(arrivalYMD, departureYMD) {
       const cls = classifyStay(arrivalYMD, departureYMD);
@@ -671,12 +712,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const isHerfstvakantie =
     arrivalYMD >= '2026-10-09' &&
-    arrivalYMD < '2026-10-23';
+    arrivalYMD < '2026-10-24';
+
+  const isWinterLaagseizoen =
+  arrivalYMD >= '2026-10-24' &&
+  arrivalYMD < '2026-12-19';
+
+  const isKerstvakantie =
+  arrivalYMD >= '2026-12-19' &&
+  arrivalYMD < '2027-01-03';
 
   const usePackagePrice =
     packagePrices[cls.type] &&
     !isMeivakantie &&
-    !isHerfstvakantie;
+    !isHerfstvakantie &&
+    !isWinterLaagseizoen &&
+    !isKerstvakantie;
 
   if (usePackagePrice) {
     const pkg = packagePrices[cls.type];
